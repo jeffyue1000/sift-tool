@@ -7,29 +7,29 @@ import UploadScreen from "./screens/UploadScreen";
 import Navbar from "./components/Navbar";
 
 function App() {
-	return (
-		<Router>
-			<Navbar />
-			<Routes>
-				<Route
-					path="/"
-					element={<LoginScreen />}
-				/>
-				<Route
-					path="/compare"
-					element={<ComparisonScreen />}
-				/>
-				<Route
-					path="/rankings"
-					element={<RankingScreen />}
-				/>
-				<Route
-					path="upload"
-					element={<UploadScreen />}
-				/>
-			</Routes>
-		</Router>
-	);
+    return (
+        <Router>
+            <Navbar />
+            <Routes>
+                <Route
+                    path="/"
+                    element={<LoginScreen />}
+                />
+                <Route
+                    path="/compare"
+                    element={<ComparisonScreen />}
+                />
+                <Route
+                    path="/rankings"
+                    element={<RankingScreen />}
+                />
+                <Route
+                    path="upload"
+                    element={<UploadScreen />}
+                />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
