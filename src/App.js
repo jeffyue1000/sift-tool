@@ -14,7 +14,7 @@ function App() {
             <div className="content-container">
                 <Routes>
                     <Route
-                        path="/"
+                        path="/login"
                         element={<LoginScreen />}
                     />
                     <Route
