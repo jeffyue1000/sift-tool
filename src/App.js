@@ -5,7 +5,7 @@ import ComparisonScreen from "./screens/ComparisonScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
-import "./App.css"; // Make sure you have an App.css file with the styles defined below
+import "./App.css";
 
 function App() {
     return (

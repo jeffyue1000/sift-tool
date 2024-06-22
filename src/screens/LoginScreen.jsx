@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles//LoginScreen.css";
+import "../styles/LoginScreen.css";
 
 export default function LoginScreen() {
     const [passkey, setPasskey] = useState(""); // State to hold the passkey
