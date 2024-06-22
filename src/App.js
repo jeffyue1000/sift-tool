@@ -12,7 +12,7 @@ function App() {
             <Navbar />
             <Routes>
                 <Route
-                    path="/"
+                    path="/login"
                     element={<LoginScreen />}
                 />
                 <Route
