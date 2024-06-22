@@ -5,32 +5,29 @@ import ComparisonScreen from "./screens/ComparisonScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
-import "./App.css";
 
 function App() {
     return (
         <Router>
             <Navbar />
-            <div className="content-container">
-                <Routes>
-                    <Route
-                        path="/"
-                        element={<LoginScreen />}
-                    />
-                    <Route
-                        path="/compare"
-                        element={<ComparisonScreen />}
-                    />
-                    <Route
-                        path="/rankings"
-                        element={<RankingScreen />}
-                    />
-                    <Route
-                        path="/upload"
-                        element={<UploadScreen />}
-                    />
-                </Routes>
-            </div>
+            <Routes>
+                <Route
+                    path="/login"
+                    element={<LoginScreen />}
+                />
+                <Route
+                    path="/compare"
+                    element={<ComparisonScreen />}
+                />
+                <Route
+                    path="/rankings"
+                    element={<RankingScreen />}
+                />
+                <Route
+                    path="/upload"
+                    element={<UploadScreen />}
+                />
+            </Routes>
         </Router>
     );
 }
