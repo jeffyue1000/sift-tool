@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const sessionSchema = new mongoose.Schema({
     //defines a sifting session
@@ -15,4 +15,4 @@ const sessionSchema = new mongoose.Schema({
 
 const Session = mongoose.models.session || mongoose.model("session", sessionSchema);
 
-export default Session;
+module.exports = Session;

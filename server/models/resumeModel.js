@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const resumeSchema = new mongoose.Schema({
+    //defines a resume
     sessionID: {
         type: String,
         required: [true, "SessionID is required"],
@@ -33,6 +34,6 @@ const resumeSchema = new mongoose.Schema({
 
 const Resume = mongoose.models.resume || mongoose.model("resume", resumeSchema);
 
-Resume.createIndex({ sessionID: 1 });
+Resume.createIndex({ sessionID: 1 }); //for faster resume searching
 
-export default Resume;
+module.exports = Resume;
