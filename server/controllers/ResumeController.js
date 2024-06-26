@@ -1,3 +1,7 @@
+const multer = require("multer");
+const storage = multer.memoryStorage(); //file uploads get stored in RAM
+const upload = multer({ storage: storage });
+
 const uploadResumes = async (req, res) => {
     try {
         console.log("Request received:", req.resumes);

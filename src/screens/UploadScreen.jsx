@@ -51,6 +51,7 @@ export default function UploadScreen() {
                     onChange={onResumeChange}
                 />
                 <button type="submit">Upload</button>
+                <button onClick={() => console.log(resumes)}>see resumes</button>
             </form>
         </div>
     );
