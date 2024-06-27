@@ -2,12 +2,14 @@ const multer = require("multer");
 const storage = multer.memoryStorage(); //file uploads get stored in RAM
 const upload = multer({ storage: storage });
 
+const uploadResumeConfig = upload.array("resumes"); //middleware to handle resume upload
+
 const uploadResumes = async (req, res) => {
     try {
-        console.log("Request received:", req.resumes);
+        console.log("Request received:", req.files);
 
         res.status(201).json({
-            message: "Successfully uplaoded resumes",
+            message: "Successfully uploaded resumes",
         });
     } catch (error) {
         console.error("Error occured in uploadResumes", error);
@@ -18,4 +20,4 @@ const uploadResumes = async (req, res) => {
     }
 };
 
-module.exports = { uploadResumes };
+module.exports = { uploadResumes, uploadResumeConfig };

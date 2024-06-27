@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default function UploadScreen() {
     const [resumes, setResumes] = useState([]); //set of resumes to be uploaded
-    const [submitted, setSubmitted] = useState(false); //check if submitted
+    const [submitted, setSubmitted] = useState(false); //check if resumes submitted
     const [numResumes, setNumResumes] = useState(0); //to display resume count for user
 
     const onResumeChange = (event) => {
