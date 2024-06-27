@@ -1,8 +1,8 @@
 const express = require("express");
-const { uploadResumes, uploadResumeConfig } = require("../controllers/ResumeController");
+const { uploadResumesMongoDB, uploadResumeConfig } = require("../controllers/ResumeController");
 
 const router = express.Router();
 
-router.post("/uploadResumes", uploadResumeConfig, uploadResumes);
+router.post("/uploadResumesMongoDB", uploadResumeConfig, uploadResumesMongoDB);
 
 module.exports = router;

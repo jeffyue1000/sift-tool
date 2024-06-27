@@ -11,6 +11,10 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         required: [true, "Passkey is required"],
     },
+    duration: {
+        type: Number,
+        default: 2 * 7 * 24 * 60 * 60 * 1000, //two weeks in ms
+    },
 });
 
 const Session = mongoose.models.session || mongoose.model("session", sessionSchema);

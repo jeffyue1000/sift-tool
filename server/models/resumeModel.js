@@ -10,17 +10,13 @@ const resumeSchema = new mongoose.Schema({
         type: String,
         required: [true, "Name is required"],
     },
-    year: {
-        type: Number,
+    gradYear: {
+        type: String,
         default: 0,
     },
     s3Key: {
         type: String,
         required: [true, "S3Key is required"],
-    },
-    rank: {
-        type: Number,
-        default: 0,
     },
     eloScore: {
         type: Number,
@@ -30,10 +26,15 @@ const resumeSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    expireAt: {
+        type: Date,
+        required: true,
+    },
 });
 
-const Resume = mongoose.models.resume || mongoose.model("resume", resumeSchema);
+resumeSchema.index({ sessionID: 1 }); //for faster resume searching
+resumeSchema.index({ eloScore: 1 });
 
-Resume.createIndex({ sessionID: 1 }); //for faster resume searching
+const Resume = mongoose.models.resume || mongoose.model("resume", resumeSchema);
 
 module.exports = Resume;
