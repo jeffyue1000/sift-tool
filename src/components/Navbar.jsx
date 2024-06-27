@@ -7,16 +7,19 @@ export default function Navbar() {
         <nav className="navbar">
             <ul className="navbar-list">
                 <li className="navbar-item">
+                    <Link to="/">Welcome to Sift</Link>
+                </li>
+                <li className="navbar-item">
                     <Link to="/login">Session Login</Link>
+                </li>
+                <li className="navbar-item">
+                    <Link to="/upload">Upload Resumes</Link>
                 </li>
                 <li className="navbar-item">
                     <Link to="/compare">Compare Resumes</Link>
                 </li>
                 <li className="navbar-item">
                     <Link to="/rankings">Resume Rankings</Link>
-                </li>
-                <li className="navbar-item">
-                    <Link to="/upload">Upload Resumes</Link>
                 </li>
             </ul>
         </nav>
