@@ -6,7 +6,7 @@ export default function LoginScreen() {
     const [correctPassword, setCorrectPassword] = useState(false);
 
     const handleSubmit = (event) => {
-        event.preventDefault(); // Prevent the default form submission behavior
+        event.preventDefault();
         if (passkey === "1234") {
             alert("Welcome to the Resume Sifting Session!");
             //setCorrectPassword(true);
