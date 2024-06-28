@@ -25,7 +25,7 @@ export default function LoginScreen() {
                     type="password"
                     value={passkey}
                     onChange={(e) => setPasskey(e.target.value)}
-                    placeholder="Enter Passkey"
+                    placeholder="Enter Session Key"
                     required
                 />
                 <button type="submit">Join Session</button>

@@ -70,6 +70,7 @@ export default function WelcomeScreen() {
                     </li>
                 </ul>
             </div>
+            <footer>© 2024 Sift. All rights reserved.</footer>
         </div>
     );
 }
