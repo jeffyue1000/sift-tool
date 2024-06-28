@@ -6,6 +6,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
+import "./App.css";
 
 function App() {
     return (
@@ -38,5 +39,3 @@ function App() {
 }
 
 export default App;
-
-
