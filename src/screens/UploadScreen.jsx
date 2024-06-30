@@ -5,8 +5,21 @@ export default function UploadScreen() {
     const [resumes, setResumes] = useState([]); //set of resumes to be uploaded
     const [submitted, setSubmitted] = useState(false); //check if resumes submitted
     const [numResumes, setNumResumes] = useState(0); //to display resume count for user
-    const [sessionID, setSessionID] = useState("testID"); //sessionID
-    const [sessionDuration, setSessionDuration] = useState(1209600000); //time until document expires
+    const [sessionID, setSessionID] = useState("placeholderID"); //sessionID
+    const [sessionDuration, setSessionDuration] = useState(2 * 7 * 24 * 60 * 60 * 1000); //time until document expires
+    const [resume, setResume] = useState({
+        sessionID: "placeholderID",
+        name: "Jeff Yue",
+        gradYear: "2026",
+    });
+    const [url, setURL] = useState("test");
+
+    const getResume = async () => {
+        const url = await axios.get(`http://localhost:3001/resumes/getResumePDF`, {
+            params: resume,
+        });
+        setURL(url.data);
+    };
 
     const onResumeChange = (event) => {
         let resumeArray = Array.from(event.target.files);
@@ -35,7 +48,7 @@ export default function UploadScreen() {
             formData.append("sessionID", sessionID);
             formData.append("duration", sessionDuration);
 
-            await axios.post(`http://localhost:3001/resumes/uploadResumesMongoDB`, formData, {
+            await axios.post(`http://localhost:3001/resumes/uploadResumes`, formData, {
                 headers: {
                     "content-type": "multipart/form-data",
                 },
@@ -59,6 +72,7 @@ export default function UploadScreen() {
                 <button type="submit">Upload</button>
             </form>
             {submitted && <div>Uploaded Successfully!</div>}
+            <button onClick={getResume}>{url}</button>
         </div>
     );
 }
