@@ -1,19 +1,14 @@
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
-mongoose
-    .connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => console.log("MongoDB connected successfully"))
-    .catch((error) => console.log(error));
+const ResumeRoutes = require("./routes/ResumeRoutes");
 
-const PORT = process.env.PORT || 3001;
+app.use("/resumes", ResumeRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
