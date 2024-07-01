@@ -15,6 +15,14 @@ const sessionSchema = new mongoose.Schema({
         type: Number,
         default: 2 * 7 * 24 * 60 * 60 * 1000, //two weeks in ms
     },
+    maxResumes: {
+        type: Number,
+        required: [true, "Resume capacity is required"],
+    },
+    resumeCount: {
+        type: Number,
+        default: 0,
+    },
 });
 
 const Session = mongoose.models.session || mongoose.model("session", sessionSchema);

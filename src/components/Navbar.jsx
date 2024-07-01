@@ -18,6 +18,9 @@ export default function Navbar() {
                 <li className="navbar-item">
                     <Link to="/upload">Upload Resumes</Link>
                 </li>
+                <li className="navbar-item">
+                    <Link to="/createsession">Create a Session</Link>
+                </li>
             </ul>
         </nav>
     );

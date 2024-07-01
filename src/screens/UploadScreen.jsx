@@ -12,14 +12,6 @@ export default function UploadScreen() {
         name: "Jeff Yue",
         gradYear: "2026",
     });
-    const [url, setURL] = useState("test");
-
-    const getResume = async () => {
-        const url = await axios.get(`http://localhost:3001/resumes/getResumePDF`, {
-            params: resume,
-        });
-        setURL(url.data);
-    };
 
     const onResumeChange = (event) => {
         let resumeArray = Array.from(event.target.files);
@@ -36,7 +28,7 @@ export default function UploadScreen() {
         setNumResumes(uniqueResumes.length);
     };
 
-    const handleSubmit = async (event) => {
+    const uploadResumes = async (event) => {
         //prepare resumes for upload
         try {
             event.preventDefault();
@@ -62,7 +54,7 @@ export default function UploadScreen() {
         <div>
             <h2>Upload Resumes Here</h2>
             <div>Resumes Submitted: {numResumes}</div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={uploadResumes}>
                 <input
                     type="file"
                     accept="application/pdf"
@@ -72,7 +64,6 @@ export default function UploadScreen() {
                 <button type="submit">Upload</button>
             </form>
             {submitted && <div>Uploaded Successfully!</div>}
-            <button onClick={getResume}>{url}</button>
         </div>
     );
 }
