@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/ComparisonScreen.css";
 import ApplicantRank from "../components/ApplicantRank";
 
+//just for testing purposes, not actual comparison screen
 const applicants = [
     {
         name: "Rohan Agarwal",

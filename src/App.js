@@ -5,12 +5,18 @@ import ComparisonScreen from "./screens/ComparisonScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
+import "./App.css";
 
 function App() {
     return (
         <Router>
             <Navbar />
             <Routes>
+                <Route
+                    path="/"
+                    element={<WelcomeScreen />}
+                />
                 <Route
                     path="/login"
                     element={<LoginScreen />}

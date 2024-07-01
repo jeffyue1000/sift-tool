@@ -1,6 +1,0 @@
-.comparison-container {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping to the next line if the container width is exceeded */
-    justify-content: space-around; /* Distribute the cards with space around them */
-    align-items: flex-start; /* Align items to the top */
-}
