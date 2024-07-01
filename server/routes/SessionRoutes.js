@@ -1,4 +1,4 @@
-const express = require("expres");
+const express = require("express");
 
 const { createSession } = require("../controllers/SessionController");
 

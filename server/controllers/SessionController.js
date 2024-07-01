@@ -1,20 +1,27 @@
 const dbConnect = require("../helpers/dbConnect");
 const Session = require("../models/sessionModel");
+const bcrypt = require("bcrypt");
 
 dbConnect();
 
 const createSession = async (req, res) => {
     try {
-        const { sessionID, password } = req.body;
+        const { sessionID, password, maxResumes, duration } = req.body;
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
-        if (!sessionExists) {
-            res.send("Session exists");
+        if (sessionExists) {
+            return res.status(409).send("Session exists");
         }
+
+        //encrypt password for security
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const session = new Session({
             sessionID: sessionID,
-            passkey: password,
+            passkey: hashedPassword,
+            maxResumes: maxResumes,
+            duration: duration,
         });
 
         await session.save();
@@ -23,7 +30,7 @@ const createSession = async (req, res) => {
         });
     } catch (error) {
         console.error("Error occurred in createSession", error);
-        res.send(500).json({
+        res.status(500).json({
             message: "Error creating session",
             error: error.message,
         });
