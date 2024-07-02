@@ -1,6 +1,9 @@
-const dbConnect = require("../helpers/dbConnect");
 const Resume = require("../models/resumeModel");
-const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
@@ -16,13 +19,26 @@ const s3 = new S3Client({
     region: process.env.BUCKET_REGION,
 });
 
-dbConnect(); //connect to MongoDB
+const getResumes = async (req, res) => {
+    try {
+        console.log("scucess");
+        const resumes = await Resume.find().sort({ eloScore: 1 });
+        console.log("scucess");
+        res.status(200).json(resumes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 const getResumePDF = async (req, res) => {
     try {
         const { name, gradYear, sessionID } = req.query;
 
-        const resume = await Resume.findOne({ name: name, gradYear: gradYear, sessionID: sessionID });
+        const resume = await Resume.findOne({
+            name: name,
+            gradYear: gradYear,
+            sessionID: sessionID,
+        });
 
         if (!resume) {
             res.status(500).json({
@@ -58,7 +74,8 @@ const uploadResumes = async (req, res) => {
 
         //upload each resume to S3, then store metadata in MongoDB
         for (const resume of resumeArray) {
-            const randomName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
+            const randomName = (bytes = 32) =>
+                crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
 
             const s3Key = `${sessionID}/${randomName()}`;
 
@@ -75,7 +92,11 @@ const uploadResumes = async (req, res) => {
             const fileName = resume.originalname.split("_");
             const name = fileName[0].concat(" ", fileName[1]);
             const gradYear = fileName[3].split(".")[0];
-            const resumeExists = await Resume.findOne({ name: name, gradYear: gradYear, sessionID: sessionID });
+            const resumeExists = await Resume.findOne({
+                name: name,
+                gradYear: gradYear,
+                sessionID: sessionID,
+            });
             if (!resumeExists) {
                 const newResume = new Resume({
                     sessionID: sessionID,
@@ -100,4 +121,4 @@ const uploadResumes = async (req, res) => {
     }
 };
 
-module.exports = { uploadResumes, getResumePDF };
+module.exports = { uploadResumes, getResumePDF, getResumes };

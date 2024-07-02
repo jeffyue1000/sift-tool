@@ -1,0 +1,50 @@
+.applicant-box {
+    border: 1px solid #000000;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px;
+    width: 600px;
+    height: 100px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 16px;
+}
+
+.applicant-box:hover {
+    transform: scale(1.02);
+}
+
+.applicant-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    grid-column: 1;
+}
+
+.applicant-details {
+    display: contents;
+}
+.applicant-detail {
+    color: #666;
+    font-size: 1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.applicant-detail:nth-child(1) {
+    grid-column: 2;
+}
+
+.applicant-detail:nth-child(2) {
+    grid-column: 3;
+}
+
+.applicant-detail:nth-child(3) {
+    grid-column: 4;
+}
