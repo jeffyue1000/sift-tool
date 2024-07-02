@@ -7,9 +7,7 @@ export default function RankingScreen() {
 
     const fetchApplicants = async () => {
         try {
-            const response = await axios.get(
-                "http://localhost:3001/resumes/getResumes"
-            );
+            const response = await axios.get(`http://localhost:3001/resumes/getResumes`);
             console.log(response.data);
             setApplicants(response.data);
         } catch (error) {
@@ -32,7 +30,6 @@ export default function RankingScreen() {
                     rank={applicant.rank}
                 />
             ))}
-            <button onClick={fetchApplicants}></button>
         </div>
     );
 }

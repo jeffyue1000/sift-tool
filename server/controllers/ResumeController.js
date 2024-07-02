@@ -1,9 +1,5 @@
 const Resume = require("../models/resumeModel");
-const {
-    S3Client,
-    PutObjectCommand,
-    GetObjectCommand,
-} = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
@@ -21,9 +17,7 @@ const s3 = new S3Client({
 
 const getResumes = async (req, res) => {
     try {
-        console.log("scucess");
         const resumes = await Resume.find().sort({ eloScore: 1 });
-        console.log("scucess");
         res.status(200).json(resumes);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -74,8 +68,7 @@ const uploadResumes = async (req, res) => {
 
         //upload each resume to S3, then store metadata in MongoDB
         for (const resume of resumeArray) {
-            const randomName = (bytes = 32) =>
-                crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
+            const randomName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
 
             const s3Key = `${sessionID}/${randomName()}`;
 
