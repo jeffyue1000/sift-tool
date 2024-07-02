@@ -1,14 +1,24 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../styles/LoginScreen.css";
 
 export default function LoginScreen() {
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState(""); // State to hold the passkey
-    const [correctPassword, setCorrectPassword] = useState(false);
+    const [correctLogin, setCorrectLogin] = useState(true);
 
-    const handleSubmit = (event) => {
+    const handleLogin = async () => {
         try {
-            event.preventDefault();
+            const loginCredentials = {
+                sessionID: sessionID,
+                passkey: passkey,
+            };
+            const res = await axios.post("http://localhost:3001/sessions/loginSession", loginCredentials, {
+                withCredentials: true,
+            });
+            if (res.data === "Password is incorrect") {
+                setCorrectLogin(false);
+            }
         } catch (error) {
             console.log("Error signing in to session", error);
         }
@@ -23,7 +33,6 @@ export default function LoginScreen() {
                 value={sessionID}
                 onChange={(e) => setSessionID(e.target.value)}
                 placeholder="Enter Session ID"
-                required
             />
             <input
                 className="input"
@@ -31,10 +40,9 @@ export default function LoginScreen() {
                 value={passkey}
                 onChange={(e) => setPasskey(e.target.value)}
                 placeholder="Enter Passkey"
-                required
             />
-            {/* add a conditional div for when session id or password are incorrect */}
-            <button onClick={handleSubmit}>Join Session</button>
+            {!correctLogin && <div>SessionID or passkey is incorrect</div>}
+            <button onClick={handleLogin}>Join Session</button>
         </div>
     );
 }
