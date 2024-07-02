@@ -5,6 +5,7 @@ import ComparisonScreen from "./screens/ComparisonScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
+import CreateSessionScreen from "./screens/CreateSessionScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import "./App.css";
 
@@ -32,6 +33,10 @@ function App() {
                 <Route
                     path="/upload"
                     element={<UploadScreen />}
+                />
+                <Route
+                    path="/createsession"
+                    element={<CreateSessionScreen />}
                 />
             </Routes>
         </Router>
