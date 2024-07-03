@@ -5,13 +5,38 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+const checkSessionToken = async (req, res) => {
+    try {
+        const { encodedSessionToken } = req.query;
+        const decodedSessionToken = await jwt.compare(encodedSessionToken, process.env.TOKEN_SECRET);
+
+        const sessionExists = Session.findOne({ sessionID: decodedSessionToken });
+        if (sessionExists) {
+            return res.status(200).json({ valid: true, sessionID: decodedSessionToken.sessionData });
+        }
+    } catch (error) {
+        console.error("Error occurred in checkSessionToken", error);
+        res.status(500).json({
+            message: "error checking session token",
+            valid: false,
+            error: error.message,
+        });
+    }
+};
+
+const logoutSession = async (req, res) => {
+    //logout user by clearing session cookie
+    res.clearCookie("sessionID");
+    res.status(200).json({ cookieCleared: true });
+};
+
 const loginSession = async (req, res) => {
     try {
         const { sessionID, passkey } = req.body;
         const session = await Session.findOne({ sessionID: sessionID });
 
         if (!session) {
-            return res.status(401).send("Session with that ID does not exist");
+            return res.status(401).json({ validLogin: false });
         }
         const passkeyMatch = await bcrypt.compare(passkey, session.passkey);
 
@@ -24,9 +49,9 @@ const loginSession = async (req, res) => {
                 sameSite: "Strict",
                 maxAge: 3600000, // 1 hour in milliseconds
             });
-            res.status(200).send("Logged in successfully");
+            res.status(200).json({ validLogin: true });
         } else {
-            res.status(401).send("Password is incorrect");
+            res.status(401).json({ validLogin: false });
         }
     } catch (error) {
         console.error("Error occurred in loginSession", error);
@@ -43,7 +68,7 @@ const createSession = async (req, res) => {
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
         if (sessionExists) {
-            return res.status(409).send("Session exists");
+            return res.status(409).json({ sessionExists: true });
         }
 
         //encrypt password for security
@@ -70,4 +95,4 @@ const createSession = async (req, res) => {
     }
 };
 
-module.exports = { createSession, loginSession };
+module.exports = { createSession, loginSession, checkSessionToken, logoutSession };

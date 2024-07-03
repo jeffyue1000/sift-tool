@@ -18,7 +18,7 @@ export default function SessionCreate({ configData }) {
                 duration: configData.duration,
             };
             const res = await axios.post(`http://localhost:3001/sessions/createSession`, session);
-            if (res.data === "Session exists") {
+            if (res.data.sessionExists) {
                 setSessionExists(true);
             } else {
                 setSessionCreated(true);
