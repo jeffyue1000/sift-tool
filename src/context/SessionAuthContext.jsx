@@ -8,17 +8,22 @@ export const useSessionAuth = () => useContext(SessionAuthContext);
 
 export function SessionAuthProvider({ children }) {
     const [sessionAuthenticated, setSessionAuthenticated] = useState(false);
+    const [sessionDetails, setSessionDetails] = useState({
+        sessionID: "defaultID",
+        duration: 1, //expire immediately if invalid session
+    });
     const [loading, setLoading] = useState(true);
 
     const verifySession = async () => {
         try {
             const sessionIdToken = Cookies.get("sessionID");
             if (sessionIdToken) {
-                const res = await axios.get("http://localhost:3001/sessions/checkSessionToken", {
+                const res = await axios.get("http://localhost:3001/sessions/getSessionFromToken", {
                     params: { sessionIdToken },
                 });
                 if (res.data.valid) {
                     setSessionAuthenticated(true);
+                    setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
                 }
             }
         } catch (error) {
@@ -28,24 +33,9 @@ export function SessionAuthProvider({ children }) {
         }
     };
 
-    const login = async (loginCredentials) => {
-        try {
-            const res = await axios.post("http://localhost:3001/sessions/loginSession", loginCredentials, {
-                withCredentials: true,
-            });
-            if (res.data.validLogin) {
-                setSessionAuthenticated(true);
-                return true;
-            }
-        } catch (error) {
-            console.log("Error signing in to session", error);
-        }
-        return false;
-    };
-
     const logout = async () => {
         try {
-            const res = await axios.get("http://localhost:3001/sessions/logoutSession");
+            await axios.get("http://localhost:3001/sessions/logoutSession");
             setSessionAuthenticated(false);
         } catch (error) {
             console.error("Error logging out:", error);
@@ -61,7 +51,9 @@ export function SessionAuthProvider({ children }) {
     }
 
     return (
-        <SessionAuthContext.Provider value={{ sessionAuthenticated, login, logout }}>
+        <SessionAuthContext.Provider
+            value={{ sessionAuthenticated, setSessionAuthenticated, sessionDetails, setSessionDetails, logout }}
+        >
             {children}
         </SessionAuthContext.Provider>
     );

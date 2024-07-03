@@ -1,20 +1,34 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "../styles/LoginScreen.css";
 import { useSessionAuth } from "../context/SessionAuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function LoginScreen() {
-    const { login } = useSessionAuth();
+    const { setSessionAuthenticated, setSessionDetails } = useSessionAuth();
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState("");
     const [failedLogin, setFailedLogin] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
-        const loginSuccess = await login({ sessionID: sessionID, passkey: passkey });
-        //if context has not changed after log in attempt, display log in error message
-        if (!loginSuccess) {
-            setFailedLogin(true);
+        try {
+            const res = await axios.post(
+                "http://localhost:3001/sessions/loginSession",
+                { sessionID: sessionID, passkey: passkey },
+                { withCredentials: true }
+            );
+            if (res.data.validLogin) {
+                setSessionAuthenticated(true);
+                setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
+                navigate("/compare");
+            } else {
+                setFailedLogin(true);
+            }
+        } catch (error) {
+            console.log("Error signing in to session", error);
         }
+        return false;
     };
 
     return (

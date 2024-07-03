@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from "react";
 import axios from "axios";
+import { useSessionAuth } from "../context/SessionAuthContext";
 
 export default function SessionCreate({ configData }) {
     const [sessionID, setSessionID] = useState("");
@@ -8,6 +9,7 @@ export default function SessionCreate({ configData }) {
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [sessionExists, setSessionExists] = useState(false);
     const [sessionCreated, setSessionCreated] = useState(false);
+    const { setSessionAuthenticated, setSessionDetails } = useSessionAuth();
 
     const onCreateSession = async () => {
         try {
@@ -17,10 +19,15 @@ export default function SessionCreate({ configData }) {
                 maxResumes: configData.maxResumes,
                 duration: configData.duration,
             };
-            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session);
+            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session, {
+                withCredentials: "true",
+            });
+
             if (res.data.sessionExists) {
                 setSessionExists(true);
-            } else {
+            } else if (res.data.creationSucces) {
+                setSessionAuthenticated(true);
+                setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
                 setSessionCreated(true);
             }
             //push to new screen?
@@ -30,12 +37,12 @@ export default function SessionCreate({ configData }) {
     };
 
     useEffect(() => {
-        if (confirmPassword === password) {
+        if (confirmPassword === password || confirmPassword === "") {
             setPasswordsMatch(true);
         } else {
             setPasswordsMatch(false);
         }
-    }, [confirmPassword]);
+    }, [confirmPassword, password]);
 
     return (
         <div>

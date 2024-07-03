@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import SessionConfig from "../components/SessionConfig";
 import SessionCreate from "../components/SessionCreate";
 
-export default function () {
+export default function CreateSessionScreen() {
     const [configData, setConfigData] = useState({
         maxResumes: 1,
         duration: 1,
@@ -13,6 +13,7 @@ export default function () {
         setConfigData({ maxResumes, duration });
         setCurrentScreen("create");
     };
+
     return (
         <div>
             {currentScreen === "config" ? (

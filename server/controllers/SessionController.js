@@ -5,17 +5,21 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const checkSessionToken = async (req, res) => {
+const createAndSetSessionCookie = require("../helpers/createAndSetSessionCookie");
+
+const getSessionFromToken = async (req, res) => {
     try {
         const { encodedSessionToken } = req.query;
         const decodedSessionToken = await jwt.compare(encodedSessionToken, process.env.TOKEN_SECRET);
 
-        const sessionExists = Session.findOne({ sessionID: decodedSessionToken });
-        if (sessionExists) {
-            return res.status(200).json({ valid: true, sessionID: decodedSessionToken.sessionData });
+        const session = Session.findOne({ sessionID: decodedSessionToken });
+        if (session) {
+            res.status(200).json({ valid: true, session: session });
+        } else {
+            res.status(404).json({ valid: false });
         }
     } catch (error) {
-        console.error("Error occurred in checkSessionToken", error);
+        console.error("Error occurred in getSessionFromToken", error);
         res.status(500).json({
             message: "error checking session token",
             valid: false,
@@ -41,15 +45,8 @@ const loginSession = async (req, res) => {
         const passkeyMatch = await bcrypt.compare(passkey, session.passkey);
 
         if (passkeyMatch) {
-            const sessionData = { sessionID: session.sessionID };
-            const token = await jwt.sign(sessionData, process.env.TOKEN_SECRET, { expiresIn: "1h" });
-            res.cookie("sessionID", token, {
-                httpOnly: true,
-                // secure: true,  -> uncomment in production
-                sameSite: "Strict",
-                maxAge: 3600000, // 1 hour in milliseconds
-            });
-            res.status(200).json({ validLogin: true });
+            await createAndSetSessionCookie(sessionID, res);
+            res.status(200).json({ validLogin: true, session: session });
         } else {
             res.status(401).json({ validLogin: false });
         }
@@ -83,16 +80,20 @@ const createSession = async (req, res) => {
         });
 
         await session.save();
-        res.status(201).json({
-            message: "Session created sucessfully",
+
+        await createAndSetSessionCookie(sessionID, res); //authenticate user upon creating session
+
+        res.status(200).json({
+            creationSuccess: true,
+            session: session,
         });
     } catch (error) {
         console.error("Error occurred in createSession", error);
         res.status(500).json({
-            message: "Error creating session",
+            creationSuccess: false,
             error: error.message,
         });
     }
 };
 
-module.exports = { createSession, loginSession, checkSessionToken, logoutSession };
+module.exports = { createSession, loginSession, getSessionFromToken, logoutSession };

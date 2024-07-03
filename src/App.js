@@ -34,7 +34,7 @@ function App() {
                     />
                     <Route
                         path="/createsession"
-                        element={<ProtectedRoute component={<CreateSessionScreen />} />}
+                        element={<CreateSessionScreen />}
                     />
                     <Route
                         path="*"
