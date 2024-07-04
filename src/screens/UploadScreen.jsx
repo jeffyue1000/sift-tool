@@ -1,17 +1,12 @@
 import React, { useState } from "react";
+import { useSessionAuth } from "../context/SessionAuthContext";
 import axios from "axios";
 
 export default function UploadScreen() {
     const [resumes, setResumes] = useState([]); //set of resumes to be uploaded
     const [submitted, setSubmitted] = useState(false); //check if resumes submitted
     const [numResumes, setNumResumes] = useState(0); //to display resume count for user
-    const [sessionID, setSessionID] = useState("placeholderID"); //sessionID
-    const [sessionDuration, setSessionDuration] = useState(2 * 7 * 24 * 60 * 60 * 1000); //time until document expires
-    const [resume, setResume] = useState({
-        sessionID: "placeholderID",
-        name: "Jeff Yue",
-        gradYear: "2026",
-    });
+    const { sessionDetails } = useSessionAuth();
 
     const onResumeChange = (event) => {
         let resumeArray = Array.from(event.target.files);
@@ -37,8 +32,8 @@ export default function UploadScreen() {
             resumes.forEach((resume) => {
                 formData.append("resumes", resume);
             });
-            formData.append("sessionID", sessionID);
-            formData.append("duration", sessionDuration);
+            formData.append("sessionID", sessionDetails.sessionID);
+            formData.append("duration", sessionDetails.duration * 7 * 24 * 60 * 60 * 1000); //duration in weeks expressed in ms
 
             await axios.post(`http://localhost:3001/resumes/uploadResumes`, formData, {
                 headers: {
@@ -50,6 +45,7 @@ export default function UploadScreen() {
             console.error("Error uploading resume", error);
         }
     };
+
     return (
         <div>
             <h2>Upload Resumes Here</h2>

@@ -17,6 +17,7 @@ const resumeSchema = new mongoose.Schema({
     s3Key: {
         type: String,
         required: [true, "S3Key is required"],
+        unique: true,
     },
     eloScore: {
         type: Number,

@@ -1,12 +1,20 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const dbConnect = require("./helpers/dbConnect");
 const PORT = process.env.PORT || 3001;
 const dbConnect = require("./helpers/dbConnect");
 
 const app = express();
-app.use(cors());
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true, //allow cookies
+    })
+);
 app.use(express.json());
-dbConnect(); //connect to MongoDB
+app.use(cookieParser());
+dbConnect();
 
 const ResumeRoutes = require("./routes/ResumeRoutes");
 const SessionRoutes = require("./routes/SessionRoutes");

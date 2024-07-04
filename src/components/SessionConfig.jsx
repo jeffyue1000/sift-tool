@@ -7,6 +7,7 @@ export default function SessionConfig({ onSubmit }) {
     const handleConfigSubmit = () => {
         onSubmit(maxResumes, sessionDuration);
     };
+
     return (
         <div>
             <h2>Configure Session</h2>
