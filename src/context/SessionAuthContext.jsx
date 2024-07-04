@@ -19,7 +19,7 @@ export function SessionAuthProvider({ children }) {
             const sessionIdToken = Cookies.get("sessionID");
             if (sessionIdToken) {
                 const res = await axios.get("http://localhost:3001/sessions/getSessionFromToken", {
-                    params: { sessionIdToken },
+                    params: { encodedSessionToken: sessionIdToken },
                 });
                 if (res.data.valid) {
                     setSessionAuthenticated(true);

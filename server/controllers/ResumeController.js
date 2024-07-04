@@ -17,7 +17,8 @@ const s3 = new S3Client({
 
 const getResumes = async (req, res) => {
     try {
-        const resumes = await Resume.find().sort({ eloScore: 1 });
+        const { sessionID } = req.query;
+        const resumes = await Resume.find({ sessionID: sessionID }).sort({ eloScore: 1 });
         res.status(200).json(resumes);
     } catch (error) {
         res.status(500).json({ message: error.message });

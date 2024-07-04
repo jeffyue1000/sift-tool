@@ -1,4 +1,5 @@
 const Session = require("../models/sessionModel");
+const Resume = require("../models/resumeModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
@@ -96,4 +97,57 @@ const createSession = async (req, res) => {
     }
 };
 
-module.exports = { createSession, loginSession, getSessionFromToken, logoutSession };
+const hasResumeCapacity = async (req, res) => {
+    //check if session has enough space to upload resumes
+    try {
+        const { numResumes } = req.query;
+        const existingResumes = await Resume.find({ sessionID: sessionID });
+        const session = await Session.find({ sessionID: sessionID });
+
+        if (existingResumes.length + numResumes > session.maxResumes) {
+            res.status(200).json({
+                resumeOverflow: true,
+                overflowAmount: existingResumes.length + numResumes - session.maxResumes,
+            });
+        } else {
+            res.status(200).json({
+                resumeOverflow: false,
+            });
+        }
+    } catch (error) {
+        console.error("Error checking session capaicty", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const updateSessionSize = async (req, res) => {
+    try {
+        const { sessionID } = req.body;
+        const resumes = await Resume.find({ sessionID: sessionID });
+        const session = await Session.findOne({ sessionID: sessionID }); //consider using findOneandUpdate
+
+        if (resumes.length <= session.maxResumes) {
+            session.resumeCount = resumes.length;
+            res.status(200).json({
+                updateSuccessful: true,
+            });
+        } else {
+            res.json({
+                message: "Resume count exceeded maximum",
+                resumeCount: resumes.length,
+            });
+        }
+    } catch (error) {
+        console.error("Error updating session size", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = {
+    createSession,
+    loginSession,
+    getSessionFromToken,
+    logoutSession,
+    updateSessionSize,
+    hasResumeCapacity,
+};

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ApplicantRank from "../components/ApplicantRank";
+import { useSessionAuth } from "../context/SessionAuthContext";
 import "../styles/RankingScreen.css";
 
 export default function RankingScreen() {
     const [applicants, setApplicants] = useState([]);
+    const { sessionDetails } = useSessionAuth();
 
     const fetchApplicants = async () => {
         try {
-            const response = await axios.get(
-                `http://localhost:3001/resumes/getResumes`
-            );
+            //fetch all resumes in current session
+            const response = await axios.get(`http://localhost:3001/resumes/getResumes`, {
+                params: { sessionID: sessionDetails.sessionID },
+            });
             console.log(response.data);
             setApplicants(response.data);
         } catch (error) {
