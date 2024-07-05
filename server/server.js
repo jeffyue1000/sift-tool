@@ -3,7 +3,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dbConnect = require("./helpers/dbConnect");
 const PORT = process.env.PORT || 3001;
-const dbConnect = require("./helpers/dbConnect");
 
 const app = express();
 app.use(
