@@ -1,5 +1,4 @@
 body {
-    font-family: "Times New Roman", sans-serif;
     background-color: #f4f4f9;
     display: flex;
     justify-content: center;
@@ -8,21 +7,50 @@ body {
     margin: 0;
 }
 
-.login-container {
+.main-container {
+    width: 600px;
     background: white;
-    padding: 40px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 300px;
-    margin-top: 60px; /* Ensure it is pushed down if the navbar is fixed */
+    overflow: hidden;
 }
 
-.input-group {
-    margin-top: 20px;
+.tabs {
+    display: flex;
+    justify-content: center;
+    background-color: #5c67f2;
 }
 
-input {
+.tab {
+    padding: 16px;
+    cursor: pointer;
+    flex: 1;
+    color: white;
+    font-weight: bold;
+    border: none;
+    background-color: #5c67f2;
+    transition: background-color 0.3s;
+}
+
+.tab:hover,
+.tab.active {
+    background-color: #4a55c0;
+}
+
+.tab-content {
+    padding: 40px;
+}
+
+.join-header {
+    margin-top: -12px;
+}
+
+.section-container {
+    width: 100%;
+}
+
+.input {
     width: 100%;
     padding: 15px;
     margin-top: 10px;
@@ -37,11 +65,17 @@ button {
     padding: 10px;
     margin-top: 20px;
     background-color: #5c67f2;
-    color: rgb(66, 63, 59);
+    color: rgb(245, 240, 240);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    text-decoration: bold;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
 }
 
 #root {

@@ -12,7 +12,7 @@ export default function SessionConfig({ onSubmit }) {
         <div>
             <h2>Configure Session</h2>
             {/* should make button non-clickable until all are filled */}
-            <div>Number of resumes to sift:</div>
+            <div className="prompt">Number of resumes to sift:</div>
             <input
                 type="number"
                 min="1"
@@ -20,7 +20,7 @@ export default function SessionConfig({ onSubmit }) {
                 value={maxResumes}
                 onChange={(e) => setMaxResumes(e.target.value)}
             />
-            <div>Session duration in weeks:</div>
+            <div className="prompt">Session duration in weeks:</div>
             <input
                 type="number"
                 min="1"
