@@ -1,0 +1,18 @@
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.config-header {
+    margin-top: -16px;
+    margin-bottom: 30px;
+}
+
+.prompt {
+    margin-top: 10px;
+}

@@ -6,7 +6,7 @@ import { useSessionAuth } from "../context/SessionAuthContext";
 import { useNavigate } from "react-router-dom";
 import "../styles/LoginScreen.css";
 
-export default function LoginScreen() {
+export default function SessionScreen() {
     const { setSessionAuthenticated, setSessionDetails } = useSessionAuth();
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState("");
@@ -17,7 +17,7 @@ export default function LoginScreen() {
         maxResumes: 1,
         duration: 1,
     });
-    const [currentTab, setCurrentTab] = useState("create");
+    const [currentTab, setCurrentTab] = useState("config");
 
     const onConfigSubmit = (maxResumes, duration) => {
         setConfigData({ maxResumes, duration });
@@ -51,8 +51,12 @@ export default function LoginScreen() {
         <div className="main-container">
             <div className="tabs">
                 <button
-                    className={`tab ${currentTab === "create" ? "active" : ""}`}
-                    onClick={() => setCurrentTab("create")}
+                    className={`tab ${
+                        currentTab === "config" || currentTab === "create"
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => setCurrentTab("config")}
                 >
                     Create Session
                 </button>
@@ -64,13 +68,14 @@ export default function LoginScreen() {
                 </button>
             </div>
             <div className="tab-content">
+                {currentTab === "config" && (
+                    <div className="section-container">
+                        <SessionConfig onSubmit={onConfigSubmit} />
+                    </div>
+                )}
                 {currentTab === "create" && (
                     <div className="section-container">
-                        {currentTab === "config" ? (
-                            <SessionConfig onSubmit={onConfigSubmit} />
-                        ) : (
-                            <SessionCreate configData={configData} />
-                        )}
+                        <SessionCreate configData={configData} />
                     </div>
                 )}
                 {currentTab === "login" && (
