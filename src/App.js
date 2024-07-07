@@ -28,15 +28,21 @@ function App() {
                     />
                     <Route
                         path="/compare"
-                        element={<ComparisonScreen />}
+                        element={
+                            <ProtectedRoute component={<ComparisonScreen />} />
+                        }
                     />
                     <Route
                         path="/rankings"
-                        element={<RankingScreen />}
+                        element={
+                            <ProtectedRoute component={<RankingScreen />} />
+                        }
                     />
                     <Route
                         path="/upload"
-                        element={<UploadScreen />}
+                        element={
+                            <ProtectedRoute component={<UploadScreen />} />
+                        }
                     />
                     <Route
                         path="/createsession"
