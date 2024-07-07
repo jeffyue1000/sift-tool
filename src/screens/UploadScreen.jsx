@@ -60,7 +60,7 @@ export default function UploadScreen() {
 
             <h4 className="upload-instruction">
                 Files must be named in the following format:
-                FirstName_LastName_GradYear.pdf
+                FirstName_LastName_Resume_GradYear.pdf
             </h4>
             <div>Resumes Submitted: {numResumes}</div>
             <form onSubmit={uploadResumes}>
