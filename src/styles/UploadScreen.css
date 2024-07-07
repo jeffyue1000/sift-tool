@@ -1,0 +1,13 @@
+.upload-instruction {
+    color: rgb(116, 111, 111);
+    font-style: italic;
+}
+
+.upload-container {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 500px;
+}

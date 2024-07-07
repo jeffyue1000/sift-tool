@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import axios from "axios";
+import "../styles/UploadScreen.css";
 
 export default function UploadScreen() {
     const [resumes, setResumes] = useState([]); //set of resumes to be uploaded
@@ -33,13 +34,20 @@ export default function UploadScreen() {
                 formData.append("resumes", resume);
             });
             formData.append("sessionID", sessionDetails.sessionID);
-            formData.append("duration", sessionDetails.duration * 7 * 24 * 60 * 60 * 1000); //duration in weeks expressed in ms
+            formData.append(
+                "duration",
+                sessionDetails.duration * 7 * 24 * 60 * 60 * 1000
+            ); //duration in weeks expressed in ms
 
-            await axios.post(`http://localhost:3001/resumes/uploadResumes`, formData, {
-                headers: {
-                    "content-type": "multipart/form-data",
-                },
-            });
+            await axios.post(
+                `http://localhost:3001/resumes/uploadResumes`,
+                formData,
+                {
+                    headers: {
+                        "content-type": "multipart/form-data",
+                    },
+                }
+            );
             setSubmitted(true);
         } catch (error) {
             console.error("Error uploading resume", error);
@@ -47,8 +55,13 @@ export default function UploadScreen() {
     };
 
     return (
-        <div>
+        <div className="upload-container">
             <h2>Upload Resumes Here</h2>
+
+            <h4 className="upload-instruction">
+                Files must be named in the following format:
+                FirstName_LastName_GradYear.pdf
+            </h4>
             <div>Resumes Submitted: {numResumes}</div>
             <form onSubmit={uploadResumes}>
                 <input
