@@ -9,7 +9,6 @@ export const useSessionAuth = () => useContext(SessionAuthContext);
 export function SessionAuthProvider({ children }) {
     const [sessionAuthenticated, setSessionAuthenticated] = useState(false);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
-
     const [sessionDetails, setSessionDetails] = useState({
         sessionID: "defaultID",
         duration: 1, //expire immediately if invalid session

@@ -9,5 +9,5 @@ export function SessionProtectedRoute({ component }) {
 
 export function AdminProtectedRoute({ component }) {
     const { sessionAuthenticated, adminAuthenticated } = useSessionAuth();
-    return sessionAuthenticated && adminAuthenticated ? component : <Navigate to="/compare" />;
+    return sessionAuthenticated && adminAuthenticated ? component : <Navigate to="/rankings" />;
 }

@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import { useNavigate } from "react-router-dom";
@@ -10,12 +9,10 @@ export default function SessionCreate({ configData }) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [adminKey, setAdminKey] = useState("");
-    const [confirmAdminKey, setConfirmAdminKey] = useState("");
     const [passwordsMatch, setPasswordsMatch] = useState(true);
-    const [adminKeysMatch, setAdminKeysMatch] = useState(true);
     const [sessionExists, setSessionExists] = useState(false);
     const [sessionCreated, setSessionCreated] = useState(false);
-    const { setSessionAuthenticated, setSessionDetails } = useSessionAuth();
+    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
     const navigate = useNavigate();
 
     const onCreateSession = async () => {
@@ -37,6 +34,7 @@ export default function SessionCreate({ configData }) {
             }
             if (res.data.creationSuccess) {
                 setSessionAuthenticated(true);
+                setAdminAuthenticated(true);
                 setSessionDetails({
                     sessionID: res.data.session.sessionID,
                     duration: res.data.session.duration,
@@ -55,12 +53,7 @@ export default function SessionCreate({ configData }) {
         } else {
             setPasswordsMatch(false);
         }
-        if (confirmAdminKey === adminKey || confirmAdminKey === "") {
-            setAdminKeysMatch(true);
-        } else {
-            setAdminKeysMatch(false);
-        }
-    }, [confirmPassword, password, confirmAdminKey, adminKey]);
+    }, [confirmPassword, password, adminKey]);
 
     return (
         <div className="create-session-container">
@@ -89,19 +82,13 @@ export default function SessionCreate({ configData }) {
                 onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <input
+                className="input-field"
                 type="password"
                 value={adminKey}
                 placeholder="Admin Key"
                 onChange={(e) => setAdminKey(e.target.value)}
             />
-            <input
-                type="password"
-                value={confirmAdminKey}
-                placeholder="Confirm Admin Key"
-                onChange={(e) => setConfirmAdminKey(e.target.value)}
-            />
             {!passwordsMatch && <div>Passwords do not match!</div>}
-            {!adminKeysMatch && <div>Admin keys do not match!</div>}
             {sessionExists && <div>Session with that ID already exists!</div>}
             {sessionCreated && <div>Session created successfully!</div>}
             <button
