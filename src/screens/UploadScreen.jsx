@@ -48,7 +48,9 @@ export default function UploadScreen() {
                     "content-type": "multipart/form-data",
                 },
             });
-            await axios.post(`http://localhost:3001/sessions/updateSessionSize`, { sessionID: sessionID }); //update resume count for the current session
+            await axios.post(`http://localhost:3001/sessions/updateSessionSize`, {
+                sessionID: sessionDetails.sessionID,
+            }); //update resume count for the current session
 
             setSubmitted(true);
         } catch (error) {
