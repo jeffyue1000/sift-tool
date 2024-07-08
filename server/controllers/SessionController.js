@@ -2,7 +2,7 @@ const Session = require("../models/sessionModel");
 const Resume = require("../models/resumeModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { DEFAULT_ELO } = require("@/globals");
+const { DEFAULT_ELO } = require("../globals");
 const dotenv = require("dotenv");
 
 dotenv.config();

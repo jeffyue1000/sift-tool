@@ -3,7 +3,7 @@ const Session = require("../models/sessionModel");
 const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { calculateSessionStdDev } = require("./SessionController");
-const { MAX_ELO_ADJUSTMENT } = require("@/globals");
+const { MAX_ELO_ADJUSTMENT } = require("../globals");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
 
