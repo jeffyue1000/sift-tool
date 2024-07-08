@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import axios from "axios";
+import "../styles/UploadScreen.css";
 
 export default function UploadScreen() {
     const [resumes, setResumes] = useState([]); //set of resumes to be uploaded
@@ -61,8 +62,12 @@ export default function UploadScreen() {
     return (
         <div>
             {!resumeOverflow ? (
-                <div>
+                <div className="upload-container">
                     <h2>Upload Resumes Here</h2>
+
+                    <h4 className="upload-instruction">
+                        Files must be named in the following format: FirstName_LastName_Resume_GradYear.pdf
+                    </h4>
                     <div>Resumes Submitted: {numResumes}</div>
                     <form onSubmit={uploadResumes}>
                         <input

@@ -36,9 +36,9 @@ export default function WelcomeScreen() {
                     </li>
                     <li className="sift-instruction-item">
                         Upload Resumes: Upload resumes with the following naming
-                        convention: FirstName_LastName_GradYear.pdf. Once you
-                        upload a resume, you will not be able to remove it from
-                        your session.{" "}
+                        convention: FirstName_LastName_Resume_GradYear.pdf. Once
+                        you upload a resume, you will not be able to remove it
+                        from your session.{" "}
                     </li>
                     <li className="sift-instruction-item">
                         Compare Resumes: You will be presented with two resumes

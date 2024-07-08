@@ -1,0 +1,32 @@
+.create-session-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.input-field:first-child {
+    margin-top: 0;
+}
+
+.create-header {
+    margin-top: -30px;
+}
+
+.submit-button {
+    font-weight: bold;
+}
+
+.submit-button:hover {
+    background-color: #4a55c0;
+}

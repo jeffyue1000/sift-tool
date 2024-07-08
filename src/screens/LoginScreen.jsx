@@ -1,15 +1,28 @@
 import React, { useState } from "react";
-import "../styles/LoginScreen.css";
+import axios from "axios";
+import SessionConfig from "../components/SessionConfig";
+import SessionCreate from "../components/SessionCreate";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import "../styles/LoginScreen.css";
 
-export default function LoginScreen() {
+export default function SessionScreen() {
     const { setSessionAuthenticated, setSessionDetails } = useSessionAuth();
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState("");
     const [failedLogin, setFailedLogin] = useState(false);
     const navigate = useNavigate();
+
+    const [configData, setConfigData] = useState({
+        maxResumes: 1,
+        duration: 1,
+    });
+    const [currentTab, setCurrentTab] = useState("config");
+
+    const onConfigSubmit = (maxResumes, duration) => {
+        setConfigData({ maxResumes, duration });
+        setCurrentTab("create");
+    };
 
     const handleLogin = async () => {
         try {
@@ -20,7 +33,10 @@ export default function LoginScreen() {
             );
             if (res.data.validLogin) {
                 setSessionAuthenticated(true);
-                setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
+                setSessionDetails({
+                    sessionID: res.data.session.sessionID,
+                    duration: res.data.session.duration,
+                });
                 navigate("/compare");
             } else {
                 setFailedLogin(true);
@@ -32,24 +48,67 @@ export default function LoginScreen() {
     };
 
     return (
-        <div className="login-container">
-            <h2>Join Resume Sifting Session</h2>
-            <input
-                className="input"
-                type="text"
-                value={sessionID}
-                onChange={(e) => setSessionID(e.target.value)}
-                placeholder="Enter Session ID"
-            />
-            <input
-                className="input"
-                type="password"
-                value={passkey}
-                onChange={(e) => setPasskey(e.target.value)}
-                placeholder="Enter Passkey"
-            />
-            {failedLogin && <div>SessionID or passkey is incorrect</div>}
-            <button onClick={handleLogin}>Join Session</button>
+        <div className="main-container">
+            <div className="tabs">
+                <button
+                    className={`tab ${
+                        currentTab === "config" || currentTab === "create"
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => setCurrentTab("config")}
+                >
+                    Create Session
+                </button>
+                <button
+                    className={`tab ${currentTab === "login" ? "active" : ""}`}
+                    onClick={() => setCurrentTab("login")}
+                >
+                    Join Session
+                </button>
+            </div>
+            <div className="tab-content">
+                {currentTab === "config" && (
+                    <div className="section-container">
+                        <SessionConfig onSubmit={onConfigSubmit} />
+                    </div>
+                )}
+                {currentTab === "create" && (
+                    <div className="section-container">
+                        <SessionCreate configData={configData} />
+                    </div>
+                )}
+                {currentTab === "login" && (
+                    <div className="section-container login-container">
+                        <h2 className="join-header">Join Session</h2>
+                        <input
+                            className="input"
+                            type="text"
+                            value={sessionID}
+                            onChange={(e) => setSessionID(e.target.value)}
+                            placeholder="Enter Session ID"
+                        />
+                        <input
+                            className="input"
+                            type="password"
+                            value={passkey}
+                            onChange={(e) => setPasskey(e.target.value)}
+                            placeholder="Enter Passkey"
+                        />
+                        {failedLogin && (
+                            <div className="error-message">
+                                SessionID or passkey is incorrect
+                            </div>
+                        )}
+                        <button
+                            onClick={handleLogin}
+                            className="submit-button"
+                        >
+                            Enter Session
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
