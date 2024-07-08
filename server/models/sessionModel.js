@@ -23,7 +23,16 @@ const sessionSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    totalComparisons: {
+        type: Number,
+        default: 0,
+    },
+    totalScore: {
+        type: Number,
+        default: 0,
+    },
 });
+sessionSchema.index({ sessionID: 1 });
 
 const Session = mongoose.models.session || mongoose.model("session", sessionSchema);
 

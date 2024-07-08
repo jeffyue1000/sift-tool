@@ -25,7 +25,9 @@ export default function SessionCreate({ configData }) {
 
             if (res.data.sessionExists) {
                 setSessionExists(true);
-            } else if (res.data.creationSucces) {
+                return;
+            }
+            if (res.data.creationSuccess) {
                 setSessionAuthenticated(true);
                 setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
                 setSessionCreated(true);

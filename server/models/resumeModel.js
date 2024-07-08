@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DEFAULT_ELO } = require("/globals.js");
 
 const resumeSchema = new mongoose.Schema({
     //defines a resume
@@ -21,7 +22,7 @@ const resumeSchema = new mongoose.Schema({
     },
     eloScore: {
         type: Number,
-        default: 100,
+        default: DEFAULT_ELO,
     },
     numComparison: {
         type: Number,
@@ -35,6 +36,7 @@ const resumeSchema = new mongoose.Schema({
 
 resumeSchema.index({ sessionID: 1 }); //for faster resume searching
 resumeSchema.index({ eloScore: 1 });
+resumeSchema.index({ numComparison: 1 });
 
 const Resume = mongoose.models.resume || mongoose.model("resume", resumeSchema);
 

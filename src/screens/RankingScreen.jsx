@@ -11,7 +11,7 @@ export default function RankingScreen() {
     const fetchApplicants = async () => {
         try {
             //fetch all resumes in current session
-            const response = await axios.get(`http://localhost:3001/resumes/getResumes`, {
+            const response = await axios.get(`http://localhost:3001/resumes/getAllResumes`, {
                 params: { sessionID: sessionDetails.sessionID },
             });
             console.log(response.data);

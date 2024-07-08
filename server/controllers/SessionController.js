@@ -2,18 +2,34 @@ const Session = require("../models/sessionModel");
 const Resume = require("../models/resumeModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { DEFAULT_ELO } = require("@/globals");
 const dotenv = require("dotenv");
 
 dotenv.config();
 
 const createAndSetSessionCookie = require("../helpers/createAndSetSessionCookie");
 
+const calculateSessionStdDev = async (sessionID) => {
+    try {
+        const resumes = await Resume.find({ sessionID: sessionID });
+        const session = await Session.findOne({ sessionID: sessionID });
+        const meanScore = session.totalScore / session.resumeCount;
+        let deviations = 0;
+
+        for (let i = 0; i < resumes.length; i++) {
+            deviations += Math.pow(resumes[i].eloScore - meanScore, 2);
+        }
+        return Math.sqrt(deviations / session.resumeCount);
+    } catch (error) {
+        console.error("Error occurred in calculateSessionStdDev", error);
+    }
+};
 const getSessionFromToken = async (req, res) => {
     try {
         const { encodedSessionToken } = req.query;
         const decodedSessionToken = await jwt.compare(encodedSessionToken, process.env.TOKEN_SECRET);
 
-        const session = Session.findOne({ sessionID: decodedSessionToken });
+        const session = await Session.findOne({ sessionID: decodedSessionToken });
         if (session) {
             res.status(200).json({ valid: true, session: session });
         } else {
@@ -115,8 +131,11 @@ const hasResumeCapacity = async (req, res) => {
             });
         }
     } catch (error) {
-        console.error("Error checking session capaicty", error);
-        res.status(500).json({ message: error.message });
+        console.error("Error occurred in hasResumeCapacity", error);
+        res.status(500).json({
+            message: "Error occurred checking session resume capacity",
+            error: error.message,
+        });
     }
 };
 
@@ -127,19 +146,42 @@ const updateSessionSize = async (req, res) => {
         const session = await Session.findOne({ sessionID: sessionID }); //consider using findOneandUpdate
 
         if (resumes.length <= session.maxResumes) {
+            session.totalScore += DEFAULT_ELO * (resumes.length - session.resumeCount);
             session.resumeCount = resumes.length;
             res.status(200).json({
                 updateSuccessful: true,
             });
         } else {
+            //should never run; serves as backup check
             res.json({
                 message: "Resume count exceeded maximum",
                 resumeCount: resumes.length,
             });
         }
     } catch (error) {
-        console.error("Error updating session size", error);
-        res.status(500).json({ message: error.message });
+        console.error("Error occurred in updateSessionSize", error);
+        res.status(500).json({
+            message: "Error occurred updating session size",
+            error: error.message,
+        });
+    }
+};
+
+const updateTotalComparisons = async (req, res) => {
+    try {
+        const { sessionID } = req.body;
+        const session = await Session.findOne({ sessionID: sessionID }); //consider using findOneandUpda
+        session.totalComparisons = session.totalComparisons + 1;
+        await session.save();
+        res.status(200).json({
+            updateTotalComparisonsSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateTotalComparisons", error);
+        res.status(500).json({
+            message: "Error updating session number of comparisons",
+            error: error.message,
+        });
     }
 };
 
@@ -150,4 +192,6 @@ module.exports = {
     logoutSession,
     updateSessionSize,
     hasResumeCapacity,
+    updateTotalComparisons,
+    calculateSessionStdDev,
 };
