@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { DEFAULT_ELO } = require("@/globals");
+const { DEFAULT_ELO } = require("../globals");
 
 const resumeSchema = new mongoose.Schema({
     //defines a resume

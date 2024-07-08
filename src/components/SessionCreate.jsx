@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import "../styles/SessionCreate.css";
@@ -11,6 +12,7 @@ export default function SessionCreate({ configData }) {
     const [sessionExists, setSessionExists] = useState(false);
     const [sessionCreated, setSessionCreated] = useState(false);
     const { setSessionAuthenticated, setSessionDetails } = useSessionAuth();
+    const navigate = useNavigate();
 
     const onCreateSession = async () => {
         try {
@@ -20,13 +22,9 @@ export default function SessionCreate({ configData }) {
                 maxResumes: configData.maxResumes,
                 duration: configData.duration,
             };
-            const res = await axios.post(
-                `http://localhost:3001/sessions/createSession`,
-                session,
-                {
-                    withCredentials: "true",
-                }
-            );
+            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session, {
+                withCredentials: "true",
+            });
 
             if (res.data.sessionExists) {
                 setSessionExists(true);
@@ -40,7 +38,7 @@ export default function SessionCreate({ configData }) {
                 });
                 setSessionCreated(true);
             }
-            //push to new screen?
+            navigate("/compare");
         } catch (error) {
             console.error("Error creating session", error);
         }
