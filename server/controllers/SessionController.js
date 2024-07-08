@@ -53,17 +53,22 @@ const logoutSession = async (req, res) => {
 
 const loginSession = async (req, res) => {
     try {
-        const { sessionID, passkey } = req.body;
+        const { sessionID, passkey, adminKey } = req.body;
         const session = await Session.findOne({ sessionID: sessionID });
 
         if (!session) {
             return res.status(401).json({ validLogin: false });
         }
-        const passkeyMatch = await bcrypt.compare(passkey, session.passkey);
 
-        if (passkeyMatch) {
+        const passkeyMatch = await bcrypt.compare(passkey, session.passkey);
+        const adminKeyMatch = await bcrypt.compare(adminKey, session.adminKey);
+
+        if (passkeyMatch && adminKeyMatch) {
             await createAndSetSessionCookie(sessionID, res);
-            res.status(200).json({ validLogin: true, session: session });
+            res.status(200).json({ validLogin: true, admin: true, session: session });
+        } else if (passkeyMatch) {
+            await createAndSetSessionCookie(sessionID, res);
+            res.status(200).json({ validLogin: true, admin: false, session: session });
         } else {
             res.status(401).json({ validLogin: false });
         }
@@ -78,20 +83,22 @@ const loginSession = async (req, res) => {
 
 const createSession = async (req, res) => {
     try {
-        const { sessionID, password, maxResumes, duration } = req.body;
+        const { sessionID, password, adminKey, maxResumes, duration } = req.body;
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
         if (sessionExists) {
             return res.status(409).json({ sessionExists: true });
         }
 
-        //encrypt password for security
+        //encrypt keys for security
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedAdminKey = await bcrypt.hash(adminKey, salt);
 
         const session = new Session({
             sessionID: sessionID,
             passkey: hashedPassword,
+            adminKey: hashedAdminKey,
             maxResumes: maxResumes,
             duration: duration,
         });

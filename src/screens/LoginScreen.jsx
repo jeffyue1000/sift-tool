@@ -6,10 +6,11 @@ import { useSessionAuth } from "../context/SessionAuthContext";
 import { useNavigate } from "react-router-dom";
 import "../styles/LoginScreen.css";
 
-export default function SessionScreen() {
-    const { setSessionAuthenticated, setSessionDetails } = useSessionAuth();
+export default function LoginScreen() {
+    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState("");
+    const [adminKey, setAdminKey] = useState("");
     const [failedLogin, setFailedLogin] = useState(false);
     const navigate = useNavigate();
 
@@ -28,15 +29,15 @@ export default function SessionScreen() {
         try {
             const res = await axios.post(
                 "http://localhost:3001/sessions/loginSession",
-                { sessionID: sessionID, passkey: passkey },
+                { sessionID: sessionID, passkey: passkey, adminKey: adminKey },
                 { withCredentials: true }
             );
             if (res.data.validLogin) {
                 setSessionAuthenticated(true);
-                setSessionDetails({
-                    sessionID: res.data.session.sessionID,
-                    duration: res.data.session.duration,
-                });
+                setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
+                if (res.data.admin) {
+                    setAdminAuthenticated(true);
+                }
                 navigate("/compare");
             } else {
                 setFailedLogin(true);
@@ -51,11 +52,7 @@ export default function SessionScreen() {
         <div className="main-container">
             <div className="tabs">
                 <button
-                    className={`tab ${
-                        currentTab === "config" || currentTab === "create"
-                            ? "active"
-                            : ""
-                    }`}
+                    className={`tab ${currentTab === "config" || currentTab === "create" ? "active" : ""}`}
                     onClick={() => setCurrentTab("config")}
                 >
                     Create Session
@@ -95,10 +92,15 @@ export default function SessionScreen() {
                             onChange={(e) => setPasskey(e.target.value)}
                             placeholder="Enter Passkey"
                         />
+                        <input
+                            className="input"
+                            type="password"
+                            value={adminKey}
+                            onChange={(e) => setAdminKey(e.target.value)}
+                            placeholder="Enter Admin Key (Optional)"
+                        />
                         {failedLogin && (
-                            <div className="error-message">
-                                SessionID or passkey is incorrect
-                            </div>
+                            <div className="error-message">Could not find a session with those credentials!</div>
                         )}
                         <button
                             onClick={handleLogin}
