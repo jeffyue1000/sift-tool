@@ -7,7 +7,7 @@ import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
 import CreateSessionScreen from "./screens/CreateSessionScreen";
 import { SessionAuthProvider } from "./context/SessionAuthContext";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { SessionProtectedRoute, AdminProtectedRoute } from "./components/ProtectedRoutes";
 import NotFound from "./components/NotFound";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import "./App.css";
@@ -28,15 +28,15 @@ function App() {
                     />
                     <Route
                         path="/compare"
-                        element={<ProtectedRoute component={<ComparisonScreen />} />}
+                        element={<SessionProtectedRoute component={<ComparisonScreen />} />}
                     />
                     <Route
                         path="/rankings"
-                        element={<ProtectedRoute component={<RankingScreen />} />}
+                        element={<SessionProtectedRoute component={<RankingScreen />} />}
                     />
                     <Route
                         path="/upload"
-                        element={<ProtectedRoute component={<UploadScreen />} />}
+                        element={<AdminProtectedRoute component={<UploadScreen />} />}
                     />
                     <Route
                         path="/createsession"

@@ -8,6 +8,8 @@ export const useSessionAuth = () => useContext(SessionAuthContext);
 
 export function SessionAuthProvider({ children }) {
     const [sessionAuthenticated, setSessionAuthenticated] = useState(false);
+    const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+
     const [sessionDetails, setSessionDetails] = useState({
         sessionID: "defaultID",
         duration: 1, //expire immediately if invalid session
@@ -52,7 +54,15 @@ export function SessionAuthProvider({ children }) {
 
     return (
         <SessionAuthContext.Provider
-            value={{ sessionAuthenticated, setSessionAuthenticated, sessionDetails, setSessionDetails, logout }}
+            value={{
+                sessionAuthenticated,
+                setSessionAuthenticated,
+                adminAuthenticated,
+                setAdminAuthenticated,
+                sessionDetails,
+                setSessionDetails,
+                logout,
+            }}
         >
             {children}
         </SessionAuthContext.Provider>
