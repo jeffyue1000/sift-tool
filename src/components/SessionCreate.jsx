@@ -30,7 +30,7 @@ export default function SessionCreate({ configData }) {
 
             if (res.data.sessionExists) {
                 setSessionExists(true);
-            } else if (res.data.creationSucces) {
+            } else if (res.data.creationSuccess) {
                 setSessionAuthenticated(true);
                 setSessionDetails({
                     sessionID: res.data.session.sessionID,
