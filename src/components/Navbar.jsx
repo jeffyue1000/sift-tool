@@ -5,7 +5,7 @@ import "../styles/Navbar.css";
 
 export default function Navbar() {
     const [click, setClick] = useState(false);
-    const { adminAuthenticated, logout } = useSessionAuth();
+    const { sessionAuthenticated, adminAuthenticated, logout } = useSessionAuth();
     // const [button, setButton] = useState(true);
 
     const handleClick = () => setClick(!click);
@@ -46,15 +46,6 @@ export default function Navbar() {
                             Home
                         </Link>
                     </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/login"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Session Login
-                        </Link>
-                    </li>
                     {adminAuthenticated && (
                         <li className="nav-item">
                             <Link
@@ -62,40 +53,56 @@ export default function Navbar() {
                                 className="nav-links"
                                 onClick={closeMobileMenu}
                             >
-                                Resume Upload
+                                Upload
                             </Link>
                         </li>
                     )}
-                    <li className="nav-item">
-                        <Link
-                            to="/compare"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Compare Resumes
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/rankings"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Resume Rankings
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/login"
-                            className="nav-links"
-                            onClick={() => {
-                                logout();
-                                setClick(false);
-                            }}
-                        >
-                            Logout
-                        </Link>
-                    </li>
+                    {sessionAuthenticated && (
+                        <li className="nav-item">
+                            <Link
+                                to="/compare"
+                                className="nav-links"
+                                onClick={closeMobileMenu}
+                            >
+                                Compare
+                            </Link>
+                        </li>
+                    )}
+                    {sessionAuthenticated && (
+                        <li className="nav-item">
+                            <Link
+                                to="/rankings"
+                                className="nav-links"
+                                onClick={closeMobileMenu}
+                            >
+                                Rankings
+                            </Link>
+                        </li>
+                    )}
+                    {sessionAuthenticated ? (
+                        <li className="nav-item">
+                            <Link
+                                to="/login"
+                                className="nav-links"
+                                onClick={() => {
+                                    logout();
+                                    setClick(false);
+                                }}
+                            >
+                                Logout
+                            </Link>
+                        </li>
+                    ) : (
+                        <li className="nav-item">
+                            <Link
+                                to="/login"
+                                className="nav-links"
+                                onClick={closeMobileMenu}
+                            >
+                                Login
+                            </Link>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>

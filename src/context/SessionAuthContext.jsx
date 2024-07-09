@@ -38,6 +38,7 @@ export function SessionAuthProvider({ children }) {
         try {
             await axios.get("http://localhost:3001/sessions/logoutSession");
             setSessionAuthenticated(false);
+            setAdminAuthenticated(false);
         } catch (error) {
             console.error("Error logging out:", error);
         }
