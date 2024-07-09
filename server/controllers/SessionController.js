@@ -123,7 +123,7 @@ const createSession = async (req, res) => {
 const hasResumeCapacity = async (req, res) => {
     //check if session has enough space to upload resumes
     try {
-        const { numResumes } = req.query;
+        const { numResumes, sessionID } = req.query;
         const existingResumes = await Resume.find({ sessionID: sessionID });
         const session = await Session.find({ sessionID: sessionID });
 
@@ -155,6 +155,7 @@ const updateSessionSize = async (req, res) => {
         if (resumes.length <= session.maxResumes) {
             session.totalScore += DEFAULT_ELO * (resumes.length - session.resumeCount);
             session.resumeCount = resumes.length;
+            await session.save();
             res.status(200).json({
                 updateSuccessful: true,
             });

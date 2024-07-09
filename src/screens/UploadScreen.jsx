@@ -29,8 +29,12 @@ export default function UploadScreen() {
         //prepare resumes for upload
         try {
             event.preventDefault();
-            const res = await axios.get(`http://localhost:3001/session/hasResumeCapacity`, { params: { numResumes } }); //check if session has space to upload
-
+            const res = await axios.get(`http://localhost:3001/sessions/hasResumeCapacity`, {
+                params: {
+                    numResumes: numResumes,
+                    sessionID: sessionDetails.sessionID,
+                },
+            }); //check if session has space to upload
             if (res.data.resumeOverflow) {
                 setResumeOverflow(true);
                 return;

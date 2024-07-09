@@ -1,0 +1,4 @@
+.resumes {
+    display: flex;
+    flex-direction: row;
+}

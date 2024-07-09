@@ -34,7 +34,11 @@ export default function LoginScreen() {
             );
             if (res.data.validLogin) {
                 setSessionAuthenticated(true);
-                setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
+                setSessionDetails({
+                    sessionID: res.data.session.sessionID,
+                    duration: res.data.session.duration,
+                    resumeCount: res.data.session.resumeCount,
+                });
                 if (res.data.admin) {
                     setAdminAuthenticated(true);
                 }

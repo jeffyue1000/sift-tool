@@ -38,6 +38,7 @@ export default function SessionCreate({ configData }) {
                 setSessionDetails({
                     sessionID: res.data.session.sessionID,
                     duration: res.data.session.duration,
+                    resumeCount: res.data.session.resumeCount,
                 });
                 setSessionCreated(true);
             }

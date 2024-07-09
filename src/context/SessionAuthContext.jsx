@@ -12,6 +12,7 @@ export function SessionAuthProvider({ children }) {
     const [sessionDetails, setSessionDetails] = useState({
         sessionID: "defaultID",
         duration: 1, //expire immediately if invalid session
+        resumeCount: 0,
     });
     const [loading, setLoading] = useState(true);
 
@@ -24,7 +25,11 @@ export function SessionAuthProvider({ children }) {
                 });
                 if (res.data.valid) {
                     setSessionAuthenticated(true);
-                    setSessionDetails({ sessionID: res.data.session.sessionID, duration: res.data.session.duration });
+                    setSessionDetails({
+                        sessionID: res.data.session.sessionID,
+                        duration: res.data.session.duration,
+                        resumeCount: res.data.session.resumeCount,
+                    });
                 }
             }
         } catch (error) {
@@ -38,6 +43,7 @@ export function SessionAuthProvider({ children }) {
         try {
             await axios.get("http://localhost:3001/sessions/logoutSession");
             setSessionAuthenticated(false);
+            setAdminAuthenticated(false);
         } catch (error) {
             console.error("Error logging out:", error);
         }
