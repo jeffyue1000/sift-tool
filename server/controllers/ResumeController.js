@@ -1,6 +1,10 @@
 const Resume = require("../models/resumeModel");
 const Session = require("../models/sessionModel");
-const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { calculateSessionStdDev } = require("./SessionController");
 const { MAX_ELO_ADJUSTMENT } = require("../globals");
@@ -21,14 +25,20 @@ const s3 = new S3Client({
 const getComparisonResumes = async (req, res) => {
     try {
         const { sessionID } = req.query;
-        const resumesByComparison = await Resume.find({ sessionID: sessionID }).sort({ numComparison: 1 });
+        const resumesByComparison = await Resume.find({
+            sessionID: sessionID,
+        }).sort({ numComparison: 1 });
         const leftResume = resumesByComparison[0]; //choose a resume that has been compared the least
         const leftElo = leftResume.eloScore;
         const sessionStdDev = calculateSessionStdDev(sessionID);
         const allResumes = await Resume.find({ sessionID: sessionID });
 
         for (let i = 0; i < allResumes.length; i++) {
-            if (Math.abs(allResumes[i].eloScore - leftElo) <= 0.3 * sessionStdDev && allResumes[i] != leftResume) {
+            if (
+                Math.abs(allResumes[i].eloScore - leftElo) <=
+                    0.3 * sessionStdDev &&
+                allResumes[i] != leftResume
+            ) {
                 return res.status(200).json({
                     leftResume: leftResume,
                     rightResume: allResumes[i],
@@ -46,7 +56,9 @@ const getComparisonResumes = async (req, res) => {
 const getAllResumes = async (req, res) => {
     try {
         const { sessionID } = req.query;
-        const resumes = await Resume.find({ sessionID: sessionID }).sort({ eloScore: 1 });
+        const resumes = await Resume.find({ sessionID: sessionID }).sort({
+            eloScore: 1,
+        });
         res.status(200).json(resumes);
     } catch (error) {
         console.error("Error occurred in getAllResumes", error);
@@ -104,7 +116,8 @@ const uploadResumes = async (req, res) => {
 
         //upload each resume to S3, then store metadata in MongoDB
         for (const resume of resumeArray) {
-            const randomName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
+            const randomName = (bytes = 16) =>
+                crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
 
             const s3Key = `${sessionID}/${randomName()}`;
 
@@ -159,12 +172,28 @@ const compareResumes = async (req, res) => {
         leftResume.numComparison++;
         rightResume.numComparison++;
 
-        const leftExpectedScore = 1 / (1 + Math.pow(10, (rightResume.eloScore - leftResume.eloScore) / 400));
-        const rightExpectedScore = 1 / (1 + Math.pow(10, (leftResume.eloScore - rightResume.eloScore) / 400));
+        const leftExpectedScore =
+            1 /
+            (1 +
+                Math.pow(
+                    10,
+                    (rightResume.eloScore - leftResume.eloScore) / 400
+                ));
+        const rightExpectedScore =
+            1 /
+            (1 +
+                Math.pow(
+                    10,
+                    (leftResume.eloScore - rightResume.eloScore) / 400
+                ));
         const leftNewScore =
-            leftResume.eloScore + MAX_ELO_ADJUSTMENT * (winner == leftResume ? 1 : 0 - leftExpectedScore);
+            leftResume.eloScore +
+            MAX_ELO_ADJUSTMENT *
+                (winner == leftResume ? 1 : 0 - leftExpectedScore);
         const rightNewScore =
-            rightResume.eloScore + MAX_ELO_ADJUSTMENT * (winner == rightResume ? 1 : 0 - rightExpectedScore);
+            rightResume.eloScore +
+            MAX_ELO_ADJUSTMENT *
+                (winner == rightResume ? 1 : 0 - rightExpectedScore);
 
         leftResume.eloScore = leftNewScore;
         rightResume.eloScore = rightNewScore;
@@ -181,4 +210,10 @@ const compareResumes = async (req, res) => {
     }
 };
 
-module.exports = { uploadResumes, getResumePDF, getAllResumes, getComparisonResumes, compareResumes };
+module.exports = {
+    uploadResumes,
+    getResumePDF,
+    getAllResumes,
+    getComparisonResumes,
+    compareResumes,
+};
