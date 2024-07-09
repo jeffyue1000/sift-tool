@@ -11,3 +11,8 @@ export function AdminProtectedRoute({ component }) {
     const { sessionAuthenticated, adminAuthenticated } = useSessionAuth();
     return sessionAuthenticated && adminAuthenticated ? component : <Navigate to="/rankings" />;
 }
+
+export function LoginRedirect({ component }) {
+    const { sessionAuthenticated } = useSessionAuth();
+    return sessionAuthenticated ? <Navigate to="/compare" /> : component;
+}

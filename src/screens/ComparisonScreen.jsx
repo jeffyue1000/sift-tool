@@ -13,8 +13,8 @@ export default function ComparisonScreen() {
         leftURL: "",
         rightURL: "",
     });
-    const [winner, setWinner] = useState();
-
+    const [winner, setWinner] = useState(null);
+    const [canCompare, setCanCompare] = useState(false);
     const { sessionDetails } = useSessionAuth();
 
     const getComparisonResumes = async () => {
@@ -22,10 +22,12 @@ export default function ComparisonScreen() {
             const res = await axios.get("http://localhost:3001/resumes/getComparisonResumes", {
                 params: { sessionID: sessionDetails.sessionID },
             });
-            setResumes({
-                leftResume: res.data.leftResume,
-                rightResume: res.data.rightResume,
-            });
+            if (res.data.leftResume && res.data.rightResume) {
+                setResumes({
+                    leftResume: res.data.leftResume,
+                    rightResume: res.data.rightResume,
+                });
+            }
         } catch (error) {
             console.error("Error getting resumes for comparison", error);
         }
@@ -33,53 +35,81 @@ export default function ComparisonScreen() {
 
     const getResumePdfs = async () => {
         try {
-            const leftRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
-                params: { id: resumes.leftResume._id },
-            });
-            const rightRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
-                params: { id: resumes.rightResume._id },
-            });
+            if (resumes.leftResume && resumes.rightResume) {
+                const leftRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.leftResume._id },
+                });
+                const rightRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.rightResume._id },
+                });
 
-            setResumeUrls({
-                leftURL: leftRes.data.url,
-                rightURL: rightRes.data.url,
-            });
+                setResumeUrls({
+                    leftURL: leftRes.data.url,
+                    rightURL: rightRes.data.url,
+                });
+            }
         } catch (error) {
             console.error("Error getting resume PDFs", error);
         }
     };
-    const handleWinner = async () => {
+    const handleWinner = async (winner) => {
         try {
             await axios.post("http://localhost:3001/resumes/compareResumes", {
                 ...resumes,
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
             });
+
+            setWinner(null);
+            getComparisonResumes();
+            console.log(resumes);
         } catch (error) {
             console.error("Error comparing resumes", error);
         }
     };
+
     useEffect(() => {
-        getComparisonResumes();
-        getResumePdfs();
+        if (sessionDetails.resumeCount >= 2) {
+            setCanCompare(true);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        getComparisonResumes();
+        if (canCompare) {
+            getComparisonResumes();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [canCompare]);
+
+    useEffect(() => {
         getResumePdfs();
-        handleWinner();
-    }, [winner]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resumes]);
+
+    // useEffect(() => {
+    //     if (winner) {
+    //         handleWinner();
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [winner]);
 
     return (
         <div>
-            <ResumePDF
-                resumeURL={resumeUrls.leftURL}
-                onClick={() => setWinner(resumes.leftResume)}
-            />
-            <ResumePDF
-                resumeURL={resumeUrls.rightURL}
-                onClick={() => setWinner(resumes.rightResume)}
-            />
+            {canCompare ? (
+                <div className="resumes">
+                    <ResumePDF
+                        resumeURL={resumeUrls.leftURL}
+                        onClick={() => handleWinner(resumes.leftResume)}
+                    />
+                    <ResumePDF
+                        resumeURL={resumeUrls.rightURL}
+                        onClick={() => handleWinner(resumes.rightResume)}
+                    />
+                </div>
+            ) : (
+                <div>Upload More Resumes To Compare First!</div>
+            )}
         </div>
     );
 }

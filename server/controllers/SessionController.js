@@ -171,6 +171,7 @@ const updateSessionSize = async (req, res) => {
             session.totalScore +=
                 DEFAULT_ELO * (resumes.length - session.resumeCount);
             session.resumeCount = resumes.length;
+            await session.save();
             res.status(200).json({
                 updateSuccessful: true,
             });

@@ -25,19 +25,25 @@ const s3 = new S3Client({
 const getComparisonResumes = async (req, res) => {
     try {
         const { sessionID } = req.query;
-        const resumesByComparison = await Resume.find({
-            sessionID: sessionID,
-        }).sort({ numComparison: 1 });
+        const resumesByComparison = await Resume.find({ sessionID: sessionID }).sort({ numComparison: 1 });
+
+        if (resumesByComparison.length < 2) {
+            return res.status(400).json({
+                message: "Not enough resumes to compare",
+            });
+        }
+
         const leftResume = resumesByComparison[0]; //choose a resume that has been compared the least
         const leftElo = leftResume.eloScore;
-        const sessionStdDev = calculateSessionStdDev(sessionID);
+        const sessionStdDev = await calculateSessionStdDev(sessionID);
+
         const allResumes = await Resume.find({ sessionID: sessionID });
 
         for (let i = 0; i < allResumes.length; i++) {
+            console.log(allResumes[i]);
             if (
-                Math.abs(allResumes[i].eloScore - leftElo) <=
-                    0.3 * sessionStdDev &&
-                allResumes[i] != leftResume
+                Math.abs(allResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
+                allResumes[i]._id.toString() !== leftResume._id.toString()
             ) {
                 return res.status(200).json({
                     leftResume: leftResume,
@@ -45,6 +51,13 @@ const getComparisonResumes = async (req, res) => {
                 });
             }
         }
+
+        const rightResume = resumesByComparison[1]; //fallback in case no suitable resume found
+
+        return res.status(200).json({
+            leftResume: leftResume,
+            rightResume: rightResume,
+        });
     } catch (error) {
         console.error("Error occurred in getComparisonResumes", error);
         res.status(500).json({
@@ -71,7 +84,7 @@ const getAllResumes = async (req, res) => {
 
 const getResumePDF = async (req, res) => {
     try {
-        const { name, gradYear, sessionID, id } = req.query;
+        const { id } = req.query;
         const resume = await Resume.findById(id);
         // const resume = await Resume.findOne({
         //     name: name,
@@ -167,10 +180,12 @@ const compareResumes = async (req, res) => {
     try {
         const { leftResume, rightResume, winner, sessionID } = req.body;
         const session = await Session.findOne({ sessionID: sessionID });
+        const mongoLeft = await Resume.findById(leftResume._id);
+        const mongoRight = await Resume.findById(rightResume._id);
 
         session.totalComparisons++;
-        leftResume.numComparison++;
-        rightResume.numComparison++;
+        mongoLeft.numComparison++;
+        mongoRight.numComparison++;
 
         const leftExpectedScore =
             1 /
@@ -195,12 +210,15 @@ const compareResumes = async (req, res) => {
             MAX_ELO_ADJUSTMENT *
                 (winner == rightResume ? 1 : 0 - rightExpectedScore);
 
-        leftResume.eloScore = leftNewScore;
-        rightResume.eloScore = rightNewScore;
+        mongoLeft.eloScore = leftNewScore;
+        mongoRight.eloScore = rightNewScore;
 
         await session.save();
-        await leftResume.save();
-        await rightResume.save();
+        await mongoLeft.save();
+        await mongoRight.save();
+        res.status(200).json({
+            comparisonSuccess: true,
+        });
     } catch (error) {
         console.error("Error occurred in compareResumes", error);
         res.status(500).json({

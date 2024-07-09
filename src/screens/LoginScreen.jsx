@@ -41,6 +41,7 @@ export default function LoginScreen() {
                 setSessionDetails({
                     sessionID: res.data.session.sessionID,
                     duration: res.data.session.duration,
+                    resumeCount: res.data.session.resumeCount,
                 });
                 if (res.data.admin) {
                     setAdminAuthenticated(true);
