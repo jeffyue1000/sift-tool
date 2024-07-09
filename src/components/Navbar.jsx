@@ -1,24 +1,25 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSessionAuth } from "../context/SessionAuthContext";
 import "../styles/Navbar.css";
-import { Button } from "./Button";
 
 export default function Navbar() {
     const [click, setClick] = useState(false);
-    const [button, setButton] = useState(true);
+    const { sessionAuthenticated, adminAuthenticated, logout } = useSessionAuth();
+    // const [button, setButton] = useState(true);
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
 
-    const showButton = () => {
-        if (window.innerWidth <= 960) {
-            setButton(false);
-        } else {
-            setButton(true);
-        }
-    };
+    // const showButton = () => {
+    //     if (window.innerWidth <= 960) {
+    //         setButton(false);
+    //     } else {
+    //         setButton(true);
+    //     }
+    // };
 
-    window.addEventListener("resize", showButton);
+    // window.addEventListener("resize", showButton);
 
     return (
         <nav className="navbar">
@@ -45,42 +46,63 @@ export default function Navbar() {
                             Home
                         </Link>
                     </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/login"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Session Login
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/upload"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Resume Upload
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/compare"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Compare Resumes
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link
-                            to="/rankings"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Resume Rankings
-                        </Link>
-                    </li>
+                    {adminAuthenticated && (
+                        <li className="nav-item">
+                            <Link
+                                to="/upload"
+                                className="nav-links"
+                                onClick={closeMobileMenu}
+                            >
+                                Upload
+                            </Link>
+                        </li>
+                    )}
+                    {sessionAuthenticated && (
+                        <li className="nav-item">
+                            <Link
+                                to="/compare"
+                                className="nav-links"
+                                onClick={closeMobileMenu}
+                            >
+                                Compare
+                            </Link>
+                        </li>
+                    )}
+                    {sessionAuthenticated && (
+                        <li className="nav-item">
+                            <Link
+                                to="/rankings"
+                                className="nav-links"
+                                onClick={closeMobileMenu}
+                            >
+                                Rankings
+                            </Link>
+                        </li>
+                    )}
+                    {sessionAuthenticated ? (
+                        <li className="nav-item">
+                            <Link
+                                to="/login"
+                                className="nav-links"
+                                onClick={() => {
+                                    logout();
+                                    setClick(false);
+                                }}
+                            >
+                                Logout
+                            </Link>
+                        </li>
+                    ) : (
+                        <li className="nav-item">
+                            <Link
+                                to="/login"
+                                className="nav-links"
+                                onClick={closeMobileMenu}
+                            >
+                                Login
+                            </Link>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>

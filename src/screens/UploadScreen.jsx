@@ -7,6 +7,7 @@ export default function UploadScreen() {
     const [resumes, setResumes] = useState([]); //set of resumes to be uploaded
     const [submitted, setSubmitted] = useState(false); //check if resumes submitted
     const [numResumes, setNumResumes] = useState(0); //to display resume count for user
+    const [resumeOverflow, setResumeOverflow] = useState(false);
     const { sessionDetails } = useSessionAuth();
 
     const onResumeChange = (event) => {
@@ -28,8 +29,22 @@ export default function UploadScreen() {
         //prepare resumes for upload
         try {
             event.preventDefault();
+            const res = await axios.get(
+                `http://localhost:3001/sessions/hasResumeCapacity`,
+                {
+                    params: {
+                        numResumes: numResumes,
+                        sessionID: sessionDetails.sessionID,
+                    },
+                }
+            ); //check if session has space to upload
 
-            const formData = new FormData();
+            if (res.data.resumeOverflow) {
+                setResumeOverflow(true);
+                return;
+            }
+
+            const formData = new FormData(); //create FormData object for backend to handle pdfs
             resumes.forEach((resume) => {
                 formData.append("resumes", resume);
             });
@@ -43,11 +58,19 @@ export default function UploadScreen() {
                 `http://localhost:3001/resumes/uploadResumes`,
                 formData,
                 {
+                    //upload pdfs to aws and mongo
                     headers: {
                         "content-type": "multipart/form-data",
                     },
                 }
             );
+            await axios.post(
+                `http://localhost:3001/sessions/updateSessionSize`,
+                {
+                    sessionID: sessionDetails.sessionID,
+                }
+            ); //update resume count for the current session
+
             setSubmitted(true);
         } catch (error) {
             console.error("Error uploading resume", error);
@@ -55,24 +78,30 @@ export default function UploadScreen() {
     };
 
     return (
-        <div className="upload-container">
-            <h2>Upload Resumes Here</h2>
+        <div>
+            {!resumeOverflow ? (
+                <div className="upload-container">
+                    <h2>Upload Resumes Here</h2>
 
-            <h4 className="upload-instruction">
-                Files must be named in the following format:
-                FirstName_LastName_Resume_GradYear.pdf
-            </h4>
-            <div>Resumes Submitted: {numResumes}</div>
-            <form onSubmit={uploadResumes}>
-                <input
-                    type="file"
-                    accept="application/pdf"
-                    multiple
-                    onChange={onResumeChange}
-                />
-                <button type="submit">Upload</button>
-            </form>
-            {submitted && <div>Uploaded Successfully!</div>}
+                    <h4 className="upload-instruction">
+                        Files must be named in the following format:
+                        FirstName_LastName_Resume_GradYear.pdf
+                    </h4>
+                    <div>Resumes Submitted: {numResumes}</div>
+                    <form onSubmit={uploadResumes}>
+                        <input
+                            type="file"
+                            accept="application/pdf"
+                            multiple
+                            onChange={onResumeChange}
+                        />
+                        <button className="submit-button">Upload</button>
+                    </form>
+                    {submitted && <div>Uploaded Successfully!</div>}
+                </div>
+            ) : (
+                <div>resumeoverflowplaceholder</div> //make a popup that tells user they have to many resumes
+            )}
         </div>
     );
 }

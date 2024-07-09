@@ -11,6 +11,10 @@ const sessionSchema = new mongoose.Schema({
         type: String,
         required: [true, "Passkey is required"],
     },
+    adminKey: {
+        type: String,
+        required: [true, "Admin key is required"],
+    },
     duration: {
         type: Number,
         default: 2 * 7 * 24 * 60 * 60 * 1000, //two weeks in ms
@@ -23,7 +27,16 @@ const sessionSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    totalComparisons: {
+        type: Number,
+        default: 0,
+    },
+    totalScore: {
+        type: Number,
+        default: 0,
+    },
 });
+sessionSchema.index({ sessionID: 1 });
 
 const Session = mongoose.models.session || mongoose.model("session", sessionSchema);
 

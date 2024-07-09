@@ -13,6 +13,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+
 dbConnect();
 
 const ResumeRoutes = require("./routes/ResumeRoutes");

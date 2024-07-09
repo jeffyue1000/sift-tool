@@ -1,6 +1,13 @@
 const Resume = require("../models/resumeModel");
-const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const Session = require("../models/sessionModel");
+const {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { calculateSessionStdDev } = require("./SessionController");
+const { MAX_ELO_ADJUSTMENT } = require("../globals");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
 
@@ -15,24 +22,62 @@ const s3 = new S3Client({
     region: process.env.BUCKET_REGION,
 });
 
-const getResumes = async (req, res) => {
+const getComparisonResumes = async (req, res) => {
     try {
-        const resumes = await Resume.find().sort({ eloScore: 1 });
+        const { sessionID } = req.query;
+        const resumesByComparison = await Resume.find({
+            sessionID: sessionID,
+        }).sort({ numComparison: 1 });
+        const leftResume = resumesByComparison[0]; //choose a resume that has been compared the least
+        const leftElo = leftResume.eloScore;
+        const sessionStdDev = calculateSessionStdDev(sessionID);
+        const allResumes = await Resume.find({ sessionID: sessionID });
+
+        for (let i = 0; i < allResumes.length; i++) {
+            if (
+                Math.abs(allResumes[i].eloScore - leftElo) <=
+                    0.3 * sessionStdDev &&
+                allResumes[i] != leftResume
+            ) {
+                return res.status(200).json({
+                    leftResume: leftResume,
+                    rightResume: allResumes[i],
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Error occurred in getComparisonResumes", error);
+        res.status(500).json({
+            message: "Error getting resumes for comparison",
+            error: error.message,
+        });
+    }
+};
+const getAllResumes = async (req, res) => {
+    try {
+        const { sessionID } = req.query;
+        const resumes = await Resume.find({ sessionID: sessionID }).sort({
+            eloScore: 1,
+        });
         res.status(200).json(resumes);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Error occurred in getAllResumes", error);
+        res.status(500).json({
+            message: "Error getting all resumes",
+            error: error.message,
+        });
     }
 };
 
 const getResumePDF = async (req, res) => {
     try {
-        const { name, gradYear, sessionID } = req.query;
-
-        const resume = await Resume.findOne({
-            name: name,
-            gradYear: gradYear,
-            sessionID: sessionID,
-        });
+        const { name, gradYear, sessionID, id } = req.query;
+        const resume = await Resume.findById(id);
+        // const resume = await Resume.findOne({
+        //     name: name,
+        //     gradYear: gradYear,
+        //     sessionID: sessionID,
+        // });
 
         if (!resume) {
             return res.status(500).json({
@@ -48,7 +93,10 @@ const getResumePDF = async (req, res) => {
         });
 
         const url = await getSignedUrl(s3, command, { expiresIn: 180 }); //signedURL will last 3 minutes
-        res.send(url);
+        res.status(200).json({
+            getPdfSucess: true,
+            url: url,
+        });
     } catch (error) {
         console.error("Error occurred in getResumePDF", error);
         res.status(500).json({
@@ -68,7 +116,8 @@ const uploadResumes = async (req, res) => {
 
         //upload each resume to S3, then store metadata in MongoDB
         for (const resume of resumeArray) {
-            const randomName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
+            const randomName = (bytes = 16) =>
+                crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
 
             const s3Key = `${sessionID}/${randomName()}`;
 
@@ -114,4 +163,57 @@ const uploadResumes = async (req, res) => {
     }
 };
 
-module.exports = { uploadResumes, getResumePDF, getResumes };
+const compareResumes = async (req, res) => {
+    try {
+        const { leftResume, rightResume, winner, sessionID } = req.body;
+        const session = await Session.findOne({ sessionID: sessionID });
+
+        session.totalComparisons++;
+        leftResume.numComparison++;
+        rightResume.numComparison++;
+
+        const leftExpectedScore =
+            1 /
+            (1 +
+                Math.pow(
+                    10,
+                    (rightResume.eloScore - leftResume.eloScore) / 400
+                ));
+        const rightExpectedScore =
+            1 /
+            (1 +
+                Math.pow(
+                    10,
+                    (leftResume.eloScore - rightResume.eloScore) / 400
+                ));
+        const leftNewScore =
+            leftResume.eloScore +
+            MAX_ELO_ADJUSTMENT *
+                (winner == leftResume ? 1 : 0 - leftExpectedScore);
+        const rightNewScore =
+            rightResume.eloScore +
+            MAX_ELO_ADJUSTMENT *
+                (winner == rightResume ? 1 : 0 - rightExpectedScore);
+
+        leftResume.eloScore = leftNewScore;
+        rightResume.eloScore = rightNewScore;
+
+        await session.save();
+        await leftResume.save();
+        await rightResume.save();
+    } catch (error) {
+        console.error("Error occurred in compareResumes", error);
+        res.status(500).json({
+            message: "Error comparing resumes",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = {
+    uploadResumes,
+    getResumePDF,
+    getAllResumes,
+    getComparisonResumes,
+    compareResumes,
+};
