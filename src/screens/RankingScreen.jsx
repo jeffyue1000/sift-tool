@@ -15,12 +15,9 @@ export default function RankingScreen() {
     const fetchApplicants = async () => {
         try {
             // Fetch all resumes in current session
-            const response = await axios.get(
-                `http://localhost:3001/resumes/getAllResumes`,
-                {
-                    params: { sessionID: sessionDetails.sessionID },
-                }
-            );
+            const response = await axios.get(`http://localhost:3001/resumes/getAllResumes`, {
+                params: { sessionID: sessionDetails.sessionID },
+            });
             console.log(response.data);
             setApplicants(response.data);
         } catch (error) {
@@ -44,21 +41,15 @@ export default function RankingScreen() {
 
     const gradYears = [
         "All",
-        ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort(
-            (a, b) => parseInt(b) - parseInt(a)
-        ),
+        ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort((a, b) => parseInt(b) - parseInt(a)),
     ];
 
     const filteredApplicants =
         selectedGradYear === "All"
             ? applicants
-            : applicants.filter(
-                  (applicant) => applicant.gradYear === selectedGradYear
-              );
+            : applicants.filter((applicant) => applicant.gradYear === selectedGradYear);
 
-    const totalPages = Math.ceil(
-        filteredApplicants.length / MAX_ITEMS_PER_PAGE
-    );
+    const totalPages = Math.ceil(filteredApplicants.length / MAX_ITEMS_PER_PAGE);
     const currentApplicants = filteredApplicants.slice(
         (currentPage - 1) * MAX_ITEMS_PER_PAGE,
         currentPage * MAX_ITEMS_PER_PAGE
@@ -69,13 +60,13 @@ export default function RankingScreen() {
             <div className="ranking-container">
                 <h1 className="header">Aggregate Rankings</h1>
                 <div className="ranking-screen">
-                    {currentApplicants.map((applicant) => (
+                    {currentApplicants.map((applicant, index) => (
                         <ApplicantRank
                             key={applicant._id}
                             name={applicant.name}
                             gradYear={applicant.gradYear}
                             eloScore={applicant.eloScore}
-                            rank={applicant.rank}
+                            rank={index + 1 + (currentPage - 1) * MAX_ITEMS_PER_PAGE}
                         />
                     ))}
                 </div>
@@ -84,9 +75,7 @@ export default function RankingScreen() {
                         <button
                             key={index + 1}
                             onClick={() => handlePageChange(index + 1)}
-                            className={`page-button ${
-                                currentPage === index + 1 ? "active" : ""
-                            }`}
+                            className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
                         >
                             {index + 1}
                         </button>
@@ -98,9 +87,7 @@ export default function RankingScreen() {
                     <button
                         key={year}
                         onClick={() => handleGradYearChange(year)}
-                        className={`filter-button ${
-                            selectedGradYear === year ? "active" : ""
-                        }`}
+                        className={`filter-button ${selectedGradYear === year ? "active" : ""}`}
                     >
                         {year}
                     </button>
