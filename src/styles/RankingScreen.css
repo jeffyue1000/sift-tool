@@ -1,16 +1,51 @@
-.ranking-container {
+.ranking-container-wrapper {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     padding: 16px;
     height: 100vh;
     overflow: hidden;
     margin-top: 150px;
 }
 
+.ranking-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    height: 100%;
+    overflow: hidden;
+}
+
 .header {
     font-size: 2em;
     margin-bottom: 16px;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-top: 80px;
+    gap: 8px;
+    margin-left: 16px;
+}
+
+.filter-button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #5c67f2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.filter-button:hover {
+    background-color: #4a55c0;
+}
+
+.filter-button.active {
+    background-color: #3c44a5;
 }
 
 .ranking-screen {
@@ -32,14 +67,14 @@
 }
 
 .page-button {
-    margin: 0 5px;
+    margin: 0 2.5px;
     padding: 10px 15px;
     border: none;
     background-color: #5c67f2;
     color: white;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3;
+    transition: background-color 0.3s;
 }
 
 .page-button:hover {
