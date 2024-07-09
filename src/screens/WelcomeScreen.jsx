@@ -12,7 +12,7 @@ export default function WelcomeScreen() {
                 <p className="welcome-instructions"></p>
                 <p className="welcome-description">
                     Sift enables groups to efficiently review resumes and
-                    automatically generate a comprehensive ranking.
+                    automatically generate a comprehensive ranking
                 </p>
                 <p className="welcome-instructions">How to get started:</p>
                 <ol className="instruction-list">

@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
     const [click, setClick] = useState(false);
-    const { sessionAuthenticated, adminAuthenticated, logout } = useSessionAuth();
+    const { sessionAuthenticated, adminAuthenticated, logout } =
+        useSessionAuth();
     // const [button, setButton] = useState(true);
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
+    const navigate = useNavigate();
 
     // const showButton = () => {
     //     if (window.innerWidth <= 960) {
@@ -82,11 +84,12 @@ export default function Navbar() {
                     {sessionAuthenticated ? (
                         <li className="nav-item">
                             <Link
-                                to="/login"
+                                to="#"
                                 className="nav-links"
                                 onClick={() => {
                                     logout();
                                     setClick(false);
+                                    navigate("/login");
                                 }}
                             >
                                 Logout
