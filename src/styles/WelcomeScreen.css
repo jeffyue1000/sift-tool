@@ -28,23 +28,30 @@ body {
 .welcome-title {
     font-size: 3em;
     margin: 0.5em 0;
-    color: #2c3e50;
+    color: #000000;
 }
 
 .welcome-subtitle {
     font-size: 1.5em;
     margin: 0.5em 0;
-    color: #34495e;
+    color: #000000;
 }
 
-.welcome-description,
 .welcome-instructions,
 .sift-instructions,
 .faq-header {
     font-size: 1.2em;
     margin: 1em 0;
-    color: #7f8c8d;
+    color: #2980b9;
     margin-top: 60px;
+}
+
+.welcome-description {
+    margin-top: 60px;
+    font-size: 1.3em;
+    margin: 1em 0;
+    text-decoration: bold;
+    color: #bdc3c7;
 }
 
 .instruction-list,
@@ -63,13 +70,13 @@ body {
 
 .welcome-instruction-item::before {
     content: "✔";
-    color: #000000;
+    color: #2980b9;
     margin-right: 0.5em;
 }
 
 .sift-instruction-item::before {
     content: "○";
-    color: grey;
+    color: #2980b9;
     margin-right: 0.5em;
 }
 

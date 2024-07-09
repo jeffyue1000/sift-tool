@@ -27,9 +27,14 @@ const calculateSessionStdDev = async (sessionID) => {
 const getSessionFromToken = async (req, res) => {
     try {
         const { encodedSessionToken } = req.query;
-        const decodedSessionToken = await jwt.compare(encodedSessionToken, process.env.TOKEN_SECRET);
+        const decodedSessionToken = await jwt.compare(
+            encodedSessionToken,
+            process.env.TOKEN_SECRET
+        );
 
-        const session = await Session.findOne({ sessionID: decodedSessionToken });
+        const session = await Session.findOne({
+            sessionID: decodedSessionToken,
+        });
         if (session) {
             res.status(200).json({ valid: true, session: session });
         } else {
@@ -65,10 +70,18 @@ const loginSession = async (req, res) => {
 
         if (passkeyMatch && adminKeyMatch) {
             await createAndSetSessionCookie(sessionID, res);
-            res.status(200).json({ validLogin: true, admin: true, session: session });
+            res.status(200).json({
+                validLogin: true,
+                admin: true,
+                session: session,
+            });
         } else if (passkeyMatch) {
             await createAndSetSessionCookie(sessionID, res);
-            res.status(200).json({ validLogin: true, admin: false, session: session });
+            res.status(200).json({
+                validLogin: true,
+                admin: false,
+                session: session,
+            });
         } else {
             res.status(401).json({ validLogin: false });
         }
@@ -83,7 +96,8 @@ const loginSession = async (req, res) => {
 
 const createSession = async (req, res) => {
     try {
-        const { sessionID, password, adminKey, maxResumes, duration } = req.body;
+        const { sessionID, password, adminKey, maxResumes, duration } =
+            req.body;
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
         if (sessionExists) {
@@ -130,7 +144,8 @@ const hasResumeCapacity = async (req, res) => {
         if (existingResumes.length + numResumes > session.maxResumes) {
             res.status(200).json({
                 resumeOverflow: true,
-                overflowAmount: existingResumes.length + numResumes - session.maxResumes,
+                overflowAmount:
+                    existingResumes.length + numResumes - session.maxResumes,
             });
         } else {
             res.status(200).json({
@@ -153,7 +168,8 @@ const updateSessionSize = async (req, res) => {
         const session = await Session.findOne({ sessionID: sessionID }); //consider using findOneandUpdate
 
         if (resumes.length <= session.maxResumes) {
-            session.totalScore += DEFAULT_ELO * (resumes.length - session.resumeCount);
+            session.totalScore +=
+                DEFAULT_ELO * (resumes.length - session.resumeCount);
             session.resumeCount = resumes.length;
             await session.save();
             res.status(200).json({

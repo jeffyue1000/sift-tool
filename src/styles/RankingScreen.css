@@ -1,12 +1,20 @@
+.ranking-container-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 16px;
+    height: 100vh;
+    overflow: hidden;
+    margin-top: 150px;
+}
+
 .ranking-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 16px;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
-    margin-top: 150px;
-    margin-right: 16px;
 }
 
 .header {
@@ -14,14 +22,65 @@
     margin-bottom: 16px;
 }
 
+.filter-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-top: 80px;
+    gap: 8px;
+    margin-left: 16px;
+}
+
+.filter-button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #5c67f2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.filter-button:hover {
+    background-color: #4a55c0;
+}
+
+.filter-button.active {
+    background-color: #3c44a5;
+}
+
 .ranking-screen {
     width: 100%;
     max-width: 800px;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 150px - 80px);
     overflow-y: auto;
     padding: 16px;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pages {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.page-button {
+    margin: 0 2.5px;
+    padding: 10px 15px;
+    border: none;
+    background-color: #5c67f2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.page-button:hover {
+    background-color: #4a55c0;
+}
+
+.page-button.active {
+    background-color: #3c44a5;
 }

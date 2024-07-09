@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 import "../styles/LoginScreen.css";
 
 export default function LoginScreen() {
-    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
+    const {
+        setSessionAuthenticated,
+        setSessionDetails,
+        setAdminAuthenticated,
+    } = useSessionAuth();
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState("");
     const [adminKey, setAdminKey] = useState("");
@@ -18,7 +22,7 @@ export default function LoginScreen() {
         maxResumes: 1,
         duration: 1,
     });
-    const [currentTab, setCurrentTab] = useState("config");
+    const [currentTab, setCurrentTab] = useState("login");
 
     const onConfigSubmit = (maxResumes, duration) => {
         setConfigData({ maxResumes, duration });
@@ -56,16 +60,20 @@ export default function LoginScreen() {
         <div className="main-container">
             <div className="tabs">
                 <button
-                    className={`tab ${currentTab === "config" || currentTab === "create" ? "active" : ""}`}
-                    onClick={() => setCurrentTab("config")}
-                >
-                    Create Session
-                </button>
-                <button
                     className={`tab ${currentTab === "login" ? "active" : ""}`}
                     onClick={() => setCurrentTab("login")}
                 >
                     Join Session
+                </button>
+                <button
+                    className={`tab ${
+                        currentTab === "config" || currentTab === "create"
+                            ? "active"
+                            : ""
+                    }`}
+                    onClick={() => setCurrentTab("config")}
+                >
+                    Create Session
                 </button>
             </div>
             <div className="tab-content">
@@ -104,7 +112,9 @@ export default function LoginScreen() {
                             placeholder="Enter Admin Key (Optional)"
                         />
                         {failedLogin && (
-                            <div className="error-message">Could not find a session with those credentials!</div>
+                            <div className="error-message">
+                                Could not find a session with those credentials!
+                            </div>
                         )}
                         <button
                             onClick={handleLogin}
