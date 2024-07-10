@@ -8,3 +8,6 @@
 .resume-container:hover {
     transform: scale(1.015);
 }
+.resume-container:active {
+    transform: scale(0.985);
+}

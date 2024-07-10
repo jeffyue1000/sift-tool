@@ -63,7 +63,6 @@ export default function ComparisonScreen() {
                 sessionID: sessionDetails.sessionID,
             });
             getComparisonResumes();
-            console.log(resumes);
         } catch (error) {
             console.error("Error comparing resumes", error);
         }

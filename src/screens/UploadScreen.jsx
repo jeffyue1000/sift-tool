@@ -8,7 +8,7 @@ export default function UploadScreen() {
     const [submitted, setSubmitted] = useState(false); //check if resumes submitted
     const [numResumes, setNumResumes] = useState(0); //to display resume count for user
     const [resumeOverflow, setResumeOverflow] = useState(false);
-    const { sessionDetails } = useSessionAuth();
+    const { sessionDetails, setSessionDetails } = useSessionAuth();
 
     const onResumeChange = (event) => {
         let resumeArray = Array.from(event.target.files);
@@ -29,14 +29,14 @@ export default function UploadScreen() {
         //prepare resumes for upload
         try {
             event.preventDefault();
-            const res = await axios.get(`http://localhost:3001/sessions/hasResumeCapacity`, {
+            const hasCapacityRes = await axios.get(`http://localhost:3001/sessions/hasResumeCapacity`, {
                 params: {
                     numResumes: numResumes,
                     sessionID: sessionDetails.sessionID,
                 },
             }); //check if session has space to upload
 
-            if (res.data.resumeOverflow) {
+            if (hasCapacityRes.data.resumeOverflow) {
                 setResumeOverflow(true);
                 return;
             }
@@ -46,28 +46,18 @@ export default function UploadScreen() {
                 formData.append("resumes", resume);
             });
             formData.append("sessionID", sessionDetails.sessionID);
-            formData.append(
-                "duration",
-                sessionDetails.duration * 7 * 24 * 60 * 60 * 1000
-            ); //duration in weeks expressed in ms
+            formData.append("duration", sessionDetails.duration * 7 * 24 * 60 * 60 * 1000); //duration in weeks expressed in ms
 
-            await axios.post(
-                `http://localhost:3001/resumes/uploadResumes`,
-                formData,
-                {
-                    //upload pdfs to aws and mongo
-                    headers: {
-                        "content-type": "multipart/form-data",
-                    },
-                }
-            );
-            await axios.post(
-                `http://localhost:3001/sessions/updateSessionSize`,
-                {
-                    sessionID: sessionDetails.sessionID,
-                }
-            ); //update resume count for the current session
-
+            await axios.post(`http://localhost:3001/resumes/uploadResumes`, formData, {
+                //upload pdfs to aws and mongo
+                headers: {
+                    "content-type": "multipart/form-data",
+                },
+            });
+            const updateSizeRes = await axios.post(`http://localhost:3001/sessions/updateSessionSize`, {
+                sessionID: sessionDetails.sessionID,
+            }); //update resume count for the current session
+            setSessionDetails({ ...sessionDetails, resumeCount: updateSizeRes.data.resumeCount });
             setSubmitted(true);
         } catch (error) {
             console.error("Error uploading resume", error);
@@ -81,8 +71,7 @@ export default function UploadScreen() {
                     <h2>Upload Resumes Here</h2>
 
                     <h4 className="upload-instruction">
-                        Files must be named in the following format:
-                        FirstName_LastName_Resume_GradYear.pdf
+                        Files must be named in the following format: FirstName_LastName_Resume_GradYear.pdf
                     </h4>
                     <div>Resumes Submitted: {numResumes}</div>
                     <form onSubmit={uploadResumes}>
