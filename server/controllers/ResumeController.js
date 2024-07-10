@@ -45,7 +45,6 @@ const getComparisonResumes = async (req, res) => {
             { $match: { sessionID: sessionID } },
             { $sample: { size: parseInt(resumeCount) } }, // Randomly shuffle the matched resumes
         ]);
-        console.log(allResumes);
         for (let i = 0; i < allResumes.length; i++) {
             if (
                 Math.abs(allResumes[i].eloScore - leftElo) <=

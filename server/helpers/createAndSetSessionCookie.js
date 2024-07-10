@@ -4,10 +4,12 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // cookie setter helper function
-const createAndSetSessionCookie = async (sessionID, res) => {
+const createAndSetSessionCookie = async (sessionID, isAdmin, res) => {
     try {
-        const token = await jwt.sign({ sessionID }, process.env.TOKEN_SECRET, { expiresIn: "1h" });
-        res.cookie("sessionID", token, {
+        const token = jwt.sign({ sessionID: sessionID, isAdmin: isAdmin }, process.env.TOKEN_SECRET, {
+            expiresIn: "1h",
+        });
+        res.cookie("session", token, {
             httpOnly: true,
             // secure: true,
             sameSite: "Strict",
