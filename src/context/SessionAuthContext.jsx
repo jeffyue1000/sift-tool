@@ -1,5 +1,4 @@
 import { React, useState, useEffect, createContext, useContext } from "react";
-import Cookies from "js-cookie";
 import axios from "axios";
 
 export const SessionAuthContext = createContext();
@@ -18,13 +17,20 @@ export function SessionAuthProvider({ children }) {
 
     const verifySession = async () => {
         try {
-            const sessionIdToken = Cookies.get("sessionID");
-            if (sessionIdToken) {
+            const res = await axios.get("http://localhost:3001/sessions/getCookie", {
+                withCredentials: true,
+            });
+            const cookieToken = res.data.cookieToken;
+            if (cookieToken) {
                 const res = await axios.get("http://localhost:3001/sessions/getSessionFromToken", {
-                    params: { encodedSessionToken: sessionIdToken },
+                    params: { encodedSessionToken: cookieToken },
                 });
+                console.log(res);
                 if (res.data.valid) {
                     setSessionAuthenticated(true);
+                    if (res.data.isAdmin) {
+                        setAdminAuthenticated(true);
+                    }
                     setSessionDetails({
                         sessionID: res.data.session.sessionID,
                         duration: res.data.session.duration,

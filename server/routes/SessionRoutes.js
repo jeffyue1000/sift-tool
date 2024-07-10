@@ -8,6 +8,7 @@ const {
     updateSessionSize,
     hasResumeCapacity,
     updateTotalComparisons,
+    getCookie,
 } = require("../controllers/SessionController");
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.get("/getSessionFromToken", getSessionFromToken);
 router.post("/updateSessionSize", updateSessionSize);
 router.get("/hasResumeCapacity", hasResumeCapacity);
 router.post("/updateNumComparisons", updateTotalComparisons);
+router.get("/getCookie", getCookie);
 
 module.exports = router;

@@ -24,26 +24,41 @@ const calculateSessionStdDev = async (sessionID) => {
         console.error("Error occurred in calculateSessionStdDev", error);
     }
 };
+const getCookie = async (req, res) => {
+    try {
+        const encodedSessionToken = req.cookies.session;
+        res.status(200).json({
+            cookieToken: encodedSessionToken,
+        });
+    } catch (error) {
+        console.error("Error occurred in getCookie", error);
+        res.status(500).json({
+            message: "Erorr getting cookie",
+            error: error.message,
+        });
+    }
+};
 const getSessionFromToken = async (req, res) => {
     try {
         const { encodedSessionToken } = req.query;
-        const decodedSessionToken = await jwt.compare(
-            encodedSessionToken,
-            process.env.TOKEN_SECRET
-        );
-
-        const session = await Session.findOne({
-            sessionID: decodedSessionToken,
+        jwt.verify(encodedSessionToken, process.env.TOKEN_SECRET, async (err, decoded) => {
+            if (err) {
+                console.error("JWT Verification Error:", err);
+                return res.status(401).json({ message: "Failed to authenticate token" });
+            }
+            const session = await Session.findOne({
+                sessionID: decoded.sessionID,
+            });
+            if (session) {
+                res.status(200).json({ valid: true, session: session, isAdmin: decoded.isAdmin });
+            } else {
+                res.status(404).json({ valid: false });
+            }
         });
-        if (session) {
-            res.status(200).json({ valid: true, session: session });
-        } else {
-            res.status(404).json({ valid: false });
-        }
     } catch (error) {
         console.error("Error occurred in getSessionFromToken", error);
         res.status(500).json({
-            message: "error checking session token",
+            message: "Error checking session token",
             valid: false,
             error: error.message,
         });
@@ -69,14 +84,14 @@ const loginSession = async (req, res) => {
         const adminKeyMatch = await bcrypt.compare(adminKey, session.adminKey);
 
         if (passkeyMatch && adminKeyMatch) {
-            await createAndSetSessionCookie(sessionID, res);
+            await createAndSetSessionCookie(sessionID, adminKeyMatch, res);
             res.status(200).json({
                 validLogin: true,
                 admin: true,
                 session: session,
             });
         } else if (passkeyMatch) {
-            await createAndSetSessionCookie(sessionID, res);
+            await createAndSetSessionCookie(sessionID, adminKeyMatch, res);
             res.status(200).json({
                 validLogin: true,
                 admin: false,
@@ -96,8 +111,7 @@ const loginSession = async (req, res) => {
 
 const createSession = async (req, res) => {
     try {
-        const { sessionID, password, adminKey, maxResumes, duration } =
-            req.body;
+        const { sessionID, password, adminKey, maxResumes, duration } = req.body;
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
         if (sessionExists) {
@@ -119,7 +133,7 @@ const createSession = async (req, res) => {
 
         await session.save();
 
-        await createAndSetSessionCookie(sessionID, res); //authenticate user upon creating session
+        await createAndSetSessionCookie(sessionID, true, res); //authenticate user upon creating session
 
         res.status(200).json({
             creationSuccess: true,
@@ -144,8 +158,7 @@ const hasResumeCapacity = async (req, res) => {
         if (existingResumes.length + numResumes > session.maxResumes) {
             res.status(200).json({
                 resumeOverflow: true,
-                overflowAmount:
-                    existingResumes.length + numResumes - session.maxResumes,
+                overflowAmount: existingResumes.length + numResumes - session.maxResumes,
             });
         } else {
             res.status(200).json({
@@ -168,12 +181,12 @@ const updateSessionSize = async (req, res) => {
         const session = await Session.findOne({ sessionID: sessionID }); //consider using findOneandUpdate
 
         if (resumes.length <= session.maxResumes) {
-            session.totalScore +=
-                DEFAULT_ELO * (resumes.length - session.resumeCount);
+            session.totalScore += DEFAULT_ELO * (resumes.length - session.resumeCount);
             session.resumeCount = resumes.length;
             await session.save();
             res.status(200).json({
                 updateSuccessful: true,
+                resumeCount: resumes.length,
             });
         } else {
             //should never run; serves as backup check
@@ -218,4 +231,5 @@ module.exports = {
     hasResumeCapacity,
     updateTotalComparisons,
     calculateSessionStdDev,
+    getCookie,
 };
