@@ -1,5 +1,6 @@
 import { React, useEffect, useState } from "react";
 import ResumePDF from "../components/ResumePdf";
+import Screen from "../components/Screen";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import axios from "axios";
 import "../styles/ComparisonScreen.css";
@@ -13,14 +14,16 @@ export default function ComparisonScreen() {
         leftURL: "",
         rightURL: "",
     });
-    const [winner, setWinner] = useState(null);
     const [canCompare, setCanCompare] = useState(false);
     const { sessionDetails } = useSessionAuth();
 
     const getComparisonResumes = async () => {
         try {
             const res = await axios.get("http://localhost:3001/resumes/getComparisonResumes", {
-                params: { sessionID: sessionDetails.sessionID },
+                params: {
+                    sessionID: sessionDetails.sessionID,
+                    resumeCount: sessionDetails.resumeCount,
+                },
             });
             if (res.data.leftResume && res.data.rightResume) {
                 setResumes({
@@ -59,8 +62,6 @@ export default function ComparisonScreen() {
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
             });
-
-            setWinner(null);
             getComparisonResumes();
             console.log(resumes);
         } catch (error) {
@@ -69,7 +70,7 @@ export default function ComparisonScreen() {
     };
 
     useEffect(() => {
-        if (sessionDetails.resumeCount >= 2) {
+        if (parseInt(sessionDetails.resumeCount) >= 2) {
             setCanCompare(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,29 +88,24 @@ export default function ComparisonScreen() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resumes]);
 
-    // useEffect(() => {
-    //     if (winner) {
-    //         handleWinner();
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [winner]);
-
     return (
-        <div>
+        <Screen>
             {canCompare ? (
-                <div className="resumes">
-                    <ResumePDF
-                        resumeURL={resumeUrls.leftURL}
-                        onClick={() => handleWinner(resumes.leftResume)}
-                    />
-                    <ResumePDF
-                        resumeURL={resumeUrls.rightURL}
-                        onClick={() => handleWinner(resumes.rightResume)}
-                    />
+                <div className="compare-container">
+                    <div className="resumes">
+                        <ResumePDF
+                            resumeURL={resumeUrls.leftURL}
+                            onClick={() => handleWinner("leftWin")}
+                        />
+                        <ResumePDF
+                            resumeURL={resumeUrls.rightURL}
+                            onClick={() => handleWinner("rightWin")}
+                        />
+                    </div>
                 </div>
             ) : (
                 <div>Upload More Resumes To Compare First!</div>
             )}
-        </div>
+        </Screen>
     );
 }
