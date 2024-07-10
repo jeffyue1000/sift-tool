@@ -67,7 +67,12 @@ const getSessionFromToken = async (req, res) => {
 
 const logoutSession = async (req, res) => {
     //logout user by clearing session cookie
-    res.clearCookie("sessionID");
+    res.cookie("session", "", {
+        httpOnly: true,
+        // secure: true,
+        sameSite: "Strict",
+        maxAge: 0,
+    });
     res.status(200).json({ cookieCleared: true });
 };
 
