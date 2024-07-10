@@ -64,7 +64,7 @@ export default function RankingScreen() {
                             key={applicant._id}
                             name={applicant.name}
                             gradYear={applicant.gradYear}
-                            eloScore={applicant.eloScore}
+                            eloScore={Math.round(applicant.eloScore)}
                             rank={index + 1 + (currentPage - 1) * MAX_ITEMS_PER_PAGE}
                         />
                     ))}

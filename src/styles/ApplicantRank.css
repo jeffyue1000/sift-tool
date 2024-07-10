@@ -5,7 +5,7 @@
     margin: 16px;
     width: 735px;
     height: 40px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: -4px 4px 8px #57575b;
     transition: transform 0.2s;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -31,7 +31,7 @@
     display: contents;
 }
 .applicant-detail {
-    font-size: 1em;
+    font-size: 1.1em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
