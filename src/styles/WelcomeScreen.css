@@ -1,8 +1,6 @@
 body {
     margin: 0;
     padding: 0;
-    background: #f4f4f4;
-    color: #333;
 }
 
 .welcome-container {
@@ -12,7 +10,18 @@ body {
     justify-content: center;
     min-height: 100vh;
     padding: 10px;
-    background: #ffffff;
+    background: #1c92d2; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to left,
+        #f2fcfe,
+        #1c92d2
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to left,
+        #f2fcfe,
+        #1c92d2
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
     margin-top: 575px;
 }
 
@@ -20,21 +29,36 @@ body {
     max-width: 1500px;
     text-align: center;
     padding: 20px;
-    background: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #1c92d2; /* fallback for old browsers */
+    background: -webkit-linear-gradient(
+        to left,
+        #f2fcfe,
+        #1c92d2
+    ); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(
+        to left,
+        #f2fcfe,
+        #1c92d2
+    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
     border-radius: 10px;
 }
 
 .welcome-title {
-    font-size: 3em;
+    font-size: 6em;
+    font-family: "Graviola-Regular";
+    src: url("../fonts/Graviola-Regular.otf") format("opentype");
     margin: 0.5em 0;
-    color: #000000;
+    color: #212a31;
 }
 
 .welcome-subtitle {
     font-size: 1.5em;
     margin: 0.5em 0;
-    color: #000000;
+    color: #212a31;
+    font-family: "Nanum Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .welcome-instructions,
@@ -42,15 +66,14 @@ body {
 .faq-header {
     font-size: 1.2em;
     margin: 1em 0;
-    color: #2980b9;
+    color: #124e66;
     margin-top: 60px;
 }
 
 .welcome-description {
-    margin-top: 60px;
+    margin-top: 150px;
     font-size: 1.3em;
     margin: 1em 0;
-    text-decoration: bold;
     color: #bdc3c7;
 }
 
@@ -66,24 +89,25 @@ body {
 .faq-item {
     margin: 1em 0;
     text-align: left;
+    color: #212a31;
 }
 
 .welcome-instruction-item::before {
     content: "✔";
-    color: #2980b9;
+    color: #124e66;
     margin-right: 0.5em;
 }
 
 .sift-instruction-item::before {
     content: "○";
-    color: #2980b9;
+    color: #124e66;
     margin-right: 0.5em;
 }
 
 .faq-question {
     font-size: 1.3em;
     font-weight: bold;
-    color: #2980b9;
+    color: #212a31;
 }
 
 .faq-answer {
@@ -95,5 +119,5 @@ body {
 footer {
     margin-top: 2em;
     font-size: 1em;
-    color: #bdc3c7;
+    color: #212a31;
 }

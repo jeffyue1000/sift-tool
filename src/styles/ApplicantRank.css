@@ -11,7 +11,7 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     align-items: center;
     gap: 16px;
-    background-color: rgb(245, 241, 241);
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
 }
 
 .applicant-box:hover {
@@ -21,7 +21,7 @@
 .applicant-name {
     font-size: 1.35em;
     font-weight: bold;
-    color: #2c3e50;
+    color: #000000;
     overflow: hidden;
     text-overflow: ellipsis;
     grid-column: 1;
@@ -35,6 +35,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #000000;
 }
 
 .applicant-detail:nth-child(1) {

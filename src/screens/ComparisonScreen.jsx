@@ -13,15 +13,17 @@ export default function ComparisonScreen() {
         leftURL: "",
         rightURL: "",
     });
-    const [winner, setWinner] = useState(null);
     const [canCompare, setCanCompare] = useState(false);
     const { sessionDetails } = useSessionAuth();
 
     const getComparisonResumes = async () => {
         try {
-            const res = await axios.get("http://localhost:3001/resumes/getComparisonResumes", {
-                params: { sessionID: sessionDetails.sessionID },
-            });
+            const res = await axios.get(
+                "http://localhost:3001/resumes/getComparisonResumes",
+                {
+                    params: { sessionID: sessionDetails.sessionID },
+                }
+            );
             if (res.data.leftResume && res.data.rightResume) {
                 setResumes({
                     leftResume: res.data.leftResume,
@@ -36,12 +38,18 @@ export default function ComparisonScreen() {
     const getResumePdfs = async () => {
         try {
             if (resumes.leftResume && resumes.rightResume) {
-                const leftRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
-                    params: { id: resumes.leftResume._id },
-                });
-                const rightRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
-                    params: { id: resumes.rightResume._id },
-                });
+                const leftRes = await axios.get(
+                    "http://localhost:3001/resumes/getResumePDF",
+                    {
+                        params: { id: resumes.leftResume._id },
+                    }
+                );
+                const rightRes = await axios.get(
+                    "http://localhost:3001/resumes/getResumePDF",
+                    {
+                        params: { id: resumes.rightResume._id },
+                    }
+                );
 
                 setResumeUrls({
                     leftURL: leftRes.data.url,
@@ -59,8 +67,6 @@ export default function ComparisonScreen() {
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
             });
-
-            setWinner(null);
             getComparisonResumes();
             console.log(resumes);
         } catch (error) {
@@ -69,7 +75,7 @@ export default function ComparisonScreen() {
     };
 
     useEffect(() => {
-        if (sessionDetails.resumeCount >= 2) {
+        if (parseInt(sessionDetails.resumeCount) >= 2) {
             setCanCompare(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,11 +106,11 @@ export default function ComparisonScreen() {
                 <div className="resumes">
                     <ResumePDF
                         resumeURL={resumeUrls.leftURL}
-                        onClick={() => handleWinner(resumes.leftResume)}
+                        onClick={() => handleWinner("leftWin")}
                     />
                     <ResumePDF
                         resumeURL={resumeUrls.rightURL}
-                        onClick={() => handleWinner(resumes.rightResume)}
+                        onClick={() => handleWinner("rightWin")}
                     />
                 </div>
             ) : (

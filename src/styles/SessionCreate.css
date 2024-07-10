@@ -25,8 +25,9 @@
 
 .submit-button {
     font-weight: bold;
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
 }
 
 .submit-button:hover {
-    background-color: #4a55c0;
+    background-color: #3a98cb;
 }

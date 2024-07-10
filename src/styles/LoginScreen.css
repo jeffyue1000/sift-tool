@@ -1,5 +1,4 @@
 body {
-    background-color: #f4f4f9;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +8,7 @@ body {
 
 .main-container {
     width: 600px;
-    background: white;
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -19,23 +18,23 @@ body {
 .tabs {
     display: flex;
     justify-content: center;
-    background-color: #5c67f2;
+    border-bottom: 1px solid #000000;
 }
 
 .tab {
     padding: 16px;
     cursor: pointer;
+
     flex: 1;
+    background-color: transparent;
     color: white;
     font-weight: bold;
-    border: none;
-    background-color: #5c67f2;
     transition: background-color 0.3s;
 }
 
 .tab:hover,
 .tab.active {
-    background-color: #4a55c0;
+    background-color: #3a98cb;
 }
 
 .tab-content {
@@ -55,7 +54,7 @@ body {
     padding: 15px;
     margin-top: 10px;
     border: none;
-    border-bottom: 2px solid #5c67f2;
+    border-bottom: 2px solid 1px solid #000000;
     font-size: 16px;
     box-sizing: border-box;
 }
@@ -64,9 +63,9 @@ button {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
-    background-color: #5c67f2;
+    background-color: transparent;
     color: rgb(245, 240, 240);
-    border: none;
+    border: 1px solid #000000;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;

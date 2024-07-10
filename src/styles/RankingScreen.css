@@ -33,7 +33,7 @@
 .filter-button {
     padding: 10px 15px;
     border: none;
-    background-color: #5c67f2;
+    background-color: #124e66;
     color: white;
     cursor: pointer;
     font-weight: bold;
@@ -41,11 +41,11 @@
 }
 
 .filter-button:hover {
-    background-color: #4a55c0;
+    background-color: #1b83a9;
 }
 
 .filter-button.active {
-    background-color: #3c44a5;
+    background-color: #1b83a9;
 }
 
 .ranking-screen {
@@ -54,9 +54,8 @@
     height: calc(100vh - 150px - 80px);
     overflow-y: auto;
     padding: 16px;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: transparent;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -70,7 +69,7 @@
     margin: 0 2.5px;
     padding: 10px 15px;
     border: none;
-    background-color: #5c67f2;
+    background-color: #124e66;
     color: white;
     cursor: pointer;
     font-weight: bold;
@@ -78,9 +77,9 @@
 }
 
 .page-button:hover {
-    background-color: #4a55c0;
+    background-color: #1b83a9;
 }
 
 .page-button.active {
-    background-color: #3c44a5;
+    background-color: #1b83a9;
 }

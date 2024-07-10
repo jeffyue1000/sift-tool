@@ -1,10 +1,6 @@
 .navbar {
-    background: linear-gradient(
-        90deg,
-        rgb(28, 27, 27) 0%,
-        rgb(26, 23, 23) 100%
-    );
-    height: 60px;
+    /*background: linear-gradient(90deg, #212a31, #2e3944); */
+    height: 65px;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -15,10 +11,11 @@
     top: 0;
     left: 0;
     z-index: 1000; /* Ensures the navbar is on top of other elements */
+    font-family: "PT Sans", sans-serif;
 }
 
 .navbar-logo {
-    color: white;
+    color: #212a31;
     justify-self: start;
     margin-left: 20px;
     cursor: pointer;
@@ -30,6 +27,11 @@
     margin-top: 10px;
     top: 0;
     left: 0;
+    transition: color 0.3s ease-out;
+}
+
+.navbar-logo:hover {
+    color: #1888ff;
 }
 
 .fa-firstdraft {
@@ -55,19 +57,18 @@
 }
 
 .nav-links {
-    color: white;
+    color: #212a31;
     text-decoration: none;
     padding: 0.5rem 1rem;
+    transition: color 0.3s ease-out;
 }
 
 .nav-links:hover {
-    background-color: #1888ff;
-    border-radius: 4px;
-    transition: all 0.2s ease-out;
+    color: #1888ff;
 }
 
 .fa-bars {
-    color: white;
+    color: #212a31;
 }
 
 .nav-links-mobile {
@@ -110,12 +111,14 @@
         padding: 2rem;
         width: 100%;
         display: table;
+        color: white;
     }
 
     .nav-links:hover {
         background-color: #1888ff;
         border-width: 0;
         width: 100%;
+        color: white;
     }
 
     .menu-icon {
@@ -129,7 +132,7 @@
     }
 
     .fa-times {
-        color: #ffffff;
+        color: #212a31;
         font-size: 1.8rem;
         display: flex;
     }
@@ -151,5 +154,6 @@
         background: #fff;
         color: #1888ff;
         transition: 250ms;
+        color: white;
     }
 }

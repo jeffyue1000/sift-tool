@@ -5,15 +5,13 @@ export default function WelcomeScreen() {
     return (
         <div className="welcome-container">
             <div className="welcome-content">
-                <h1 className="welcome-title">Welcome to Sift!</h1>
+                {/* <h2 className="welcome-description">Introducing</h2> */}
+                <h1 className="welcome-title">SIFT</h1>
                 <h2 className="welcome-subtitle">
                     Collaborative Resume Review and Ranking Tool
                 </h2>
                 <p className="welcome-instructions"></p>
-                <p className="welcome-description">
-                    Sift enables groups to efficiently review resumes and
-                    automatically generate a comprehensive ranking
-                </p>
+
                 <p className="welcome-instructions">How to get started:</p>
                 <ol className="instruction-list">
                     <li className="welcome-instruction-item">
