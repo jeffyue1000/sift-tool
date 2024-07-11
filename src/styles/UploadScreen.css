@@ -1,5 +1,5 @@
 .upload-instruction {
-    color: rgb(116, 111, 111);
+    color: rgb(0, 0, 0);
     font-style: italic;
 }
 
@@ -10,4 +10,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 500px;
+}
+
+.form {
 }

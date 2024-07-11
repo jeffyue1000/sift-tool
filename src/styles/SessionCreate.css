@@ -26,8 +26,10 @@
 .submit-button {
     font-weight: bold;
     background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
+    font-family: "Nanum Myeongjo", serif;
+    color: black;
 }
 
 .submit-button:hover {
-    background-color: #3a98cb;
+    background-color: #65aed5;
 }

@@ -32,20 +32,21 @@
 
 .filter-button {
     padding: 10px 15px;
-    border: none;
-    background-color: #124e66;
-    color: white;
+    border: 1px solid #000000;
+    background-color: transparent;
+    color: black;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s;
+    font-family: "Nanum Myeongjo", serif;
 }
 
 .filter-button:hover {
-    background-color: #1b83a9;
+    background-color: #65aed5;
 }
 
 .filter-button.active {
-    background-color: #1b83a9;
+    background-color: #65aed5;
 }
 
 .ranking-screen {
@@ -69,17 +70,18 @@
     margin: 0 2.5px;
     padding: 10px 15px;
     border: none;
-    background-color: #124e66;
-    color: white;
+    background-color: transparent;
+    color: black;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s;
+    font-family: "Nanum Myeongjo", serif;
 }
 
 .page-button:hover {
-    background-color: #1b83a9;
+    background-color: #65aed5;
 }
 
 .page-button.active {
-    background-color: #1b83a9;
+    background-color: #65aed5;
 }

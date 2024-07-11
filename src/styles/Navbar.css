@@ -31,7 +31,7 @@
 }
 
 .navbar-logo:hover {
-    color: #1888ff;
+    color: #65aed5;
 }
 
 .fa-firstdraft {
@@ -64,7 +64,7 @@
 }
 
 .nav-links:hover {
-    color: #1888ff;
+    color: #65aed5;
 }
 
 .fa-bars {
@@ -115,7 +115,7 @@
     }
 
     .nav-links:hover {
-        background-color: #1888ff;
+        background-color: #65aed5;
         border-width: 0;
         width: 100%;
         color: white;
@@ -152,7 +152,7 @@
 
     .nav-links-mobile:hover {
         background: #fff;
-        color: #1888ff;
+        color: #65aed5;
         transition: 250ms;
         color: white;
     }

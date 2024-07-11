@@ -24,17 +24,17 @@ body {
 .tab {
     padding: 16px;
     cursor: pointer;
-
+    font-family: "Nanum Myeongjo", serif;
     flex: 1;
     background-color: transparent;
-    color: white;
+    color: rgb(0, 0, 0);
     font-weight: bold;
     transition: background-color 0.3s;
 }
 
 .tab:hover,
 .tab.active {
-    background-color: #3a98cb;
+    background-color: #65aed5;
 }
 
 .tab-content {
