@@ -57,7 +57,7 @@ export default function RankingScreen() {
     return (
         <div className="ranking-container-wrapper">
             <div className="ranking-container">
-                <h1 className="header">Aggregate Rankings</h1>
+                <div className="header">Aggregate Rankings</div>
                 <div className="ranking-screen">
                     {currentApplicants.map((applicant, index) => (
                         <ApplicantRank

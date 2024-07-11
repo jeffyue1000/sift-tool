@@ -19,6 +19,7 @@
 
 .header {
     font-size: 2em;
+    font-weight: 600;
     margin-bottom: 16px;
 }
 
@@ -53,6 +54,7 @@
     max-width: 800px;
     height: calc(100vh - 150px - 80px);
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 16px;
     border-radius: 8px;
     background-color: transparent;
