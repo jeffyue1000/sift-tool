@@ -121,8 +121,8 @@ export default function UploadScreen() {
                             }`}
                         </div>
                         <button className="upload-button">Upload</button>
+                        {submitted && <div>Uploaded Successfully!</div>}
                     </form>
-                    {submitted && <div>Uploaded Successfully!</div>}
                 </div>
             ) : (
                 <div>resumeoverflowplaceholder</div> //make a popup that tells user they have to many resumes

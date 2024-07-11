@@ -54,7 +54,7 @@
 .ranking-screen {
     width: 100%;
     max-width: 800px;
-    height: calc(100vh - 150px - 80px);
+    height: calc(100vh - 150px - 120px);
     overflow-y: auto;
     overflow-x: hidden;
     padding: 16px;
