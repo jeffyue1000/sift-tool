@@ -42,18 +42,12 @@ export default function ComparisonScreen() {
     const getResumePdfs = async () => {
         try {
             if (resumes.leftResume && resumes.rightResume) {
-                const leftRes = await axios.get(
-                    "http://localhost:3001/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.leftResume._id },
-                    }
-                );
-                const rightRes = await axios.get(
-                    "http://localhost:3001/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.rightResume._id },
-                    }
-                );
+                const leftRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.leftResume._id },
+                });
+                const rightRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.rightResume._id },
+                });
 
                 setResumeUrls({
                     leftURL: leftRes.data.url,

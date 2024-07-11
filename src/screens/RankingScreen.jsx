@@ -57,14 +57,14 @@ export default function RankingScreen() {
     return (
         <div className="ranking-container-wrapper">
             <div className="ranking-container">
-                <h1 className="header">Aggregate Rankings</h1>
+                <div className="header">Aggregate Rankings</div>
                 <div className="ranking-screen">
                     {currentApplicants.map((applicant, index) => (
                         <ApplicantRank
                             key={applicant._id}
                             name={applicant.name}
                             gradYear={applicant.gradYear}
-                            eloScore={applicant.eloScore}
+                            eloScore={Math.round(applicant.eloScore)}
                             rank={index + 1 + (currentPage - 1) * MAX_ITEMS_PER_PAGE}
                         />
                     ))}
