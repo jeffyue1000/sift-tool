@@ -5,7 +5,7 @@
     margin: 16px;
     width: 735px;
     height: 40px;
-    box-shadow: -4px 4px 8px #57575b;
+    box-shadow: -4px 4px 8px #464649;
     transition: transform 0.2s;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;

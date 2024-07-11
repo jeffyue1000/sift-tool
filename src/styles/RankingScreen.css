@@ -38,11 +38,12 @@
     color: black;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: 0.2s;
     font-family: "Nanum Myeongjo", serif;
 }
 
 .filter-button:hover {
+    color: #f9ede1;
     background-color: #65aed5;
 }
 
@@ -76,14 +77,16 @@
     color: black;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: 0.2s;
     font-family: "Nanum Myeongjo", serif;
 }
 
 .page-button:hover {
+    color: #f9ede1;
     background-color: #65aed5;
 }
 
 .page-button.active {
+    color: #f9ede1;
     background-color: #65aed5;
 }

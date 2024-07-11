@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useSessionAuth } from "../context/SessionAuthContext";
+import { useDropzone } from "react-dropzone";
+import Screen from "../components/Screen";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import "../styles/UploadScreen.css";
 
@@ -10,20 +14,32 @@ export default function UploadScreen() {
     const [resumeOverflow, setResumeOverflow] = useState(false);
     const { sessionDetails, setSessionDetails } = useSessionAuth();
 
-    const onResumeChange = (event) => {
-        let resumeArray = Array.from(event.target.files);
-        resumeArray = [...resumeArray, ...resumes];
+    const onDrop = useCallback(
+        (acceptedFiles) => {
+            console.log("accepted files: ", acceptedFiles);
+            console.log("resumes: ", resumes);
+            let resumeArray = [...acceptedFiles, ...resumes];
+            //uses map to eliminate duplicate resumes
+            const resumeMap = new Map();
+            resumeArray.forEach((resume) => {
+                resumeMap.set(resume.name, resume);
+            });
+            const uniqueResumes = Array.from(resumeMap.values());
+            console.log(uniqueResumes);
+            setResumes(uniqueResumes);
+            setNumResumes(uniqueResumes.length);
+        },
+        [resumes]
+    );
 
-        //uses map to eliminate duplicate resumes
-        const resumeMap = new Map();
-        resumeArray.forEach((resume) => {
-            resumeMap.set(resume.name, resume);
-        });
-        const uniqueResumes = Array.from(resumeMap.values());
-
-        setResumes(uniqueResumes);
-        setNumResumes(uniqueResumes.length);
-    };
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: {
+            "application/pdf": [],
+        },
+        maxSize: 500000,
+        maxFiles: 10000,
+    });
 
     const uploadResumes = async (event) => {
         //prepare resumes for upload
@@ -65,29 +81,52 @@ export default function UploadScreen() {
     };
 
     return (
-        <div>
+        <Screen>
             {!resumeOverflow ? (
-                <div className="upload-container">
-                    <h2>Upload Resumes Here</h2>
-
-                    <h4 className="upload-instruction">
-                        Files must be named in the following format: FirstName_LastName_Resume_GradYear.pdf
-                    </h4>
-                    <div>Resumes Submitted: {numResumes}</div>
-                    <form onSubmit={uploadResumes}>
-                        <input
-                            type="file"
-                            accept="application/pdf"
-                            multiple
-                            onChange={onResumeChange}
-                        />
-                        <button className="submit-button">Upload</button>
+                <div className="upload-boxes-container">
+                    <div className="upload-instruction-container">
+                        <h2 className="instruction-header">Upload Resumes</h2>
+                        <div className="upload-instruction">
+                            Submit any resumes to be sifted to the dropzone on the right. You may drag and drop
+                            individual files or select multiple to be submitted at once.
+                            <br />
+                            <p>
+                                Files must be named in the following format:{" "}
+                                <b>FirstName_LastName_Resume_GradYear.pdf</b>
+                                <br />
+                                <b>(e.g. Joe_Bruin_Resume_2026) </b>
+                            </p>
+                        </div>
+                    </div>
+                    <form
+                        className="drop-box-container"
+                        onSubmit={uploadResumes}
+                    >
+                        <div
+                            className="drop-box"
+                            {...getRootProps()}
+                        >
+                            <input {...getInputProps()} />
+                            <FontAwesomeIcon
+                                icon={faFilePdf}
+                                className="large-icon"
+                            />{" "}
+                            Browse Files
+                        </div>
+                        <div className="submission-details">
+                            Attached: {numResumes}
+                            <br />
+                            {`Remaining Resume Slots: ${
+                                parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)
+                            }`}
+                        </div>
+                        <button className="upload-button">Upload</button>
                     </form>
                     {submitted && <div>Uploaded Successfully!</div>}
                 </div>
             ) : (
                 <div>resumeoverflowplaceholder</div> //make a popup that tells user they have to many resumes
             )}
-        </div>
+        </Screen>
     );
 }

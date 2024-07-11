@@ -8,7 +8,7 @@ const MAX_ITEMS_PER_PAGE = 20;
 
 export default function RankingScreen() {
     const [applicants, setApplicants] = useState([]);
-    const { sessionDetails } = useSessionAuth();
+    const { sessionDetails, verifySession } = useSessionAuth();
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedGradYear, setSelectedGradYear] = useState("All");
 
@@ -25,6 +25,7 @@ export default function RankingScreen() {
     };
 
     useEffect(() => {
+        verifySession();
         fetchApplicants();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -58,6 +59,7 @@ export default function RankingScreen() {
         <div className="ranking-container-wrapper">
             <div className="ranking-container">
                 <div className="header">Aggregate Rankings</div>
+                <div>{`Total Comparisons: ${sessionDetails.totalComparisons}`}</div>
                 <div className="ranking-screen">
                     {currentApplicants.map((applicant, index) => (
                         <ApplicantRank

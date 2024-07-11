@@ -60,7 +60,7 @@
     color: #212a31;
     text-decoration: none;
     padding: 0.5rem 1rem;
-    transition: color 0.3s ease-out;
+    transition: color 0.2s ease-in-out;
 }
 
 .nav-links:hover {
