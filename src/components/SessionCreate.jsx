@@ -12,11 +12,7 @@ export default function SessionCreate({ configData }) {
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [sessionExists, setSessionExists] = useState(false);
     const [sessionCreated, setSessionCreated] = useState(false);
-    const {
-        setSessionAuthenticated,
-        setSessionDetails,
-        setAdminAuthenticated,
-    } = useSessionAuth();
+    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
     const navigate = useNavigate();
 
     const onCreateSession = async () => {
@@ -28,13 +24,9 @@ export default function SessionCreate({ configData }) {
                 maxResumes: configData.maxResumes,
                 duration: configData.duration,
             };
-            const res = await axios.post(
-                `http://localhost:3001/sessions/createSession`,
-                session,
-                {
-                    withCredentials: "true",
-                }
-            );
+            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session, {
+                withCredentials: "true",
+            });
 
             if (res.data.sessionExists) {
                 setSessionExists(true);
@@ -47,6 +39,8 @@ export default function SessionCreate({ configData }) {
                     sessionID: res.data.session.sessionID,
                     duration: res.data.session.duration,
                     resumeCount: res.data.session.resumeCount,
+                    maxResumes: res.data.session.maxResumes,
+                    totalComparisons: res.data.session.totalComparisons,
                 });
                 setSessionCreated(true);
             }

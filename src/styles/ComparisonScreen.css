@@ -4,11 +4,6 @@ body {
     height: 100vh;
 }
 .compare-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 60px;
-    margin-top: 20px;
 }
 .resumes {
     display: flex;

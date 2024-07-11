@@ -34,6 +34,8 @@ export function SessionAuthProvider({ children }) {
                         sessionID: res.data.session.sessionID,
                         duration: res.data.session.duration,
                         resumeCount: res.data.session.resumeCount,
+                        maxResumes: res.data.session.maxResumes,
+                        totalComparisons: res.data.session.totalComparisons,
                     });
                 }
             }
@@ -74,6 +76,7 @@ export function SessionAuthProvider({ children }) {
                 sessionDetails,
                 setSessionDetails,
                 logout,
+                verifySession,
             }}
         >
             {children}
