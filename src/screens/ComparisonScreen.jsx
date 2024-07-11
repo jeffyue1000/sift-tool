@@ -19,12 +19,15 @@ export default function ComparisonScreen() {
 
     const getComparisonResumes = async () => {
         try {
-            const res = await axios.get("http://localhost:3001/resumes/getComparisonResumes", {
-                params: {
-                    sessionID: sessionDetails.sessionID,
-                    resumeCount: sessionDetails.resumeCount,
-                },
-            });
+            const res = await axios.get(
+                "http://localhost:3001/resumes/getComparisonResumes",
+                {
+                    params: {
+                        sessionID: sessionDetails.sessionID,
+                        resumeCount: sessionDetails.resumeCount,
+                    },
+                }
+            );
             if (res.data.leftResume && res.data.rightResume) {
                 setResumes({
                     leftResume: res.data.leftResume,

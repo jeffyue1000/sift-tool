@@ -15,7 +15,7 @@ export default function ResumePDF({ onClick, resumeURL }) {
             >
                 <Page
                     pageNumber={1}
-                    scale={1.08}
+                    scale={1.02}
                 />
             </Document>
         </div>

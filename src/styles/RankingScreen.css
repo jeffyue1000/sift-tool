@@ -19,6 +19,7 @@
 
 .header {
     font-size: 2em;
+    font-weight: 600;
     margin-bottom: 16px;
 }
 
@@ -32,31 +33,33 @@
 
 .filter-button {
     padding: 10px 15px;
-    border: none;
-    background-color: #5c67f2;
-    color: white;
+    border: 1px solid #000000;
+    background-color: transparent;
+    color: black;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
 }
 
 .filter-button:hover {
-    background-color: #4a55c0;
+    color: #f9ede1;
+    background-color: #65aed5;
 }
 
 .filter-button.active {
-    background-color: #3c44a5;
+    background-color: #65aed5;
 }
 
 .ranking-screen {
     width: 100%;
     max-width: 800px;
-    height: calc(100vh - 150px - 80px);
+    height: calc(100vh - 150px - 120px);
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 16px;
-    border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: transparent;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -70,17 +73,20 @@
     margin: 0 2.5px;
     padding: 10px 15px;
     border: none;
-    background-color: #5c67f2;
-    color: white;
+    background-color: transparent;
+    color: black;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
 }
 
 .page-button:hover {
-    background-color: #4a55c0;
+    color: #f9ede1;
+    background-color: #65aed5;
 }
 
 .page-button.active {
-    background-color: #3c44a5;
+    color: #f9ede1;
+    background-color: #65aed5;
 }

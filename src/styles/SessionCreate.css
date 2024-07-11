@@ -10,9 +10,14 @@
     padding: 10px;
     margin-top: 10px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 16px;
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1em;
+    background-color: #f9ede1;
 }
 
 .input-field:first-child {
@@ -24,9 +29,15 @@
 }
 
 .submit-button {
+    margin-top: 30px;
     font-weight: bold;
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
+    font-family: "Nanum Myeongjo", serif;
+    color: black;
+    transition: 0.2s;
 }
 
 .submit-button:hover {
-    background-color: #4a55c0;
+    color: #f9ede1;
+    background-color: #65aed5;
 }
