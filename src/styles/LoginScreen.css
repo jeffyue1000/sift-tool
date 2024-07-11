@@ -10,15 +10,14 @@ body {
     width: 600px;
     background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .tabs {
     display: flex;
     justify-content: center;
-    border-bottom: 1px solid #000000;
 }
 
 .tab {

@@ -1,23 +1,17 @@
 body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 .welcome-container {
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     padding: 10px;
-    background: #1c92d2; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to left, #f2fcfe, #1c92d2); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to left,
-        #f2fcfe,
-        #1c92d2
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
     margin-top: 575px;
 }
 
@@ -25,14 +19,6 @@ body {
     max-width: 1500px;
     text-align: center;
     padding: 20px;
-    background: #1c92d2; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to left, #f2fcfe, #1c92d2); /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(
-        to left,
-        #f2fcfe,
-        #1c92d2
-    ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
     border-radius: 10px;
 }
 
@@ -42,10 +28,11 @@ body {
     src: url("../fonts/Graviola-Regular.otf") format("opentype");
     margin: 0.5em 0;
     color: #212a31;
+    margin-top: -500px;
 }
 
 .welcome-subtitle {
-    font-size: 1.5em;
+    font-size: 1.8em;
     margin: 0.5em 0;
     color: #212a31;
     font-family: "Nanum Myeongjo", serif;
@@ -54,12 +41,20 @@ body {
 }
 
 .welcome-instructions,
-.sift-instructions,
 .faq-header {
-    font-size: 1.2em;
+    font-size: 1.5em;
     margin: 1em 0;
     color: #124e66;
-    margin-top: 60px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.sift-instructions {
+    text-align: center;
+    font-size: 1.65em;
+    margin: 1em 0;
+    color: #000000;
+    margin-top: 20px;
 }
 
 .welcome-description {
@@ -77,14 +72,21 @@ body {
 }
 
 .welcome-instruction-item,
-.sift-instruction-item,
 .faq-item {
     margin: 1em 0;
-    text-align: left;
+    text-align: center;
     color: #212a31;
 }
 
-.welcome-instruction-item::before {
+.sift-instruction-item {
+    text-align: center;
+    color: #212a31;
+    margin: 1em 0;
+    font-size: 1.1em;
+    margin-top: 30px;
+}
+
+/* .welcome-instruction-item::before {
     content: "✔";
     color: #124e66;
     margin-right: 0.5em;
@@ -95,8 +97,46 @@ body {
     font-size: 12px;
     color: #124e66;
     margin-right: 0.5em;
+} 
+*/
+
+/* .welcome-instructions-container {
+    display: flexbox;
+    background-color: transparent;
+    border: 2px solid black;
+    padding: 10px;
+    margin: 20px 0;
+    width: 500px;
+    height: 200px;
+    margin-top: 50px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+        -5px -5px 10px rgba(0, 0, 0, 0.2);
+} */
+
+.sift-instructions-container {
+    display: flexbox;
+    background-color: transparent;
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 20px 0;
+    width: 1000px;
+    height: 350px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+        -5px -5px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 40px;
 }
 
+.instructions-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin: 20px 0;
+    width: 100%;
+    margin-top: 60px;
+}
 .faq-question {
     font-size: 1.3em;
     font-weight: bold;
@@ -110,7 +150,20 @@ body {
 }
 
 footer {
-    margin-top: 2em;
     font-size: 1em;
     color: #212a31;
+    margin-bottom: 90px;
+}
+
+.start-button {
+    margin-top: 15px;
+    width: 600px;
+    font-weight: bold;
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
+    font-family: "Nanum Myeongjo", serif;
+    color: black;
+}
+
+.start-button:hover {
+    background-color: #65aed5;
 }
