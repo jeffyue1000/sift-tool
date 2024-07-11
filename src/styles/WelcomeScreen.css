@@ -32,8 +32,8 @@ body {
 }
 
 .welcome-subtitle {
-    font-size: 1.8em;
-    margin: 0.5em 0;
+    font-size: 1.4em;
+    margin-top: -50px;
     color: #212a31;
     font-family: "Nanum Myeongjo", serif;
     font-weight: 400;
@@ -42,7 +42,7 @@ body {
 
 .welcome-instructions,
 .faq-header {
-    font-size: 1.5em;
+    font-size: 1.6em;
     margin: 1em 0;
     color: #124e66;
     margin-top: 30px;
@@ -162,8 +162,10 @@ footer {
     background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
     font-family: "Nanum Myeongjo", serif;
     color: black;
+    transition: 0.2s;
 }
 
 .start-button:hover {
+    color: #f9ede1;
     background-color: #65aed5;
 }

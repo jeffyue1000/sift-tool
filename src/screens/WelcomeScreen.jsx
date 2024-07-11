@@ -9,7 +9,7 @@ export default function WelcomeScreen() {
                 {/* <h2 className="welcome-description">Introducing</h2> */}
                 <h1 className="welcome-title">SIFT</h1>
                 <h2 className="welcome-subtitle">
-                    Collaborative Resume Review and Ranking Tool
+                    Collaborative Resume Review Tool
                 </h2>
                 <p className="welcome-instructions"></p>
                 <div className="instructions-wrapper">
