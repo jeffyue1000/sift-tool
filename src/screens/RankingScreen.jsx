@@ -38,6 +38,18 @@ export default function RankingScreen() {
         setCurrentPage(1);
     };
 
+    const showResume = async (index) => {
+        try {
+            const res = await axios.get(`http://localhost:3001/resumes/getResumePDF`, {
+                params: { id: applicants[index]._id },
+            });
+            if (res.data.getPdfSuccess) {
+                window.open(res.data.url, "_blank");
+            }
+        } catch (error) {
+            console.error("Error displaying resume pdf", error);
+        }
+    };
     const gradYears = [
         "All",
         ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort((a, b) => parseInt(b) - parseInt(a)),
@@ -66,6 +78,7 @@ export default function RankingScreen() {
                             gradYear={applicant.gradYear}
                             eloScore={applicant.eloScore}
                             rank={index + 1 + (currentPage - 1) * MAX_ITEMS_PER_PAGE}
+                            onClick={() => showResume(index)}
                         />
                     ))}
                 </div>

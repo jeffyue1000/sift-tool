@@ -85,11 +85,6 @@ const getResumePDF = async (req, res) => {
     try {
         const { id } = req.query;
         const resume = await Resume.findById(id);
-        // const resume = await Resume.findOne({
-        //     name: name,
-        //     gradYear: gradYear,
-        //     sessionID: sessionID,
-        // });
 
         if (!resume) {
             return res.status(500).json({
@@ -104,9 +99,9 @@ const getResumePDF = async (req, res) => {
             Key: s3Key,
         });
 
-        const url = await getSignedUrl(s3, command, { expiresIn: 180 }); //signedURL will last 3 minutes
+        const url = await getSignedUrl(s3, command, { expiresIn: 120 }); //signedURL will last 2 minutes
         res.status(200).json({
-            getPdfSucess: true,
+            getPdfSuccess: true,
             url: url,
         });
     } catch (error) {
