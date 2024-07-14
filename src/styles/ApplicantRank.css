@@ -15,9 +15,11 @@
 }
 
 .applicant-box:hover {
-    transform: scale(1.02);
+    transform: scale(1.015);
 }
-
+.applicant-box:active {
+    transform: scale(0.99);
+}
 .applicant-name {
     font-size: 1.35em;
     font-weight: 600;
