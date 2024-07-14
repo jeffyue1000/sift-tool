@@ -1,18 +1,17 @@
 body {
     margin: 0;
     padding: 0;
-    background: #f4f4f4;
-    color: #333;
+    overflow: hidden;
 }
 
 .welcome-container {
+    margin-left: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     padding: 10px;
-    background: #ffffff;
     margin-top: 575px;
 }
 
@@ -20,37 +19,48 @@ body {
     max-width: 1500px;
     text-align: center;
     padding: 20px;
-    background: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
 .welcome-title {
-    font-size: 3em;
+    font-size: 6em;
+    font-family: "Graviola-Regular";
+    src: url("../fonts/Graviola-Regular.otf") format("opentype");
     margin: 0.5em 0;
-    color: #000000;
+    color: #212a31;
+    margin-top: -500px;
 }
 
 .welcome-subtitle {
-    font-size: 1.5em;
-    margin: 0.5em 0;
-    color: #000000;
+    font-size: 1.4em;
+    margin-top: -50px;
+    color: #212a31;
+    font-family: "Nanum Myeongjo", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .welcome-instructions,
-.sift-instructions,
 .faq-header {
-    font-size: 1.2em;
+    font-size: 1.6em;
     margin: 1em 0;
-    color: #2980b9;
-    margin-top: 60px;
+    color: #124e66;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.sift-instructions {
+    text-align: center;
+    font-size: 1.65em;
+    margin: 1em 0;
+    color: #000000;
+    margin-top: 20px;
 }
 
 .welcome-description {
-    margin-top: 60px;
+    margin-top: 150px;
     font-size: 1.3em;
     margin: 1em 0;
-    text-decoration: bold;
     color: #bdc3c7;
 }
 
@@ -62,28 +72,75 @@ body {
 }
 
 .welcome-instruction-item,
-.sift-instruction-item,
 .faq-item {
     margin: 1em 0;
-    text-align: left;
+    text-align: center;
+    color: #212a31;
 }
 
-.welcome-instruction-item::before {
+.sift-instruction-item {
+    text-align: center;
+    color: #212a31;
+    margin: 1em 0;
+    font-size: 1.1em;
+    margin-top: 30px;
+}
+
+/* .welcome-instruction-item::before {
     content: "✔";
-    color: #2980b9;
+    color: #124e66;
     margin-right: 0.5em;
 }
 
 .sift-instruction-item::before {
     content: "○";
-    color: #2980b9;
+    font-size: 12px;
+    color: #124e66;
     margin-right: 0.5em;
+} 
+*/
+
+/* .welcome-instructions-container {
+    display: flexbox;
+    background-color: transparent;
+    border: 2px solid black;
+    padding: 10px;
+    margin: 20px 0;
+    width: 500px;
+    height: 200px;
+    margin-top: 50px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+        -5px -5px 10px rgba(0, 0, 0, 0.2);
+} */
+
+.sift-instructions-container {
+    display: flexbox;
+    background-color: transparent;
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 20px 0;
+    width: 1000px;
+    height: 350px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5),
+        -5px -5px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 40px;
 }
 
+.instructions-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin: 20px 0;
+    width: 100%;
+    margin-top: 60px;
+}
 .faq-question {
     font-size: 1.3em;
     font-weight: bold;
-    color: #2980b9;
+    color: #212a31;
 }
 
 .faq-answer {
@@ -93,7 +150,22 @@ body {
 }
 
 footer {
-    margin-top: 2em;
     font-size: 1em;
-    color: #bdc3c7;
+    color: #212a31;
+    margin-bottom: 90px;
+}
+
+.start-button {
+    margin-top: 15px;
+    width: 600px;
+    font-weight: bold;
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
+    font-family: "Nanum Myeongjo", serif;
+    color: black;
+    transition: 0.2s;
+}
+
+.start-button:hover {
+    color: #f9ede1;
+    background-color: #65aed5;
 }

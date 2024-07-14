@@ -7,11 +7,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/LoginScreen.css";
 
 export default function LoginScreen() {
-    const {
-        setSessionAuthenticated,
-        setSessionDetails,
-        setAdminAuthenticated,
-    } = useSessionAuth();
+    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState("");
     const [adminKey, setAdminKey] = useState("");
@@ -42,6 +38,8 @@ export default function LoginScreen() {
                     sessionID: res.data.session.sessionID,
                     duration: res.data.session.duration,
                     resumeCount: res.data.session.resumeCount,
+                    maxResumes: res.data.session.maxResumes,
+                    totalComparisons: res.data.session.totalComparisons,
                 });
                 if (res.data.admin) {
                     setAdminAuthenticated(true);
@@ -66,11 +64,7 @@ export default function LoginScreen() {
                     Join Session
                 </button>
                 <button
-                    className={`tab ${
-                        currentTab === "config" || currentTab === "create"
-                            ? "active"
-                            : ""
-                    }`}
+                    className={`tab ${currentTab === "config" || currentTab === "create" ? "active" : ""}`}
                     onClick={() => setCurrentTab("config")}
                 >
                     Create Session
@@ -112,9 +106,7 @@ export default function LoginScreen() {
                             placeholder="Enter Admin Key (Optional)"
                         />
                         {failedLogin && (
-                            <div className="error-message">
-                                Could not find a session with those credentials!
-                            </div>
+                            <div className="error-message">Could not find a session with those credentials!</div>
                         )}
                         <button
                             onClick={handleLogin}

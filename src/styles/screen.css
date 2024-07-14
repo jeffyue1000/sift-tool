@@ -1,10 +1,13 @@
 .screen-container {
-    flex: 1;
     overflow: hidden; /* Prevent scrolling */
     padding: 15px;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
     height: calc(100vh - 55px); /* Subtract the height of the navbar */
     margin-top: 60px; /* Push content below the fixed navbar */
+    padding-bottom: 30px;
 }

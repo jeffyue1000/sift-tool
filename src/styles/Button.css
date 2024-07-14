@@ -1,5 +1,5 @@
 :root {
-    --primary: white;
+    --primary: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
 }
 
 .btn {
