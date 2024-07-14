@@ -1,9 +1,12 @@
 import React from "react";
 import "../styles/ApplicantRank.css";
 
-export default function ApplicantRank({ name, gradYear, eloScore, rank }) {
+export default function ApplicantRank({ name, gradYear, eloScore, rank, onClick }) {
     return (
-        <div className="applicant-box">
+        <div
+            className="applicant-box"
+            onClick={onClick}
+        >
             <h3 className="applicant-name">{name}</h3>
             <div className="applicant-details">
                 <p className="applicant-detail">Grad Year: {gradYear}</p>

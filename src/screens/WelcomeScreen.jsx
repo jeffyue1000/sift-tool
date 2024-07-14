@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/WelcomeScreen.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function WelcomeScreen() {
     return (
@@ -8,9 +8,7 @@ export default function WelcomeScreen() {
             <div className="welcome-content">
                 {/* <h2 className="welcome-description">Introducing</h2> */}
                 <h1 className="welcome-title">SIFT</h1>
-                <h2 className="welcome-subtitle">
-                    Collaborative Resume Review Tool
-                </h2>
+                <h2 className="welcome-subtitle">Collaborative Resume Review Tool</h2>
                 <p className="welcome-instructions"></p>
                 <div className="instructions-wrapper">
                     {/* <div className="welcome-instructions-container">
@@ -33,38 +31,30 @@ export default function WelcomeScreen() {
                         </ol>
                     </div> */}
                     <div className="sift-instructions-container">
-                        <p className="sift-instructions">
-                            Sifting Instructions
-                        </p>
+                        <p className="sift-instructions">Sifting Instructions</p>
                         <ol className="instruction-list">
                             <li className="sift-instruction-item">
-                                Login: Enter your session key to join your
-                                group's sifting session or create your group's
-                                unique session
+                                Login: Enter your session key to join your group's sifting session or create your
+                                group's unique session
                             </li>
                             <li className="sift-instruction-item">
-                                Upload: Upload resumes in PDF format. Once you
-                                upload a resume, you cannot remove it from your
-                                session.{" "}
+                                Upload: Upload resumes in PDF format. Once you upload a resume, you cannot remove it
+                                from your session.{" "}
                             </li>
                             <li className="sift-instruction-item">
-                                Compare: You will be presented with two resumes
-                                at a time. Click on the resume you believe is
-                                stronger. Repeat this process.{" "}
+                                Compare: You will be presented with two resumes at a time. Click on the resume you
+                                believe is stronger. Repeat this process.{" "}
                             </li>
                             <li className="sift-instruction-item">
-                                Rankings: View your group resume rankings. The
-                                more comparisons you make, the more accurate the
-                                overall ranking will be.{" "}
+                                Rankings: View your group resume rankings. The more comparisons you make, the more
+                                accurate the overall ranking will be.{" "}
                             </li>
                         </ol>
                         <Link
                             to="/login"
                             className="start-button-link"
                         >
-                            <button className="start-button">
-                                Get Started
-                            </button>
+                            <button className="start-button">Get Started</button>
                         </Link>
                     </div>
                 </div>
