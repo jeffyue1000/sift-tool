@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center; /* Center content vertically */
     height: calc(100vh - 55px); /* Full viewport height */
+    z-index: 1000;
 }
 
 .timer-container {
@@ -15,11 +16,10 @@
     font-size: 1.5em;
     font-weight: bold;
     display: inline-flex;
-    margin-top: 35px;
+    margin-top: 30px;
     justify-content: center;
     margin-bottom: 20px;
     padding: 5px 10px;
-    z-index: 1000;
     border-radius: 10px;
     color: #f9ede1;
     background-color: #65aed5;

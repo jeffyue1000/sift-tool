@@ -36,7 +36,7 @@ export default function ComparisonScreen() {
                     rightResume: res.data.rightResume,
                 });
                 setIsDisabled(true);
-                setTimeLeft(10);
+                setTimeLeft(10); //10 second countdown timer before picking rsumes
             }
         } catch (error) {
             console.error("Error getting resumes for comparison", error);
@@ -102,7 +102,7 @@ export default function ComparisonScreen() {
 
     useEffect(() => {
         if (timeLeft > 0) {
-            const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+            const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); //decrement by one every 1000 milliseconds
             return () => clearTimeout(timerId);
         } else {
             setIsDisabled(false);
