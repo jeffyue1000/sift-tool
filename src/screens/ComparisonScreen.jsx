@@ -15,7 +15,7 @@ export default function ComparisonScreen() {
         rightURL: "",
     });
     const [canCompare, setCanCompare] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(15);
+    const [timeLeft, setTimeLeft] = useState(10);
     const [isDisabled, setIsDisabled] = useState(true);
     const { sessionDetails } = useSessionAuth();
 
@@ -36,7 +36,7 @@ export default function ComparisonScreen() {
                     rightResume: res.data.rightResume,
                 });
                 setIsDisabled(true);
-                setTimeLeft(15);
+                setTimeLeft(10);
             }
         } catch (error) {
             console.error("Error getting resumes for comparison", error);
