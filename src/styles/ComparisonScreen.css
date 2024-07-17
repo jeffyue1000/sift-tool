@@ -1,9 +1,28 @@
-body {
+.compare-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    align-items: center;
+    justify-content: center; /* Center content vertically */
+    height: calc(100vh - 55px); /* Full viewport height */
 }
-.compare-container {
+
+.timer-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.timer {
+    font-size: 1.5em;
+    font-weight: bold;
+    display: inline-flex;
+    margin-top: 35px;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+    z-index: 1000;
+    border-radius: 10px;
+    color: #f9ede1;
+    background-color: #65aed5;
 }
 .resumes {
     display: flex;

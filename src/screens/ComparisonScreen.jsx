@@ -15,6 +15,8 @@ export default function ComparisonScreen() {
         rightURL: "",
     });
     const [canCompare, setCanCompare] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(15);
+    const [isDisabled, setIsDisabled] = useState(true);
     const { sessionDetails } = useSessionAuth();
 
     const getComparisonResumes = async () => {
@@ -33,6 +35,8 @@ export default function ComparisonScreen() {
                     leftResume: res.data.leftResume,
                     rightResume: res.data.rightResume,
                 });
+                setIsDisabled(true);
+                setTimeLeft(15);
             }
         } catch (error) {
             console.error("Error getting resumes for comparison", error);
@@ -42,12 +46,18 @@ export default function ComparisonScreen() {
     const getResumePdfs = async () => {
         try {
             if (resumes.leftResume && resumes.rightResume) {
-                const leftRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
-                    params: { id: resumes.leftResume._id },
-                });
-                const rightRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
-                    params: { id: resumes.rightResume._id },
-                });
+                const leftRes = await axios.get(
+                    "http://localhost:3001/resumes/getResumePDF",
+                    {
+                        params: { id: resumes.leftResume._id },
+                    }
+                );
+                const rightRes = await axios.get(
+                    "http://localhost:3001/resumes/getResumePDF",
+                    {
+                        params: { id: resumes.rightResume._id },
+                    }
+                );
 
                 setResumeUrls({
                     leftURL: leftRes.data.url,
@@ -90,18 +100,32 @@ export default function ComparisonScreen() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resumes]);
 
+    useEffect(() => {
+        if (timeLeft > 0) {
+            const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+            return () => clearTimeout(timerId);
+        } else {
+            setIsDisabled(false);
+        }
+    }, [timeLeft]);
+
     return (
         <Screen>
             {canCompare ? (
                 <div className="compare-container">
+                    <div className="timer-container">
+                        <div className="timer">{timeLeft}</div>
+                    </div>
                     <div className="resumes">
                         <ResumePDF
                             resumeURL={resumeUrls.leftURL}
                             onClick={() => handleWinner("leftWin")}
+                            disabled={isDisabled}
                         />
                         <ResumePDF
                             resumeURL={resumeUrls.rightURL}
                             onClick={() => handleWinner("rightWin")}
+                            disabled={isDisabled}
                         />
                     </div>
                 </div>

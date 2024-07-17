@@ -6,11 +6,11 @@ import "../styles/ResumePdf.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-export default function ResumePDF({ onClick, resumeURL }) {
+export default function ResumePDF({ onClick, resumeURL, disabled }) {
     return (
-        <div className="resume-container">
+        <div className={`resume-container ${disabled ? "disabled" : ""} `}>
             <Document
-                onClick={onClick}
+                onClick={!disabled ? onClick : null}
                 file={resumeURL}
             >
                 <Page

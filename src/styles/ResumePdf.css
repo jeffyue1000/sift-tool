@@ -11,3 +11,8 @@
 .resume-container:active {
     transform: scale(0.985);
 }
+
+.resume-container.disabled {
+    pointer-events: none;
+    opacity: 0.85;
+}
