@@ -46,6 +46,17 @@ export default function Navbar() {
                         </Link>
                     </li>
                 )}
+                {adminAuthenticated && (
+                    <li className="nav-item">
+                        <Link
+                            to="/admin"
+                            className="nav-links"
+                            onClick={closeMobileMenu}
+                        >
+                            Admin
+                        </Link>
+                    </li>
+                )}
                 {sessionAuthenticated && (
                     <li className="nav-item">
                         <Link

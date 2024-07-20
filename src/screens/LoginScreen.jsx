@@ -34,12 +34,20 @@ export default function LoginScreen() {
             );
             if (res.data.validLogin) {
                 setSessionAuthenticated(true);
+                const session = res.data.session;
+
                 setSessionDetails({
-                    sessionID: res.data.session.sessionID,
-                    duration: res.data.session.duration,
-                    resumeCount: res.data.session.resumeCount,
-                    maxResumes: res.data.session.maxResumes,
-                    totalComparisons: res.data.session.totalComparisons,
+                    sessionID: session.sessionID,
+                    duration: session.duration,
+                    resumeCount: session.resumeCount,
+                    maxResumes: session.maxResumes,
+                    totalComparisons: session.totalComparisons,
+                    useReject: session.useReject,
+                    usePush: session.usePush,
+                    rejectRequireAdmin: session.rejectRequireAdmin,
+                    pushRequireAdmin: session.pushRequireAdmin,
+                    rejectQuota: session.rejectQuota,
+                    pushQuota: session.pushQuota,
                 });
                 if (res.data.admin) {
                     setAdminAuthenticated(true);
@@ -49,7 +57,7 @@ export default function LoginScreen() {
                 setFailedLogin(true);
             }
         } catch (error) {
-            console.log("Error signing in to session", error);
+            console.error("Error signing in to session", error);
         }
         return false;
     };

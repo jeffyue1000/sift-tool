@@ -9,6 +9,56 @@ dotenv.config();
 
 const createAndSetSessionCookie = require("../helpers/createAndSetSessionCookie");
 
+const updateRejectOrPushQuota = async (req, res) => {
+    try {
+        const { quota, sessionID, type } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = type === "push" ? { pushQuota: quota } : { rejectQuota: quota };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateRejectOrPushQuota", error);
+        res.status(500).json({
+            message: "Error updating rejectQuota or pushQuota",
+        });
+    }
+};
+const updateRequireAdminPushOrReject = async (req, res) => {
+    try {
+        const { checked, sessionID, type } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = type === "push" ? { pushRequireAdmin: checked } : { rejectRequireAdmin: checked };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateAdminRequiresPushOrReject", error);
+        res.status(500).json({
+            message: "Error updating requireAdminReject or requireAdminPush",
+        });
+    }
+};
+const updateUsePushOrReject = async (req, res) => {
+    try {
+        const { checked, sessionID, type } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = type === "push" ? { usePush: checked } : { useReject: checked };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateUsePushOrReject", error);
+        res.status(500).json({
+            message: "Error updating useReject or usePush",
+            error: error.message,
+        });
+    }
+};
+
 const calculateSessionStdDev = async (sessionID) => {
     try {
         const resumes = await Resume.find({ sessionID: sessionID });
@@ -22,6 +72,10 @@ const calculateSessionStdDev = async (sessionID) => {
         return Math.sqrt(deviations / session.resumeCount);
     } catch (error) {
         console.error("Error occurred in calculateSessionStdDev", error);
+        res.status(500).json({
+            message: "Error calculating standard deviation",
+            error: error.message,
+        });
     }
 };
 const getCookie = async (req, res) => {
@@ -33,7 +87,7 @@ const getCookie = async (req, res) => {
     } catch (error) {
         console.error("Error occurred in getCookie", error);
         res.status(500).json({
-            message: "Erorr getting cookie",
+            message: "Error getting cookie",
             error: error.message,
         });
     }
@@ -237,4 +291,7 @@ module.exports = {
     updateTotalComparisons,
     calculateSessionStdDev,
     getCookie,
+    updateUsePushOrReject,
+    updateRequireAdminPushOrReject,
+    updateRejectOrPushQuota,
 };

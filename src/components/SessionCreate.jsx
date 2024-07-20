@@ -35,12 +35,19 @@ export default function SessionCreate({ configData }) {
             if (res.data.creationSuccess) {
                 setSessionAuthenticated(true);
                 setAdminAuthenticated(true);
+                const session = res.data.session;
                 setSessionDetails({
-                    sessionID: res.data.session.sessionID,
-                    duration: res.data.session.duration,
-                    resumeCount: res.data.session.resumeCount,
-                    maxResumes: res.data.session.maxResumes,
-                    totalComparisons: res.data.session.totalComparisons,
+                    sessionID: session.sessionID,
+                    duration: session.duration,
+                    resumeCount: session.resumeCount,
+                    maxResumes: session.maxResumes,
+                    totalComparisons: session.totalComparisons,
+                    useReject: session.useReject,
+                    usePush: session.usePush,
+                    rejectRequireAdmin: session.rejectRequireAdmin,
+                    pushRequireAdmin: session.pushRequireAdmin,
+                    rejectQuota: session.rejectQuota,
+                    pushQuota: session.pushQuota,
                 });
                 setSessionCreated(true);
             }

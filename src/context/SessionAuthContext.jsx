@@ -12,6 +12,11 @@ export function SessionAuthProvider({ children }) {
         sessionID: "defaultID",
         duration: 1, //expire immediately if invalid session
         resumeCount: 0,
+        totalComparisons: 0,
+        useReject: false,
+        usePush: false,
+        requireAdminReject: true,
+        requireAdminPush: true,
     });
     const [loading, setLoading] = useState(true);
 
@@ -30,12 +35,19 @@ export function SessionAuthProvider({ children }) {
                     if (res.data.isAdmin) {
                         setAdminAuthenticated(true);
                     }
+                    const session = res.data.session;
                     setSessionDetails({
-                        sessionID: res.data.session.sessionID,
-                        duration: res.data.session.duration,
-                        resumeCount: res.data.session.resumeCount,
-                        maxResumes: res.data.session.maxResumes,
-                        totalComparisons: res.data.session.totalComparisons,
+                        sessionID: session.sessionID,
+                        duration: session.duration,
+                        resumeCount: session.resumeCount,
+                        maxResumes: session.maxResumes,
+                        totalComparisons: session.totalComparisons,
+                        useReject: session.useReject,
+                        usePush: session.usePush,
+                        rejectRequireAdmin: session.rejectRequireAdmin,
+                        pushRequireAdmin: session.pushRequireAdmin,
+                        rejectQuota: session.rejectQuota,
+                        pushQuota: session.pushQuota,
                     });
                 }
             }
