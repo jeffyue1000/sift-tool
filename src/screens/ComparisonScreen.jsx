@@ -19,68 +19,6 @@ export default function ComparisonScreen() {
     const [isDisabled, setIsDisabled] = useState(true);
     const { sessionDetails } = useSessionAuth();
 
-    const getComparisonResumes = async () => {
-        try {
-            const res = await axios.get(
-                "http://localhost:3001/resumes/getComparisonResumes",
-                {
-                    params: {
-                        sessionID: sessionDetails.sessionID,
-                        resumeCount: sessionDetails.resumeCount,
-                    },
-                }
-            );
-            if (res.data.leftResume && res.data.rightResume) {
-                setResumes({
-                    leftResume: res.data.leftResume,
-                    rightResume: res.data.rightResume,
-                });
-                setIsDisabled(true);
-                setTimeLeft(10); //10 second countdown timer before picking rsumes
-            }
-        } catch (error) {
-            console.error("Error getting resumes for comparison", error);
-        }
-    };
-
-    const getResumePdfs = async () => {
-        try {
-            if (resumes.leftResume && resumes.rightResume) {
-                const leftRes = await axios.get(
-                    "http://localhost:3001/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.leftResume._id },
-                    }
-                );
-                const rightRes = await axios.get(
-                    "http://localhost:3001/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.rightResume._id },
-                    }
-                );
-
-                setResumeUrls({
-                    leftURL: leftRes.data.url,
-                    rightURL: rightRes.data.url,
-                });
-            }
-        } catch (error) {
-            console.error("Error getting resume PDFs", error);
-        }
-    };
-    const handleWinner = async (winner) => {
-        try {
-            await axios.post("http://localhost:3001/resumes/compareResumes", {
-                ...resumes,
-                winner: winner,
-                sessionID: sessionDetails.sessionID,
-            });
-            getComparisonResumes();
-        } catch (error) {
-            console.error("Error comparing resumes", error);
-        }
-    };
-
     useEffect(() => {
         if (parseInt(sessionDetails.resumeCount) >= 2) {
             setCanCompare(true);
@@ -109,6 +47,102 @@ export default function ComparisonScreen() {
         }
     }, [timeLeft]);
 
+    const getComparisonResumes = async () => {
+        try {
+            const res = await axios.get("http://localhost:3001/resumes/getComparisonResumes", {
+                params: {
+                    sessionID: sessionDetails.sessionID,
+                    resumeCount: sessionDetails.resumeCount,
+                },
+            });
+            if (res.data.message === "Not enough resumes to compare") {
+                setCanCompare(false);
+                return;
+            }
+            if (res.data.leftResume && res.data.rightResume) {
+                setResumes({
+                    leftResume: res.data.leftResume,
+                    rightResume: res.data.rightResume,
+                });
+                setIsDisabled(true);
+                setTimeLeft(10); //10 second countdown timer before picking rsumes
+            }
+        } catch (error) {
+            console.error("Error getting resumes for comparison", error);
+        }
+    };
+
+    const getResumePdfs = async () => {
+        try {
+            if (resumes.leftResume && resumes.rightResume) {
+                const leftRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.leftResume._id },
+                });
+                const rightRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.rightResume._id },
+                });
+
+                setResumeUrls({
+                    leftURL: leftRes.data.url,
+                    rightURL: rightRes.data.url,
+                });
+            }
+        } catch (error) {
+            console.error("Error getting resume PDFs", error);
+        }
+    };
+
+    const handleWinner = async (winner) => {
+        try {
+            await axios.post("http://localhost:3001/resumes/compareResumes", {
+                ...resumes,
+                winner: winner,
+                sessionID: sessionDetails.sessionID,
+            });
+            getComparisonResumes();
+        } catch (error) {
+            console.error("Error comparing resumes", error);
+        }
+    };
+
+    const handleAutoPush = async (resume) => {
+        try {
+            const request =
+                resume === "left"
+                    ? {
+                          resume: resumes.leftResume,
+                          pushQuota: sessionDetails.pushQuota,
+                      }
+                    : {
+                          resume: resumes.rightResume,
+                          pushQuota: sessionDetails.pushQuota,
+                      };
+            await axios.post(`http://localhost:3001/resumes/updateAutoPush`, request);
+            getComparisonResumes();
+        } catch (error) {
+            console.error("Error updating auto push", error);
+        }
+    };
+
+    const handleAutoReject = async (resume) => {
+        try {
+            const request =
+                resume === "left"
+                    ? {
+                          resume: resumes.leftResume,
+                          rejectQuota: sessionDetails.rejectQuota,
+                      }
+                    : {
+                          resume: resumes.rightResume,
+                          rejectQuota: sessionDetails.rejectQuota,
+                      };
+            await axios.post(`http://localhost:3001/resumes/updateAutoReject`, request);
+            getComparisonResumes();
+        } catch (error) {
+            console.error("Error updating auto reject", error);
+        }
+    };
+
     return (
         <Screen>
             {canCompare ? (
@@ -117,16 +151,57 @@ export default function ComparisonScreen() {
                         <div className="timer">{timeLeft}</div>
                     </div>
                     <div className="resumes">
-                        <ResumePDF
-                            resumeURL={resumeUrls.leftURL}
-                            onClick={() => handleWinner("leftWin")}
-                            disabled={isDisabled}
-                        />
-                        <ResumePDF
-                            resumeURL={resumeUrls.rightURL}
-                            onClick={() => handleWinner("rightWin")}
-                            disabled={isDisabled}
-                        />
+                        <div className="resume-render-container">
+                            <div className="auto-btns-container">
+                                {sessionDetails.usePush && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoPush("left")}
+                                    >
+                                        Push
+                                    </button>
+                                )}
+                                {sessionDetails.useReject && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoReject("left")}
+                                    >
+                                        Reject
+                                    </button>
+                                )}
+                            </div>
+                            <ResumePDF
+                                resumeURL={resumeUrls.leftURL}
+                                onClick={() => handleWinner("leftWin")}
+                                disabled={isDisabled}
+                            />
+                        </div>
+                        <div className="resume-render-container">
+                            <ResumePDF
+                                resumeURL={resumeUrls.rightURL}
+                                onClick={() => handleWinner("rightWin")}
+                                disabled={isDisabled}
+                            />
+                            <div className="auto-btns-container">
+                                {sessionDetails.usePush && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoPush("right")}
+                                    >
+                                        Push
+                                    </button>
+                                )}
+
+                                {sessionDetails.useReject && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoReject("right")}
+                                    >
+                                        Reject
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             ) : (

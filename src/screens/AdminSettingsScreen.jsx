@@ -84,7 +84,7 @@ export default function AdminSettingsScreen() {
                 <h1 className="admin-header">Admin Settings</h1>
                 <div className="settings-container">
                     <ToggleSetting
-                        settingName="Allowing auto-reject voting:"
+                        settingName="Allow auto-reject voting:"
                         onToggle={handleUseRejectOrPush}
                         checked={useReject}
                         setChecked={setUseReject}

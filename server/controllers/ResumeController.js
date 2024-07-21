@@ -1,10 +1,6 @@
 const Resume = require("../models/resumeModel");
 const Session = require("../models/sessionModel");
-const {
-    S3Client,
-    PutObjectCommand,
-    GetObjectCommand,
-} = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { calculateSessionStdDev } = require("./SessionController");
 const { MAX_ELO_ADJUSTMENT } = require("../globals");
@@ -25,17 +21,16 @@ const s3 = new S3Client({
 const getComparisonResumes = async (req, res) => {
     try {
         const { sessionID, resumeCount } = req.query;
-        const resumesByComparison = await Resume.find({
-            sessionID: sessionID,
-        }).sort({ numComparison: 1 });
+        const resumesByComparison = await Resume.find({ sessionID: sessionID }).sort({ numComparison: 1 });
 
-        if (resumesByComparison.length < 2) {
-            return res.status(400).json({
+        const filteredResumesByComparison = resumesByComparison.filter((resume) => !resume.excluded);
+        if (filteredResumesByComparison.length < 2) {
+            return res.json({
                 message: "Not enough resumes to compare",
             });
         }
 
-        const leftResume = resumesByComparison[0]; //choose a resume that has been compared the least
+        const leftResume = filteredResumesByComparison[0]; //choose a resume that has been compared the least
         const leftElo = leftResume.eloScore;
         const sessionStdDev = await calculateSessionStdDev(sessionID);
 
@@ -47,8 +42,7 @@ const getComparisonResumes = async (req, res) => {
         ]);
         for (let i = 0; i < allResumes.length; i++) {
             if (
-                Math.abs(allResumes[i].eloScore - leftElo) <=
-                    0.2 * sessionStdDev &&
+                Math.abs(allResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
                 allResumes[i]._id.toString() !== leftResume._id.toString()
             ) {
                 return res.status(200).json({
@@ -58,7 +52,7 @@ const getComparisonResumes = async (req, res) => {
             }
         }
 
-        const rightResume = resumesByComparison[1]; //fallback in case no suitable resume found
+        const rightResume = filteredResumesByComparison[1]; //fallback in case no suitable resume found
 
         return res.status(200).json({
             leftResume: leftResume,
@@ -130,8 +124,7 @@ const uploadResumes = async (req, res) => {
 
         //upload each resume to S3, then store metadata in MongoDB
         for (const resume of resumeArray) {
-            const randomName = (bytes = 16) =>
-                crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
+            const randomName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
 
             const s3Key = `${sessionID}/${randomName()}`;
 
@@ -188,27 +181,11 @@ const compareResumes = async (req, res) => {
         mongoLeft.numComparison++;
         mongoRight.numComparison++;
 
-        const leftExpected =
-            1.0 /
-            (1.0 +
-                Math.pow(
-                    10,
-                    (rightResume.eloScore - leftResume.eloScore) / 400.0
-                ));
-        const rightExpected =
-            1.0 /
-            (1.0 +
-                Math.pow(
-                    10,
-                    (leftResume.eloScore - rightResume.eloScore) / 400.0
-                ));
-        const leftNewScore =
-            leftResume.eloScore +
-            MAX_ELO_ADJUSTMENT * (winner === "leftWin" ? 1 : 0 - leftExpected);
+        const leftExpected = 1.0 / (1.0 + Math.pow(10, (rightResume.eloScore - leftResume.eloScore) / 400.0));
+        const rightExpected = 1.0 / (1.0 + Math.pow(10, (leftResume.eloScore - rightResume.eloScore) / 400.0));
+        const leftNewScore = leftResume.eloScore + MAX_ELO_ADJUSTMENT * (winner === "leftWin" ? 1 : 0 - leftExpected);
         const rightNewScore =
-            rightResume.eloScore +
-            MAX_ELO_ADJUSTMENT *
-                (winner === "rightWin" ? 1 : 0 - rightExpected);
+            rightResume.eloScore + MAX_ELO_ADJUSTMENT * (winner === "rightWin" ? 1 : 0 - rightExpected);
 
         mongoLeft.eloScore = leftNewScore;
         mongoRight.eloScore = rightNewScore;
@@ -228,10 +205,50 @@ const compareResumes = async (req, res) => {
     }
 };
 
+const updateAutoPush = async (req, res) => {
+    try {
+        const { resume, pushQuota } = req.body;
+        const newAuto = resume.auto + 1;
+        const filter = { s3Key: resume.s3Key };
+        const update = newAuto >= pushQuota ? { auto: newAuto, excluded: true } : { auto: newAuto };
+        await Resume.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateAutoSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateAutoPush", error);
+        res.status(500).json({
+            message: "Error updating auto push",
+            error: error.message,
+        });
+    }
+};
+
+const updateAutoReject = async (req, res) => {
+    try {
+        const { resume, rejectQuota } = req.body;
+        const newAuto = resume.auto - 1;
+        const filter = { s3Key: resume.s3Key };
+        const update = newAuto <= rejectQuota ? { auto: newAuto, excluded: true } : { auto: newAuto };
+        await Resume.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateAutoSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateAutoReject", error);
+        res.status(500).json({
+            message: "Error updating auto reject",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     uploadResumes,
     getResumePDF,
     getAllResumes,
     getComparisonResumes,
     compareResumes,
+    updateAutoPush,
+    updateAutoReject,
 };
