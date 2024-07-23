@@ -209,24 +209,6 @@ const updateSessionSize = async (req, res) => {
     }
 };
 
-const updateTotalComparisons = async (req, res) => {
-    try {
-        const { sessionID } = req.body;
-        const session = await Session.findOne({ sessionID: sessionID }); //consider using findOneandUpda
-        session.totalComparisons = session.totalComparisons + 1;
-        await session.save();
-        res.status(200).json({
-            updateTotalComparisonsSuccess: true,
-        });
-    } catch (error) {
-        console.error("Error occurred in updateTotalComparisons", error);
-        res.status(500).json({
-            message: "Error updating session number of comparisons",
-            error: error.message,
-        });
-    }
-};
-
 module.exports = {
     createSession,
     loginSession,
@@ -234,7 +216,6 @@ module.exports = {
     logoutSession,
     updateSessionSize,
     hasResumeCapacity,
-    updateTotalComparisons,
     calculateSessionStdDev,
     getCookie,
 };

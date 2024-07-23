@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/screen.css";
+import "../styles/Screen.css";
 
 export default function Screen({ children }) {
     return <div className="screen-container">{children}</div>;

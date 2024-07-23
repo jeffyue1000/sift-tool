@@ -21,21 +21,18 @@ export default function ComparisonScreen() {
 
     const getComparisonResumes = async () => {
         try {
-            const res = await axios.get(
-                "http://localhost:3001/resumes/getComparisonResumes",
-                {
-                    params: {
-                        sessionID: sessionDetails.sessionID,
-                        resumeCount: sessionDetails.resumeCount,
-                    },
-                }
-            );
+            const res = await axios.get("http://localhost:3001/resumes/getComparisonResumes", {
+                params: {
+                    sessionID: sessionDetails.sessionID,
+                    resumeCount: sessionDetails.resumeCount,
+                },
+            });
             if (res.data.leftResume && res.data.rightResume) {
                 setResumes({
                     leftResume: res.data.leftResume,
                     rightResume: res.data.rightResume,
                 });
-                setIsDisabled(true);
+                // setIsDisabled(true);
                 setTimeLeft(10); //10 second countdown timer before picking rsumes
             }
         } catch (error) {
@@ -46,18 +43,12 @@ export default function ComparisonScreen() {
     const getResumePdfs = async () => {
         try {
             if (resumes.leftResume && resumes.rightResume) {
-                const leftRes = await axios.get(
-                    "http://localhost:3001/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.leftResume._id },
-                    }
-                );
-                const rightRes = await axios.get(
-                    "http://localhost:3001/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.rightResume._id },
-                    }
-                );
+                const leftRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.leftResume._id },
+                });
+                const rightRes = await axios.get("http://localhost:3001/resumes/getResumePDF", {
+                    params: { id: resumes.rightResume._id },
+                });
 
                 setResumeUrls({
                     leftURL: leftRes.data.url,
@@ -70,10 +61,12 @@ export default function ComparisonScreen() {
     };
     const handleWinner = async (winner) => {
         try {
+            console.log(sessionDetails.totalComparisons);
             await axios.post("http://localhost:3001/resumes/compareResumes", {
                 ...resumes,
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
+                totalComparisons: sessionDetails.totalComparisons,
             });
             getComparisonResumes();
         } catch (error) {
