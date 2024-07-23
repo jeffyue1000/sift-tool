@@ -127,13 +127,14 @@ const createSession = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const hashedAdminKey = await bcrypt.hash(adminKey, salt);
-
+        const expireAt = new Date(Date.now() + duration * 7 * 24 * 60 * 60 * 1000); //duration in weeks
         const session = new Session({
             sessionID: sessionID,
             passkey: hashedPassword,
             adminKey: hashedAdminKey,
             maxResumes: maxResumes,
             duration: duration,
+            expireAt: expireAt,
         });
 
         await session.save();
