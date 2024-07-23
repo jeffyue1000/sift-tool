@@ -1,24 +1,24 @@
 import React from "react";
 
-export default function QuotaSetting({ settingName, handleSubmit, quota, setQuota, type }) {
-    const handleQuotaSubmit = (e) => {
+export default function InputSetting({ settingName, handleSubmit, input, setInput, type }) {
+    const handleInputSubmit = (e) => {
         e.preventDefault();
-        handleSubmit(quota, type);
+        handleSubmit(input, type);
     };
     return (
         <div className="setting-row">
             {settingName}
-            <form onSubmit={handleQuotaSubmit}>
+            <form onSubmit={handleInputSubmit}>
                 <input
-                    className="quota-input"
+                    className="input-box"
                     type="number"
                     min="1"
-                    value={quota}
-                    onChange={(e) => setQuota(e.target.value)}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
                     placeholder="Enter amount"
                 />
                 <button
-                    className="quota-btn"
+                    className="input-btn"
                     type="submit"
                 >
                     Save

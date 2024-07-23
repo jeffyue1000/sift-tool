@@ -27,7 +27,7 @@ router.get("/getCookie", getCookie);
 router.post("/updateUsePushOrReject", updateUsePushOrReject);
 router.post("/updateRequireAdminPushOrReject", updateRequireAdminPushOrReject);
 router.post("/updateRejectOrPushQuota", updateRejectOrPushQuota);
-router.post("/updateResumeTimer", updateCompareTimer);
+router.post("/updateCompareTimer", updateCompareTimer);
 router.post("/updateUseTimer", updateUseTimer);
 
 module.exports = router;

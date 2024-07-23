@@ -264,9 +264,9 @@ const updateSessionSize = async (req, res) => {
 };
 const updateUseTimer = async (req, res) => {
     try {
-        const { sessionID, useTimer } = req.body;
+        const { sessionID, checked } = req.body;
         const filter = { sessionID: sessionID };
-        const update = { useTimer: useTimer };
+        const update = { useTimer: checked };
         await Session.findOneAndUpdate(filter, update);
         res.status(200).json({
             updateSuccess: true,

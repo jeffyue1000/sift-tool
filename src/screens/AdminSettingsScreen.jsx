@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import QuotaSetting from "../components/QuotaSetting";
+import InputSetting from "../components/InputSetting";
 import ToggleSetting from "../components/ToggleSetting";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import Screen from "../components/Screen";
@@ -12,6 +12,8 @@ export default function AdminSettingsScreen() {
     const [pushAdmin, setPushAdmin] = useState(false);
     const [rejectQuota, setRejectQuota] = useState(1);
     const [pushQuota, setPushQuota] = useState(1);
+    const [useTimer, setUseTimer] = useState(false);
+    const [compareTimer, setCompareTimer] = useState(5);
     const { sessionDetails, setSessionDetails } = useSessionAuth();
 
     useEffect(() => {
@@ -21,6 +23,8 @@ export default function AdminSettingsScreen() {
         setPushAdmin(sessionDetails.pushRequireAdmin);
         setRejectQuota(sessionDetails.rejectQuota);
         setPushQuota(sessionDetails.pushQuota);
+        setUseTimer(sessionDetails.useTimer);
+        setCompareTimer(sessionDetails.compareTimer);
     }, [sessionDetails]);
 
     const handleRejectOrPushQuotaSubmit = async (quota, type) => {
@@ -41,6 +45,7 @@ export default function AdminSettingsScreen() {
             console.error("Error updating rejectQuota or pushQuota", error);
         }
     };
+
     const handleRejectOrPushAdminRequired = async (checked, type) => {
         try {
             const res = await axios.post(`http://localhost:3001/sessions/updateRequireAdminPushOrReject`, {
@@ -59,6 +64,7 @@ export default function AdminSettingsScreen() {
             console.error("Error updating requireAdminPush or requireAdminReject", error);
         }
     };
+
     const handleUseRejectOrPush = async (checked, type) => {
         try {
             const res = await axios.post(`http://localhost:3001/sessions/updateUsePushOrReject`, {
@@ -78,59 +84,98 @@ export default function AdminSettingsScreen() {
         }
     };
 
+    const handleComparisonTimerRequired = async (checked) => {
+        try {
+            const res = await axios.post(`http://localhost:3001/sessions/updateUseTimer`, {
+                checked: checked,
+                sessionID: sessionDetails.sessionID,
+            });
+            if (res.data.updateSuccess) {
+                setSessionDetails({ ...sessionDetails, useTimer: checked });
+            }
+        } catch (error) {
+            console.error("Error updating useTimer", error);
+        }
+    };
+
+    const handleComparisonTimerSubmit = async (time) => {
+        try {
+            const res = await axios.post(`http://localhost:3001/sessions/updateCompareTimer`, {
+                sessionID: sessionDetails.sessionID,
+                time: time,
+            });
+            if (res.data.updateSuccess) {
+                setSessionDetails({ ...sessionDetails, compareTimer: time });
+            }
+        } catch (error) {
+            console.error("Error updating comparison timer", error);
+        }
+    };
+
     return (
         <Screen>
             <div className="page-container">
                 <h1 className="admin-header">Admin Settings</h1>
                 <div className="settings-container">
                     <ToggleSetting
-                        settingName="Allow auto-reject voting:"
+                        settingName="Allow auto-reject voting: "
                         onToggle={handleUseRejectOrPush}
                         checked={useReject}
-                        setChecked={setUseReject}
                         type="reject"
                     />
                     {useReject && (
-                        <QuotaSetting
-                            settingName="Number of rejections to reject:"
+                        <InputSetting
+                            settingName="Number of rejections to reject: "
                             handleSubmit={handleRejectOrPushQuotaSubmit}
-                            quota={rejectQuota}
-                            setQuota={setRejectQuota}
+                            input={rejectQuota}
+                            setInput={setRejectQuota}
                             type="reject"
                         />
                     )}
                     {useReject && (
                         <ToggleSetting
-                            settingName="Require admin to reject:"
+                            settingName="Require admin to reject: "
                             onToggle={handleRejectOrPushAdminRequired}
                             checked={rejectAdmin}
-                            setChecked={setRejectAdmin}
                             type="reject"
                         />
                     )}
                     <ToggleSetting
-                        settingName="Allow auto-push voting:"
+                        settingName="Allow auto-push voting: "
                         onToggle={handleUseRejectOrPush}
                         checked={usePush}
-                        setChecked={setUsePush}
                         type="push"
                     />
                     {usePush && (
-                        <QuotaSetting
-                            settingName="Number of pushes to push:"
+                        <InputSetting
+                            settingName="Number of pushes to push: "
                             handleSubmit={handleRejectOrPushQuotaSubmit}
-                            quota={pushQuota}
-                            setQuota={setPushQuota}
+                            input={pushQuota}
+                            setInput={setPushQuota}
                             type="push"
                         />
                     )}
                     {usePush && (
                         <ToggleSetting
-                            settingName="Require admin to push:"
+                            settingName="Require admin to push: "
                             onToggle={handleRejectOrPushAdminRequired}
                             checked={pushAdmin}
-                            setChecked={setPushAdmin}
                             type="push"
+                        />
+                    )}
+                    <ToggleSetting
+                        settingName="Enable resume comparison timer: "
+                        onToggle={handleComparisonTimerRequired}
+                        checked={useTimer}
+                        type="placeholder"
+                    />
+                    {useTimer && (
+                        <InputSetting
+                            settingName="Minimum seconds to compare: "
+                            handleSubmit={handleComparisonTimerSubmit}
+                            input={compareTimer}
+                            setInput={setCompareTimer}
+                            type="placeholder"
                         />
                     )}
                 </div>

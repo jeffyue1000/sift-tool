@@ -15,13 +15,15 @@ export default function ComparisonScreen() {
         rightURL: "",
     });
     const [canCompare, setCanCompare] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(10);
+    const [useTimer, setUseTimer] = useState(false);
+    const [timeLeft, setTimeLeft] = useState();
     const [isDisabled, setIsDisabled] = useState(true);
     const { sessionDetails } = useSessionAuth();
 
     useEffect(() => {
         if (parseInt(sessionDetails.resumeCount) >= 2) {
             setCanCompare(true);
+            setUseTimer(sessionDetails.useTimer);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -39,13 +41,15 @@ export default function ComparisonScreen() {
     }, [resumes]);
 
     useEffect(() => {
-        if (timeLeft > 0) {
-            const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); //decrement by one every 1000 milliseconds
-            return () => clearTimeout(timerId);
-        } else {
-            setIsDisabled(false);
+        if (useTimer) {
+            if (timeLeft > 0) {
+                const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); //decrement by one every 1000 milliseconds
+                return () => clearTimeout(timerId);
+            } else {
+                setIsDisabled(false);
+            }
         }
-    }, [timeLeft]);
+    }, [timeLeft, useTimer]);
 
     const getComparisonResumes = async () => {
         try {
@@ -64,8 +68,10 @@ export default function ComparisonScreen() {
                     leftResume: res.data.leftResume,
                     rightResume: res.data.rightResume,
                 });
-                setIsDisabled(true);
-                setTimeLeft(10); //10 second countdown timer before picking rsumes
+                if (useTimer) {
+                    setIsDisabled(true);
+                    setTimeLeft(sessionDetails.compareTimer);
+                }
             }
         } catch (error) {
             console.error("Error getting resumes for comparison", error);
@@ -98,6 +104,7 @@ export default function ComparisonScreen() {
                 ...resumes,
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
+                totalComparisons: sessionDetails.totalComparisons,
             });
             getComparisonResumes();
         } catch (error) {
@@ -147,9 +154,7 @@ export default function ComparisonScreen() {
         <Screen>
             {canCompare ? (
                 <div className="compare-container">
-                    <div className="timer-container">
-                        <div className="timer">{timeLeft}</div>
-                    </div>
+                    <div className="timer-container">{useTimer && <div className="timer">{timeLeft}</div>}</div>
                     <div className="resumes">
                         <div className="resume-render-container">
                             <div className="auto-btns-container">
