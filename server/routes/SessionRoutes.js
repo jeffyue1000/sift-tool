@@ -8,6 +8,9 @@ const {
     updateSessionSize,
     hasResumeCapacity,
     getCookie,
+    updateUsePushOrReject,
+    updateRequireAdminPushOrReject,
+    updateRejectOrPushQuota,
     updateCompareTimer,
     updateUseTimer,
 } = require("../controllers/SessionController");
@@ -21,6 +24,9 @@ router.get("/getSessionFromToken", getSessionFromToken);
 router.post("/updateSessionSize", updateSessionSize);
 router.get("/hasResumeCapacity", hasResumeCapacity);
 router.get("/getCookie", getCookie);
+router.post("/updateUsePushOrReject", updateUsePushOrReject);
+router.post("/updateRequireAdminPushOrReject", updateRequireAdminPushOrReject);
+router.post("/updateRejectOrPushQuota", updateRejectOrPushQuota);
 router.post("/updateResumeTimer", updateCompareTimer);
 router.post("/updateUseTimer", updateUseTimer);
 

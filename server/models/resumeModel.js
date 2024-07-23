@@ -28,6 +28,14 @@ const resumeSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    auto: {
+        type: Number,
+        default: 0,
+    },
+    excluded: {
+        type: Boolean,
+        default: false,
+    },
     expireAt: {
         type: Date,
         required: true,
