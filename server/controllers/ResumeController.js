@@ -21,17 +21,16 @@ const s3 = new S3Client({
 const getComparisonResumes = async (req, res) => {
     try {
         const { sessionID, resumeCount } = req.query;
-        const resumesByComparison = await Resume.find({
-            sessionID: sessionID,
-        }).sort({ numComparison: 1 });
+        const resumesByComparison = await Resume.find({ sessionID: sessionID }).sort({ numComparison: 1 });
 
-        if (resumesByComparison.length < 2) {
-            return res.status(400).json({
+        const filteredResumesByComparison = resumesByComparison.filter((resume) => !resume.excluded);
+        if (filteredResumesByComparison.length < 2) {
+            return res.json({
                 message: "Not enough resumes to compare",
             });
         }
 
-        const leftResume = resumesByComparison[0]; //choose a resume that has been compared the least
+        const leftResume = filteredResumesByComparison[0]; //choose a resume that has been compared the least
         const leftElo = leftResume.eloScore;
         const sessionStdDev = await calculateSessionStdDev(sessionID);
 
@@ -44,6 +43,7 @@ const getComparisonResumes = async (req, res) => {
         for (let i = 0; i < allResumes.length; i++) {
             if (
                 Math.abs(allResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
+                Math.abs(allResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
                 allResumes[i]._id.toString() !== leftResume._id.toString()
             ) {
                 return res.status(200).json({
@@ -53,7 +53,7 @@ const getComparisonResumes = async (req, res) => {
             }
         }
 
-        const rightResume = resumesByComparison[1]; //fallback in case no suitable resume found
+        const rightResume = filteredResumesByComparison[1]; //fallback in case no suitable resume found
 
         return res.status(200).json({
             leftResume: leftResume,
@@ -201,10 +201,50 @@ const compareResumes = async (req, res) => {
     }
 };
 
+const updateAutoPush = async (req, res) => {
+    try {
+        const { resume, pushQuota } = req.body;
+        const newAuto = resume.auto + 1;
+        const filter = { s3Key: resume.s3Key };
+        const update = newAuto >= pushQuota ? { auto: newAuto, excluded: true } : { auto: newAuto };
+        await Resume.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateAutoSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateAutoPush", error);
+        res.status(500).json({
+            message: "Error updating auto push",
+            error: error.message,
+        });
+    }
+};
+
+const updateAutoReject = async (req, res) => {
+    try {
+        const { resume, rejectQuota } = req.body;
+        const newAuto = resume.auto - 1;
+        const filter = { s3Key: resume.s3Key };
+        const update = newAuto <= rejectQuota ? { auto: newAuto, excluded: true } : { auto: newAuto };
+        await Resume.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateAutoSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateAutoReject", error);
+        res.status(500).json({
+            message: "Error updating auto reject",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     uploadResumes,
     getResumePDF,
     getAllResumes,
     getComparisonResumes,
     compareResumes,
+    updateAutoPush,
+    updateAutoReject,
 };
