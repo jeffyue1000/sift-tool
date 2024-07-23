@@ -41,6 +41,8 @@ export default function SessionCreate({ configData }) {
                     resumeCount: res.data.session.resumeCount,
                     maxResumes: res.data.session.maxResumes,
                     totalComparisons: res.data.session.totalComparisons,
+                    useTimer: res.data.session.useTimer,
+                    compareTimer: res.data.session.compareTimer,
                 });
                 setSessionCreated(true);
             }

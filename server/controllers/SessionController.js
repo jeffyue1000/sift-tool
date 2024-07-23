@@ -208,6 +208,40 @@ const updateSessionSize = async (req, res) => {
         });
     }
 };
+const updateUseTimer = async (req, res) => {
+    try {
+        const { sessionID, useTimer } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = { useTimer: useTimer };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateUseTimer", error);
+        res.status(500).json({
+            message: "Error occurred updating useTimer",
+            error: error.message,
+        });
+    }
+};
+const updateCompareTimer = async (req, res) => {
+    try {
+        const { sessionID, time } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = { compareTimer: time };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateCompareTimer", error);
+        res.status(500).json({
+            message: "Error occurred updating compare timer",
+            error: error.message,
+        });
+    }
+};
 
 module.exports = {
     createSession,
@@ -218,4 +252,6 @@ module.exports = {
     hasResumeCapacity,
     calculateSessionStdDev,
     getCookie,
+    updateCompareTimer,
+    updateUseTimer,
 };

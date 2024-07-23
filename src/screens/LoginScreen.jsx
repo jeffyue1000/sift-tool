@@ -40,6 +40,8 @@ export default function LoginScreen() {
                     resumeCount: res.data.session.resumeCount,
                     maxResumes: res.data.session.maxResumes,
                     totalComparisons: res.data.session.totalComparisons,
+                    useTimer: res.data.session.useTimer,
+                    compareTimer: res.data.session.compareTimer,
                 });
                 if (res.data.admin) {
                     setAdminAuthenticated(true);
@@ -105,9 +107,7 @@ export default function LoginScreen() {
                             onChange={(e) => setAdminKey(e.target.value)}
                             placeholder="Enter Admin Key (Optional)"
                         />
-                        {failedLogin && (
-                            <div className="error-message">Could not find a session with those credentials!</div>
-                        )}
+                        {failedLogin && <div className="error-message">Could not find a session with those credentials!</div>}
                         <button
                             onClick={handleLogin}
                             className="submit-button"

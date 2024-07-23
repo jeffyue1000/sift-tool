@@ -35,6 +35,14 @@ const sessionSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    useTimer: {
+        type: Boolean,
+        default: false,
+    },
+    compareTimer: {
+        type: Number,
+        default: 0,
+    },
 });
 sessionSchema.index({ sessionID: 1 });
 

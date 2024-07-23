@@ -36,6 +36,8 @@ export function SessionAuthProvider({ children }) {
                         resumeCount: res.data.session.resumeCount,
                         maxResumes: res.data.session.maxResumes,
                         totalComparisons: res.data.session.totalComparisons,
+                        useTimer: res.data.session.useTimer,
+                        compareTimer: res.data.session.compareTimer,
                     });
                 }
             }

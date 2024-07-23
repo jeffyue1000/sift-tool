@@ -15,7 +15,7 @@ export default function ComparisonScreen() {
         rightURL: "",
     });
     const [canCompare, setCanCompare] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(10);
+    const [timeLeft, setTimeLeft] = useState(5);
     const [isDisabled, setIsDisabled] = useState(true);
     const { sessionDetails } = useSessionAuth();
 
@@ -32,8 +32,8 @@ export default function ComparisonScreen() {
                     leftResume: res.data.leftResume,
                     rightResume: res.data.rightResume,
                 });
-                // setIsDisabled(true);
-                setTimeLeft(10); //10 second countdown timer before picking rsumes
+                setIsDisabled(true);
+                setTimeLeft(compareTimer); //10 second countdown timer before picking rsumes
             }
         } catch (error) {
             console.error("Error getting resumes for comparison", error);
@@ -59,6 +59,7 @@ export default function ComparisonScreen() {
             console.error("Error getting resume PDFs", error);
         }
     };
+
     const handleWinner = async (winner) => {
         try {
             console.log(sessionDetails.totalComparisons);
