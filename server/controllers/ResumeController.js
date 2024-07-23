@@ -183,11 +183,11 @@ const compareResumes = async (req, res) => {
         const leftNewScore = leftResume.eloScore + MAX_ELO_ADJUSTMENT * ((winner === "leftWin" ? 1 : 0) - leftExpected);
         const rightNewScore = rightResume.eloScore + MAX_ELO_ADJUSTMENT * ((winner === "rightWin" ? 1 : 0) - rightExpected);
 
-        const updateLeftResume = { eloScore: leftNewScore };
-        const updateRightResume = { eloScore: rightNewScore };
+        const updateLeftResume = { eloScore: leftNewScore, numComparison: leftResume.numComparison + 1 };
+        const updateRightResume = { eloScore: rightNewScore, numComparison: rightResume.numComparison + 1 };
 
-        await Resume.findOneAndUpdate(leftResume._id, updateLeftResume);
-        await Resume.findOneAndUpdate(rightResume._id, updateRightResume);
+        await Resume.findByIdAndUpdate(leftResume._id, updateLeftResume);
+        await Resume.findByIdAndUpdate(rightResume._id, updateRightResume);
 
         res.status(200).json({
             comparisonSuccess: true,

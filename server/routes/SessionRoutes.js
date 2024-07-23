@@ -7,7 +7,6 @@ const {
     getSessionFromToken,
     updateSessionSize,
     hasResumeCapacity,
-    updateTotalComparisons,
     getCookie,
 } = require("../controllers/SessionController");
 
@@ -19,7 +18,6 @@ router.get("/logoutSession", logoutSession);
 router.get("/getSessionFromToken", getSessionFromToken);
 router.post("/updateSessionSize", updateSessionSize);
 router.get("/hasResumeCapacity", hasResumeCapacity);
-router.post("/updateNumComparisons", updateTotalComparisons);
 router.get("/getCookie", getCookie);
 
 module.exports = router;

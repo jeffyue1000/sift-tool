@@ -32,7 +32,7 @@ export default function ComparisonScreen() {
                     leftResume: res.data.leftResume,
                     rightResume: res.data.rightResume,
                 });
-                setIsDisabled(true);
+                // setIsDisabled(true);
                 setTimeLeft(10); //10 second countdown timer before picking rsumes
             }
         } catch (error) {
@@ -61,6 +61,7 @@ export default function ComparisonScreen() {
     };
     const handleWinner = async (winner) => {
         try {
+            console.log(sessionDetails.totalComparisons);
             await axios.post("http://localhost:3001/resumes/compareResumes", {
                 ...resumes,
                 winner: winner,
