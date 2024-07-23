@@ -127,7 +127,6 @@ const uploadResumes = async (req, res) => {
         //upload each resume to S3, then store metadata in MongoDB
         for (const resume of resumeArray) {
             const randomName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
-            const randomName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
 
             const s3Key = `${sessionID}/${randomName()}`;
 
