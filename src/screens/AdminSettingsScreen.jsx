@@ -140,12 +140,7 @@ export default function AdminSettingsScreen() {
                             type="reject"
                         />
                     )}
-                    <ToggleSetting
-                        settingName="Allow auto-push voting: "
-                        onToggle={handleUseRejectOrPush}
-                        checked={usePush}
-                        type="push"
-                    />
+                    <ToggleSetting settingName="Allow auto-push voting: " onToggle={handleUseRejectOrPush} checked={usePush} type="push" />
                     {usePush && (
                         <InputSetting
                             settingName="Number of pushes to push: "

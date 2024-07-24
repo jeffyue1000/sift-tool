@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const createAndSetSessionCookie = require("../helpers/createAndSetSessionCookie");
+const createAndSetUserCookie = require("../helpers/createAndSetUserCookie");
 
 const updateRejectOrPushQuota = async (req, res) => {
     try {
@@ -78,14 +79,16 @@ const calculateSessionStdDev = async (sessionID) => {
         });
     }
 };
-const getCookie = async (req, res) => {
+const getCookies = async (req, res) => {
     try {
         const encodedSessionToken = req.cookies.session;
+        const encodedUserToken = req.cookies.user;
         res.status(200).json({
-            cookieToken: encodedSessionToken,
+            sessionCookieToken: encodedSessionToken,
+            userCookieToken: encodedUserToken,
         });
     } catch (error) {
-        console.error("Error occurred in getCookie", error);
+        console.error("Error occurred in getCookies", error);
         res.status(500).json({
             message: "Error getting cookie",
             error: error.message,
@@ -119,9 +122,35 @@ const getSessionFromToken = async (req, res) => {
     }
 };
 
+const getUserFromToken = async (req, res) => {
+    try {
+        const { encodedUserToken } = req.query;
+        jwt.verify(encodedUserToken, process.env.TOKEN_SECRET),
+            async (err, decoded) => {
+                if (err) {
+                    console.error("JWT verification error: ", err);
+                    return res.status(401).json({ message: "Failed to authenticate token" });
+                }
+                res.status(200).json({ user: decoded.user });
+            };
+    } catch (error) {
+        console.error("Error occurred in getUserFromToken", error);
+        res.status(500).json({
+            message: "Error checking user token",
+            error: error.message,
+        });
+    }
+};
+
 const logoutSession = async (req, res) => {
-    //logout user by clearing session cookie
+    //logout user by clearing cookies
     res.cookie("session", "", {
+        httpOnly: true,
+        // secure: true,
+        sameSite: "Strict",
+        maxAge: 0,
+    });
+    res.cookie("user", "", {
         httpOnly: true,
         // secure: true,
         sameSite: "Strict",
@@ -297,18 +326,76 @@ const updateCompareTimer = async (req, res) => {
     }
 };
 
+const addUser = async (req, res) => {
+    try {
+        const { sessionID, user } = req.body;
+        const session = await Session.findOne({ sessionID: sessionID });
+        session.users.set(user, 0);
+        await session.save();
+        await createAndSetUserCookie(user, res);
+        res.status(200).json({
+            updateSuccessful: true,
+            user: user,
+        });
+    } catch (error) {
+        console.error("Error occurred in addUser: ", error);
+        res.status(500).json({
+            message: "Error occurred adding user",
+            error: error.message,
+        });
+    }
+};
+
+const getUsers = async (req, res) => {
+    try {
+        const { sessionID } = req.query;
+        const session = await Session.findOne({ sessionID: sessionID });
+        res.status(200).json({
+            getSuccess: true,
+            users: session.users,
+        });
+    } catch (error) {
+        console.error("Error occurred in getUsers: ", error);
+        res.status(500).json({
+            message: "Error occurred getting users",
+            error: error.message,
+        });
+    }
+};
+
+const setUser = async (req, res) => {
+    try {
+        const { user } = req.body;
+        await createAndSetUserCookie(user, res);
+        res.status(200).json({
+            updateSuccessful: true,
+            user: user,
+        });
+    } catch (error) {
+        console.error("Error occurred in setUser: ", error);
+        res.status(500).json({
+            message: "Error occurred setting user",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     createSession,
     loginSession,
     getSessionFromToken,
+    getUserFromToken,
     logoutSession,
     updateSessionSize,
     hasResumeCapacity,
     calculateSessionStdDev,
-    getCookie,
+    getCookies,
     updateCompareTimer,
     updateUseTimer,
     updateUsePushOrReject,
     updateRequireAdminPushOrReject,
     updateRejectOrPushQuota,
+    addUser,
+    getUsers,
+    setUser,
 };
