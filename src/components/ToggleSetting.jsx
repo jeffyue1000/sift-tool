@@ -1,6 +1,12 @@
 import React from "react";
 import ReactSwitch from "react-switch";
-export default function ToggleSetting({ settingName, onToggle, checked, type }) {
+import "../styles/ToggleSetting.css";
+export default function ToggleSetting({
+    settingName,
+    onToggle,
+    checked,
+    type,
+}) {
     const handleToggle = () => {
         onToggle(!checked, type);
     };
@@ -9,6 +15,7 @@ export default function ToggleSetting({ settingName, onToggle, checked, type }) 
         <div className="setting-row">
             {settingName}
             <ReactSwitch
+                className="switch"
                 checked={checked}
                 onChange={handleToggle}
                 onColor="#4caf50"

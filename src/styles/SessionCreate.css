@@ -41,3 +41,8 @@
     color: #f9ede1;
     background-color: #65aed5;
 }
+
+.password-matching {
+    margin-top: 10px;
+    color: rgb(92, 6, 6);
+}
