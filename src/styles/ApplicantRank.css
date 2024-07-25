@@ -58,6 +58,12 @@
 }
 
 .applicant-details-excluded {
+    font-size: 1.1em;
+    font-weight: 550;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000000;
     margin-right: 10px;
     text-align: right;
     grid-column: 4;
