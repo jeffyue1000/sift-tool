@@ -13,7 +13,7 @@ const updateRejectOrPushQuota = async (req, res) => {
     try {
         const { quota, sessionID, type } = req.body;
         const filter = { sessionID: sessionID };
-        const update = type === "push" ? { pushQuota: quota } : { rejectQuota: quota };
+        const update = type === "push" ? { pushQuota: quota } : { rejectQuota: -1 * quota };
         await Session.findOneAndUpdate(filter, update);
         res.status(200).json({
             updateSuccess: true,

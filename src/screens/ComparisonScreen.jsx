@@ -17,7 +17,7 @@ export default function ComparisonScreen() {
     const [canCompare, setCanCompare] = useState(false);
     const [useTimer, setUseTimer] = useState(false);
     const [timeLeft, setTimeLeft] = useState();
-    const [isDisabled, setIsDisabled] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(false);
     const { sessionDetails } = useSessionAuth();
 
     useEffect(() => {

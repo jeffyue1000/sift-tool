@@ -34,17 +34,17 @@ const getComparisonResumes = async (req, res) => {
         const leftElo = leftResume.eloScore;
         const sessionStdDev = await calculateSessionStdDev(sessionID);
 
-        // const allResumes = await Resume.find({ sessionID: sessionID });
-
         const allResumes = await Resume.aggregate([
             { $match: { sessionID: sessionID } },
             { $sample: { size: parseInt(resumeCount) } }, // Randomly shuffle the matched resumes
         ]);
-        for (let i = 0; i < allResumes.length; i++) {
+        const filteredAllResumes = allResumes.filter((resume) => !resume.excluded);
+
+        for (let i = 0; i < filteredAllResumes.length; i++) {
             if (
-                Math.abs(allResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
-                Math.abs(allResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
-                allResumes[i]._id.toString() !== leftResume._id.toString()
+                Math.abs(filteredAllResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
+                Math.abs(filteredAllResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
+                filteredAllResumes[i]._id.toString() !== leftResume._id.toString()
             ) {
                 return res.status(200).json({
                     leftResume: leftResume,

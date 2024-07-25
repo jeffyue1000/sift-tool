@@ -22,7 +22,7 @@ export default function AdminSettingsScreen() {
         setUsePush(sessionDetails.usePush);
         setRejectAdmin(sessionDetails.rejectRequireAdmin);
         setPushAdmin(sessionDetails.pushRequireAdmin);
-        setRejectQuota(sessionDetails.rejectQuota);
+        setRejectQuota(sessionDetails.rejectQuota * -1);
         setPushQuota(sessionDetails.pushQuota);
         setUseTimer(sessionDetails.useTimer);
         setCompareTimer(sessionDetails.compareTimer);
@@ -37,12 +37,9 @@ export default function AdminSettingsScreen() {
             });
             if (res.data.updateSuccess) {
                 if (type === "push") {
-                    setSessionDetails({
-                        ...sessionDetails,
-                        rejectQuota: quota,
-                    });
-                } else {
                     setSessionDetails({ ...sessionDetails, pushQuota: quota });
+                } else {
+                    setSessionDetails({ ...sessionDetails, rejectQuota: quota * -1 });
                 }
             }
         } catch (error) {
@@ -59,15 +56,9 @@ export default function AdminSettingsScreen() {
             });
             if (res.data.updateSuccess) {
                 if (type === "push") {
-                    setSessionDetails({
-                        ...sessionDetails,
-                        pushRequireAdmin: checked,
-                    });
+                    setSessionDetails({ ...sessionDetails, pushRequireAdmin: checked });
                 } else {
-                    setSessionDetails({
-                        ...sessionDetails,
-                        rejectRequireAdmin: checked,
-                    });
+                    setSessionDetails({ ...sessionDetails, rejectRequireAdmin: checked });
                 }
             }
         } catch (error) {
@@ -86,10 +77,7 @@ export default function AdminSettingsScreen() {
                 if (type === "push") {
                     setSessionDetails({ ...sessionDetails, usePush: checked });
                 } else {
-                    setSessionDetails({
-                        ...sessionDetails,
-                        useReject: checked,
-                    });
+                    setSessionDetails({ ...sessionDetails, useReject: checked });
                 }
             }
         } catch (error) {
