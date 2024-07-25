@@ -17,7 +17,7 @@ export default function ComparisonScreen() {
     const [canCompare, setCanCompare] = useState(false);
     const [useTimer, setUseTimer] = useState(false);
     const [timeLeft, setTimeLeft] = useState();
-    const [isDisabled, setIsDisabled] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(false);
     const { sessionDetails } = useSessionAuth();
 
     useEffect(() => {
@@ -105,6 +105,7 @@ export default function ComparisonScreen() {
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
                 totalComparisons: sessionDetails.totalComparisons,
+                user: sessionDetails.user,
             });
             getComparisonResumes();
         } catch (error) {
@@ -159,29 +160,49 @@ export default function ComparisonScreen() {
                         <div className="resume-render-container">
                             <div className="auto-btns-container">
                                 {sessionDetails.usePush && (
-                                    <button className="auto-btn" onClick={() => handleAutoPush("left")}>
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoPush("left")}
+                                    >
                                         Push
                                     </button>
                                 )}
                                 {sessionDetails.useReject && (
-                                    <button className="auto-btn" onClick={() => handleAutoReject("left")}>
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoReject("left")}
+                                    >
                                         Reject
                                     </button>
                                 )}
                             </div>
-                            <ResumePDF resumeURL={resumeUrls.leftURL} onClick={() => handleWinner("leftWin")} disabled={isDisabled} />
+                            <ResumePDF
+                                resumeURL={resumeUrls.leftURL}
+                                onClick={() => handleWinner("leftWin")}
+                                disabled={isDisabled}
+                            />
                         </div>
                         <div className="resume-render-container">
-                            <ResumePDF resumeURL={resumeUrls.rightURL} onClick={() => handleWinner("rightWin")} disabled={isDisabled} />
+                            <ResumePDF
+                                resumeURL={resumeUrls.rightURL}
+                                onClick={() => handleWinner("rightWin")}
+                                disabled={isDisabled}
+                            />
                             <div className="auto-btns-container">
                                 {sessionDetails.usePush && (
-                                    <button className="auto-btn" onClick={() => handleAutoPush("right")}>
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoPush("right")}
+                                    >
                                         Push
                                     </button>
                                 )}
 
                                 {sessionDetails.useReject && (
-                                    <button className="auto-btn" onClick={() => handleAutoReject("right")}>
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoReject("right")}
+                                    >
                                         Reject
                                     </button>
                                 )}

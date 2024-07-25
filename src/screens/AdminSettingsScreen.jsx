@@ -3,6 +3,7 @@ import InputSetting from "../components/InputSetting";
 import ToggleSetting from "../components/ToggleSetting";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import Screen from "../components/Screen";
+import UserDisplay from "../components/UserDisplay";
 import axios from "axios";
 
 export default function AdminSettingsScreen() {
@@ -14,6 +15,7 @@ export default function AdminSettingsScreen() {
     const [pushQuota, setPushQuota] = useState(1);
     const [useTimer, setUseTimer] = useState(false);
     const [compareTimer, setCompareTimer] = useState(5);
+    const [viewUsers, setViewUsers] = useState(false);
     const { sessionDetails, setSessionDetails } = useSessionAuth();
 
     useEffect(() => {
@@ -36,9 +38,9 @@ export default function AdminSettingsScreen() {
             });
             if (res.data.updateSuccess) {
                 if (type === "push") {
-                    setSessionDetails({ ...sessionDetails, rejectQuota: quota });
-                } else {
                     setSessionDetails({ ...sessionDetails, pushQuota: quota });
+                } else {
+                    setSessionDetails({ ...sessionDetails, rejectQuota: quota });
                 }
             }
         } catch (error) {
@@ -115,65 +117,76 @@ export default function AdminSettingsScreen() {
     return (
         <Screen>
             <div className="page-container">
-                <h1 className="admin-header">Admin Settings</h1>
-                <div className="settings-container">
-                    <ToggleSetting
-                        settingName="Allow auto-reject voting: "
-                        onToggle={handleUseRejectOrPush}
-                        checked={useReject}
-                        type="reject"
-                    />
-                    {useReject && (
-                        <InputSetting
-                            settingName="Number of rejections to reject: "
-                            handleSubmit={handleRejectOrPushQuotaSubmit}
-                            input={rejectQuota}
-                            setInput={setRejectQuota}
+                <h1 className="admin-header">Admin</h1>
+                <button onClick={() => setViewUsers(false)}>Settings</button>
+                <button onClick={() => setViewUsers(true)}>Users</button>
+                {viewUsers ? (
+                    <UserDisplay />
+                ) : (
+                    <div className="settings-container">
+                        <ToggleSetting
+                            settingName="Allow auto-reject voting: "
+                            onToggle={handleUseRejectOrPush}
+                            checked={useReject}
                             type="reject"
                         />
-                    )}
-                    {useReject && (
+                        {useReject && (
+                            <InputSetting
+                                settingName="Number of rejections to reject: "
+                                handleSubmit={handleRejectOrPushQuotaSubmit}
+                                input={rejectQuota}
+                                setInput={setRejectQuota}
+                                type="reject"
+                            />
+                        )}
+                        {useReject && (
+                            <ToggleSetting
+                                settingName="Require admin to reject: "
+                                onToggle={handleRejectOrPushAdminRequired}
+                                checked={rejectAdmin}
+                                type="reject"
+                            />
+                        )}
                         <ToggleSetting
-                            settingName="Require admin to reject: "
-                            onToggle={handleRejectOrPushAdminRequired}
-                            checked={rejectAdmin}
-                            type="reject"
-                        />
-                    )}
-                    <ToggleSetting settingName="Allow auto-push voting: " onToggle={handleUseRejectOrPush} checked={usePush} type="push" />
-                    {usePush && (
-                        <InputSetting
-                            settingName="Number of pushes to push: "
-                            handleSubmit={handleRejectOrPushQuotaSubmit}
-                            input={pushQuota}
-                            setInput={setPushQuota}
+                            settingName="Allow auto-push voting: "
+                            onToggle={handleUseRejectOrPush}
+                            checked={usePush}
                             type="push"
                         />
-                    )}
-                    {usePush && (
+                        {usePush && (
+                            <InputSetting
+                                settingName="Number of pushes to push: "
+                                handleSubmit={handleRejectOrPushQuotaSubmit}
+                                input={pushQuota}
+                                setInput={setPushQuota}
+                                type="push"
+                            />
+                        )}
+                        {usePush && (
+                            <ToggleSetting
+                                settingName="Require admin to push: "
+                                onToggle={handleRejectOrPushAdminRequired}
+                                checked={pushAdmin}
+                                type="push"
+                            />
+                        )}
                         <ToggleSetting
-                            settingName="Require admin to push: "
-                            onToggle={handleRejectOrPushAdminRequired}
-                            checked={pushAdmin}
-                            type="push"
-                        />
-                    )}
-                    <ToggleSetting
-                        settingName="Enable resume comparison timer: "
-                        onToggle={handleComparisonTimerRequired}
-                        checked={useTimer}
-                        type="placeholder"
-                    />
-                    {useTimer && (
-                        <InputSetting
-                            settingName="Minimum seconds to compare: "
-                            handleSubmit={handleComparisonTimerSubmit}
-                            input={compareTimer}
-                            setInput={setCompareTimer}
+                            settingName="Enable resume comparison timer: "
+                            onToggle={handleComparisonTimerRequired}
+                            checked={useTimer}
                             type="placeholder"
                         />
-                    )}
-                </div>
+                        {useTimer && (
+                            <InputSetting
+                                settingName="Minimum seconds to compare: "
+                                handleSubmit={handleComparisonTimerSubmit}
+                                input={compareTimer}
+                                setInput={setCompareTimer}
+                                type="placeholder"
+                            />
+                        )}
+                    </div>
+                )}
             </div>
         </Screen>
     );

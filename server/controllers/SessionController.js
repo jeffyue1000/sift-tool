@@ -125,14 +125,20 @@ const getSessionFromToken = async (req, res) => {
 const getUserFromToken = async (req, res) => {
     try {
         const { encodedUserToken } = req.query;
-        jwt.verify(encodedUserToken, process.env.TOKEN_SECRET),
-            async (err, decoded) => {
-                if (err) {
-                    console.error("JWT verification error: ", err);
-                    return res.status(401).json({ message: "Failed to authenticate token" });
-                }
-                res.status(200).json({ user: decoded.user });
-            };
+        if (encodedUserToken) {
+            jwt.verify(encodedUserToken, process.env.TOKEN_SECRET),
+                async (err, decoded) => {
+                    if (err) {
+                        console.error("JWT verification error: ", err);
+                        return res.status(401).json({ message: "Failed to authenticate token" });
+                    }
+                    res.status(200).json({ user: decoded.user });
+                };
+        } else {
+            res.status(401).json({
+                message: "User cookie not found",
+            });
+        }
     } catch (error) {
         console.error("Error occurred in getUserFromToken", error);
         res.status(500).json({

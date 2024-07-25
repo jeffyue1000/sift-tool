@@ -18,6 +18,6 @@ export function LoginRedirect({ component }) {
 }
 
 export function UserProtectedRoute({ component }) {
-    const { sessionAuthenticated, userSelected } = useSessionAuth();
-    return sessionAuthenticated ? userSelected ? <Navigate to="/rankings" /> : component : <Navigate to="/login" />;
+    const { sessionAuthenticated, userAuthenticated } = useSessionAuth();
+    return sessionAuthenticated ? userAuthenticated ? <Navigate to="/rankings" /> : component : <Navigate to="/login" />;
 }

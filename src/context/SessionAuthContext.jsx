@@ -8,7 +8,7 @@ export const useSessionAuth = () => useContext(SessionAuthContext);
 export function SessionAuthProvider({ children }) {
     const [sessionAuthenticated, setSessionAuthenticated] = useState(false);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
-    const [userSelected, setUserSelected] = useState(false);
+    const [userAuthenticated, setUserAuthenticated] = useState(false);
     const [sessionDetails, setSessionDetails] = useState({
         sessionID: "defaultID",
         duration: 1, //expire immediately if invalid session
@@ -44,9 +44,6 @@ export function SessionAuthProvider({ children }) {
                         setAdminAuthenticated(true);
                     }
                     const session = res.data.session;
-                    const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
-                        params: { encodedUsertoken: userCookieToken },
-                    });
 
                     setSessionDetails({
                         sessionID: session.sessionID,
@@ -62,8 +59,14 @@ export function SessionAuthProvider({ children }) {
                         pushQuota: session.pushQuota,
                         useTimer: session.useTimer,
                         compareTimer: session.compareTimer,
-                        user: userRes.data.user,
                     });
+
+                    if (userCookieToken) {
+                        const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
+                            params: { encodedUsertoken: userCookieToken },
+                        });
+                        setSessionDetails({ ...sessionDetails, user: userRes.data.user });
+                    }
                 }
             } else {
                 setSessionAuthenticated(false);
@@ -83,6 +86,7 @@ export function SessionAuthProvider({ children }) {
             });
             setSessionAuthenticated(false);
             setAdminAuthenticated(false);
+            setUserAuthenticated(false);
         } catch (error) {
             console.error("Error logging out:", error);
         }
@@ -90,6 +94,7 @@ export function SessionAuthProvider({ children }) {
 
     useEffect(() => {
         verifySession();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (loading) {
@@ -103,6 +108,8 @@ export function SessionAuthProvider({ children }) {
                 setSessionAuthenticated,
                 adminAuthenticated,
                 setAdminAuthenticated,
+                userAuthenticated,
+                setUserAuthenticated,
                 sessionDetails,
                 setSessionDetails,
                 logout,

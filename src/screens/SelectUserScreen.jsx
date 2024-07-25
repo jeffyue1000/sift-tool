@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import Screen from "../components/Screen";
 import { useNavigate } from "react-router-dom";
 import { useSessionAuth } from "../context/SessionAuthContext";
+import axios from "axios";
 
 export default function SelectUserScreen() {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState("");
     const [newUser, setNewUser] = useState("");
     const [showAddUser, setShowAddUser] = useState(false);
-    const { sessionDetails, setSessionDetails } = useSessionAuth();
+    const { sessionDetails, setSessionDetails, setUserAuthenticated } = useSessionAuth();
 
     const navigate = useNavigate();
 
     useEffect(() => {
         getUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getUsers = async () => {
@@ -22,7 +24,8 @@ export default function SelectUserScreen() {
                 params: { sessionID: sessionDetails.sessionID },
             });
             if (res.data.getSuccess) {
-                const userArray = Array.from(res.data.users.keys());
+                const userMap = res.data.users;
+                const userArray = Object.keys(userMap);
                 setUsers(userArray);
             }
         } catch (error) {
@@ -35,15 +38,16 @@ export default function SelectUserScreen() {
         if (user === "create-user") {
             setShowAddUser(true);
         } else {
-            setSelectedUser(user);
             setShowAddUser(false);
         }
+        setSelectedUser(user);
     };
 
     const handleUserChosen = async () => {
         try {
             const res = await axios.post(`http://localhost:3001/sessions/setUser`, { user: selectedUser }, { withCredentials: true });
             setSessionDetails({ ...sessionDetails, user: res.data.user });
+            setUserAuthenticated(true);
             navigate("/compare");
         } catch (error) {
             console.error("Error choosing user: ", error);
@@ -58,6 +62,7 @@ export default function SelectUserScreen() {
                 { withCredentials: true }
             );
             setSessionDetails({ ...sessionDetails, user: res.data.user });
+            setUserAuthenticated(true);
             navigate("/compare");
         } catch (error) {
             console.error("Error creating new user: ", error);
@@ -82,7 +87,7 @@ export default function SelectUserScreen() {
                         key={index}
                         value={user}
                     >
-                        {item}
+                        {user}
                     </option>
                 ))}
                 <option value="create-user">Create new user</option>
@@ -98,7 +103,7 @@ export default function SelectUserScreen() {
                     <button onClick={handleCreateUser}>Add User</button>
                 </div>
             )}
-            <button onClick={handleUserChosen}></button>
+            {!showAddUser && <button onClick={handleUserChosen}>Select User</button>}
         </Screen>
     );
 }

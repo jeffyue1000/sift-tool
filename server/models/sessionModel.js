@@ -70,6 +70,7 @@ const sessionSchema = new mongoose.Schema({
     users: {
         type: Map,
         of: Number,
+        default: {},
     },
 });
 sessionSchema.index({ sessionID: 1 });
