@@ -16,7 +16,7 @@ export default function InputSetting({ settingName, handleSubmit, input, setInpu
         <div className="setting-row">
             {settingName}
             <form
-                className="quota-form"
+                className="input-form"
                 onSubmit={handleInputSubmit}
             >
                 <input

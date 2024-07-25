@@ -8,3 +8,18 @@
     display: flex;
     justify-content: center;
 }
+
+.reject-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.push-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+}

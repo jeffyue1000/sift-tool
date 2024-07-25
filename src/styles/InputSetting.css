@@ -5,7 +5,7 @@
     margin-top: 20px;
 }
 
-.quota-input {
+.input-box {
     margin-bottom: 10px;
     margin-top: 5px;
     padding: 10px;
@@ -14,13 +14,13 @@
     border-radius: 5px;
 }
 
-.quota-form {
+.input-form {
     align-items: center;
     display: flex;
     flex-direction: column;
 }
 
-.quota-btn {
+.input-btn {
     font-weight: bold;
     font-family: "Nanum Myeongjo", serif;
     color: black;
@@ -29,7 +29,7 @@
     margin-top: 6px;
 }
 
-.quota-btn:hover {
+.input-btn:hover {
     color: #f9ede1;
     background-color: #65aed5;
 }
