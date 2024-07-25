@@ -54,7 +54,7 @@ export default function LoginScreen() {
                 if (res.data.admin) {
                     setAdminAuthenticated(true);
                 }
-                navigate("/compare");
+                navigate("/users");
             } else {
                 setFailedLogin(true);
             }
@@ -67,7 +67,10 @@ export default function LoginScreen() {
     return (
         <div className="main-container">
             <div className="tabs">
-                <button className={`tab ${currentTab === "login" ? "active" : ""}`} onClick={() => setCurrentTab("login")}>
+                <button
+                    className={`tab ${currentTab === "login" ? "active" : ""}`}
+                    onClick={() => setCurrentTab("login")}
+                >
                     Join Session
                 </button>
                 <button
@@ -113,7 +116,10 @@ export default function LoginScreen() {
                             placeholder="Enter Admin Key (Optional)"
                         />
                         {failedLogin && <div className="error-message">Could not find a session with those credentials!</div>}
-                        <button onClick={handleLogin} className="submit-button">
+                        <button
+                            onClick={handleLogin}
+                            className="submit-button"
+                        >
                             Enter Session
                         </button>
                     </div>

@@ -53,7 +53,7 @@ export default function SessionCreate({ configData }) {
                 });
                 setSessionCreated(true);
             }
-            navigate("/upload");
+            navigate("/users");
         } catch (error) {
             console.error("Error creating session", error);
         }
