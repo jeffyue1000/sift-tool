@@ -16,7 +16,9 @@ export default function AdminSettingsScreen() {
     const [useTimer, setUseTimer] = useState(false);
     const [compareTimer, setCompareTimer] = useState(5);
     const { sessionDetails, setSessionDetails } = useSessionAuth();
-
+    useEffect(() => {
+        console.log(sessionDetails);
+    });
     useEffect(() => {
         setUseReject(sessionDetails.useReject);
         setUsePush(sessionDetails.usePush);

@@ -53,7 +53,7 @@ const sessionSchema = new mongoose.Schema({
     },
     rejectQuota: {
         type: Number,
-        default: 1,
+        default: -1,
     },
     pushQuota: {
         type: Number,
