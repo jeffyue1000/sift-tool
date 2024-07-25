@@ -39,6 +39,7 @@ const resumeSchema = new mongoose.Schema({
     expireAt: {
         type: Date,
         required: true,
+        expires: 0,
     },
 });
 
