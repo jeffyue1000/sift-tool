@@ -173,10 +173,13 @@ const uploadResumes = async (req, res) => {
 
 const compareResumes = async (req, res) => {
     try {
-        const { leftResume, rightResume, winner, sessionID, totalComparisons } = req.body;
+        const { leftResume, rightResume, winner, sessionID, totalComparisons, user } = req.body;
         const filterSession = { sessionID: sessionID };
-        const updateSession = { totalComparisons: totalComparisons + 1 };
-        await Session.findOneAndUpdate(filterSession, updateSession);
+        const updateSession = {
+            totalComparisons: totalComparisons + 1,
+            $inc: { [`users.${user}`]: 1 },
+        };
+        const session = await Session.findOneAndUpdate(filterSession, updateSession);
 
         const leftExpected = 1.0 / (1.0 + Math.pow(10, (rightResume.eloScore - leftResume.eloScore) / 400.0));
         const rightExpected = 1.0 / (1.0 + Math.pow(10, (leftResume.eloScore - rightResume.eloScore) / 400.0));

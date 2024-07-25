@@ -31,10 +31,7 @@ export default function SessionConfig({ onSubmit }) {
                 onChange={(e) => setSessionDuration(e.target.value)}
             />
             {/* make animation to create session page? */}
-            <button
-                onClick={handleConfigSubmit}
-                className="submit-button"
-            >
+            <button onClick={handleConfigSubmit} className="submit-button">
                 Continue
             </button>
         </div>

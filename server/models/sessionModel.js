@@ -72,6 +72,11 @@ const sessionSchema = new mongoose.Schema({
         required: true,
         expires: 0,
     },
+    users: {
+        type: Map,
+        of: Number,
+        default: {},
+    },
 });
 
 sessionSchema.index({ sessionID: 1 });

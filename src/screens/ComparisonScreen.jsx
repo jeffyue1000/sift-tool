@@ -105,6 +105,7 @@ export default function ComparisonScreen() {
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
                 totalComparisons: sessionDetails.totalComparisons,
+                user: sessionDetails.user,
             });
             getComparisonResumes();
         } catch (error) {

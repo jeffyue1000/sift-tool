@@ -54,7 +54,7 @@ export default function LoginScreen() {
                 if (res.data.admin) {
                     setAdminAuthenticated(true);
                 }
-                navigate("/compare");
+                navigate("/users");
             } else {
                 setFailedLogin(true);
             }
