@@ -117,6 +117,7 @@ export default function RankingScreen() {
                                 eloScore={Math.round(applicant.eloScore * 10) / 10}
                                 rank={index + 1 + (currentPage - 1) * MAX_ITEMS_PER_PAGE}
                                 onClick={() => showResume(index)}
+                                excluded={applicant.excluded}
                             />
                         ))}
                     </div>
@@ -129,6 +130,7 @@ export default function RankingScreen() {
                                 name={applicant.name}
                                 gradYear={applicant.gradYear}
                                 onClick={() => showResume(index)}
+                                excluded={applicant.excluded}
                             />
                         ))}
                     </div>
@@ -141,6 +143,7 @@ export default function RankingScreen() {
                                 name={applicant.name}
                                 gradYear={applicant.gradYear}
                                 onClick={() => showResume(index)}
+                                excluded={applicant.excluded}
                             />
                         ))}
                     </div>

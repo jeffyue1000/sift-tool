@@ -11,7 +11,7 @@ export default function AdminSettingsScreen() {
     const [usePush, setUsePush] = useState(false);
     const [rejectAdmin, setRejectAdmin] = useState(false);
     const [pushAdmin, setPushAdmin] = useState(false);
-    const [rejectQuota, setRejectQuota] = useState(1);
+    const [rejectQuota, setRejectQuota] = useState(-1);
     const [pushQuota, setPushQuota] = useState(1);
     const [useTimer, setUseTimer] = useState(false);
     const [compareTimer, setCompareTimer] = useState(5);
@@ -171,9 +171,9 @@ export default function AdminSettingsScreen() {
                             />
                         )}
                     </div>
-                    <div className="timer-container">
+                    <div className="timer-setting-container">
                         <ToggleSetting
-                            settingName="Enable resume comparison timer"
+                            settingName="Enable timer"
                             onToggle={handleComparisonTimerRequired}
                             checked={useTimer}
                             type="placeholder"
