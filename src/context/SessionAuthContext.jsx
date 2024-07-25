@@ -8,27 +8,35 @@ export const useSessionAuth = () => useContext(SessionAuthContext);
 export function SessionAuthProvider({ children }) {
     const [sessionAuthenticated, setSessionAuthenticated] = useState(false);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+    const [userSelected, setUserSelected] = useState(false);
     const [sessionDetails, setSessionDetails] = useState({
         sessionID: "defaultID",
         duration: 1, //expire immediately if invalid session
         resumeCount: 0,
+        maxResumes: 100,
         totalComparisons: 0,
         useReject: false,
         usePush: false,
         requireAdminReject: true,
         requireAdminPush: true,
+        rejectQuota: 1,
+        pushQuota: 1,
+        useTimer: false,
+        compareTimer: 3,
+        user: "",
     });
     const [loading, setLoading] = useState(true);
 
     const verifySession = async () => {
         try {
-            const res = await axios.get("http://localhost:3001/sessions/getCookie", {
+            const res = await axios.get("http://localhost:3001/sessions/getCookies", {
                 withCredentials: true,
             });
-            const cookieToken = res.data.cookieToken;
-            if (cookieToken) {
+            const sessionCookieToken = res.data.sessionCookieToken;
+            const userCookieToken = res.data.userCookieToken;
+            if (sessionCookieToken) {
                 const res = await axios.get("http://localhost:3001/sessions/getSessionFromToken", {
-                    params: { encodedSessionToken: cookieToken },
+                    params: { encodedSessionToken: sessionCookieToken },
                 });
                 if (res.data.valid) {
                     setSessionAuthenticated(true);
@@ -36,6 +44,10 @@ export function SessionAuthProvider({ children }) {
                         setAdminAuthenticated(true);
                     }
                     const session = res.data.session;
+                    const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
+                        params: { encodedUsertoken: userCookieToken },
+                    });
+
                     setSessionDetails({
                         sessionID: session.sessionID,
                         duration: session.duration,
@@ -50,8 +62,12 @@ export function SessionAuthProvider({ children }) {
                         pushQuota: session.pushQuota,
                         useTimer: session.useTimer,
                         compareTimer: session.compareTimer,
+                        user: userRes.data.user,
                     });
                 }
+            } else {
+                setSessionAuthenticated(false);
+                setAdminAuthenticated(false);
             }
         } catch (error) {
             console.error("Error verifying session", error);
@@ -67,6 +83,7 @@ export function SessionAuthProvider({ children }) {
             });
             setSessionAuthenticated(false);
             setAdminAuthenticated(false);
+            setUserSelected(false);
         } catch (error) {
             console.error("Error logging out:", error);
         }
@@ -87,6 +104,8 @@ export function SessionAuthProvider({ children }) {
                 setSessionAuthenticated,
                 adminAuthenticated,
                 setAdminAuthenticated,
+                userSelected,
+                setUserSelected,
                 sessionDetails,
                 setSessionDetails,
                 logout,
