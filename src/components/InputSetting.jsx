@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import "../styles/InputSetting.css";
 
 export default function InputSetting({ settingName, handleSubmit, input, setInput, type }) {
+    const [savedMessage, setSavedMessage] = useState(false);
+
     const handleInputSubmit = (e) => {
         e.preventDefault();
         handleSubmit(input, type);
+        setSavedMessage(true);
+        setTimeout(() => {
+            setSavedMessage(false);
+        }, 2000);
     };
     return (
         <div className="setting-row">
             {settingName}
-            <form onSubmit={handleInputSubmit}>
+            <form
+                className="quota-form"
+                onSubmit={handleInputSubmit}
+            >
                 <input
                     className="input-box"
                     type="number"
@@ -24,6 +34,7 @@ export default function InputSetting({ settingName, handleSubmit, input, setInpu
                     Save
                 </button>
             </form>
+            {savedMessage && <div className="saved-message">Saved Successfully</div>}
         </div>
     );
 }

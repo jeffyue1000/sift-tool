@@ -4,6 +4,7 @@ import ToggleSetting from "../components/ToggleSetting";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import Screen from "../components/Screen";
 import axios from "axios";
+import "../styles/AdminSettingsScreen.css";
 
 export default function AdminSettingsScreen() {
     const [useReject, setUseReject] = useState(false);
@@ -36,7 +37,10 @@ export default function AdminSettingsScreen() {
             });
             if (res.data.updateSuccess) {
                 if (type === "push") {
-                    setSessionDetails({ ...sessionDetails, rejectQuota: quota });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        rejectQuota: quota,
+                    });
                 } else {
                     setSessionDetails({ ...sessionDetails, pushQuota: quota });
                 }
@@ -55,9 +59,15 @@ export default function AdminSettingsScreen() {
             });
             if (res.data.updateSuccess) {
                 if (type === "push") {
-                    setSessionDetails({ ...sessionDetails, pushRequireAdmin: checked });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        pushRequireAdmin: checked,
+                    });
                 } else {
-                    setSessionDetails({ ...sessionDetails, rejectRequireAdmin: checked });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        rejectRequireAdmin: checked,
+                    });
                 }
             }
         } catch (error) {
@@ -76,7 +86,10 @@ export default function AdminSettingsScreen() {
                 if (type === "push") {
                     setSessionDetails({ ...sessionDetails, usePush: checked });
                 } else {
-                    setSessionDetails({ ...sessionDetails, useReject: checked });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        useReject: checked,
+                    });
                 }
             }
         } catch (error) {
@@ -117,38 +130,42 @@ export default function AdminSettingsScreen() {
             <div className="page-container">
                 <h1 className="admin-header">Admin Settings</h1>
                 <div className="settings-container">
-                    <ToggleSetting
-                        settingName="Allow auto-reject voting: "
-                        onToggle={handleUseRejectOrPush}
-                        checked={useReject}
-                        type="reject"
-                    />
-                    {useReject && (
-                        <InputSetting
-                            settingName="Number of rejections to reject: "
-                            handleSubmit={handleRejectOrPushQuotaSubmit}
-                            input={rejectQuota}
-                            setInput={setRejectQuota}
-                            type="reject"
-                        />
-                    )}
-                    {useReject && (
+                    <div>
+                        {" "}
+                        className="reject-container:
                         <ToggleSetting
-                            settingName="Require admin to reject: "
-                            onToggle={handleRejectOrPushAdminRequired}
-                            checked={rejectAdmin}
+                            settingName="Allow auto-reject voting:"
+                            onToggle={handleUseRejectOrPush}
+                            checked={useReject}
                             type="reject"
                         />
-                    )}
+                        {useReject && (
+                            <InputSetting
+                                settingName="Number of rejections to reject:"
+                                handleSubmit={handleRejectOrPushQuotaSubmit}
+                                input={rejectQuota}
+                                setInput={setRejectQuota}
+                                type="reject"
+                            />
+                        )}
+                        {useReject && (
+                            <ToggleSetting
+                                settingName="Require admin to reject:"
+                                onToggle={handleRejectOrPushAdminRequired}
+                                checked={rejectAdmin}
+                                type="reject"
+                            />
+                        )}
+                    </div>
                     <ToggleSetting
-                        settingName="Allow auto-push voting: "
+                        settingName="Allow auto-push voting:"
                         onToggle={handleUseRejectOrPush}
                         checked={usePush}
                         type="push"
                     />
                     {usePush && (
                         <InputSetting
-                            settingName="Number of pushes to push: "
+                            settingName="Number of pushes to push:"
                             handleSubmit={handleRejectOrPushQuotaSubmit}
                             input={pushQuota}
                             setInput={setPushQuota}
@@ -157,9 +174,10 @@ export default function AdminSettingsScreen() {
                     )}
                     {usePush && (
                         <ToggleSetting
-                            settingName="Require admin to push: "
+                            settingName="Require admin to push:"
                             onToggle={handleRejectOrPushAdminRequired}
                             checked={pushAdmin}
+                            setChecked={setPushAdmin}
                             type="push"
                         />
                     )}

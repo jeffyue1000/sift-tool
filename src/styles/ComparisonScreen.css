@@ -49,3 +49,8 @@
     transition: 0.2s;
     font-family: "Nanum Myeongjo", serif;
 }
+
+.auto-btn:hover {
+    color: #f9ede1;
+    background-color: #65aed5;
+}

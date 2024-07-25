@@ -1,1 +1,10 @@
+.settings-container {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+}
 
+.admin-header {
+    display: flex;
+    justify-content: center;
+}

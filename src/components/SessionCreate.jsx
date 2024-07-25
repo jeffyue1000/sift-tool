@@ -12,7 +12,11 @@ export default function SessionCreate({ configData }) {
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [sessionExists, setSessionExists] = useState(false);
     const [sessionCreated, setSessionCreated] = useState(false);
-    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
+    const {
+        setSessionAuthenticated,
+        setSessionDetails,
+        setAdminAuthenticated,
+    } = useSessionAuth();
     const navigate = useNavigate();
 
     const onCreateSession = async () => {
@@ -24,9 +28,13 @@ export default function SessionCreate({ configData }) {
                 maxResumes: configData.maxResumes,
                 duration: configData.duration,
             };
-            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session, {
-                withCredentials: "true",
-            });
+            const res = await axios.post(
+                `http://localhost:3001/sessions/createSession`,
+                session,
+                {
+                    withCredentials: "true",
+                }
+            );
 
             if (res.data.sessionExists) {
                 setSessionExists(true);
@@ -100,7 +108,9 @@ export default function SessionCreate({ configData }) {
                 placeholder="Admin Key"
                 onChange={(e) => setAdminKey(e.target.value)}
             />
-            {!passwordsMatch && <div>Passwords do not match!</div>}
+            {!passwordsMatch && (
+                <div className="password-matching">Passwords do not match!</div>
+            )}
             {sessionExists && <div>Session with that ID already exists!</div>}
             {sessionCreated && <div>Session created successfully!</div>}
             <button
