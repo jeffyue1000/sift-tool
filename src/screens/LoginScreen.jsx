@@ -25,6 +25,12 @@ export default function LoginScreen() {
         setCurrentTab("create");
     };
 
+    const handleKeyDown = (event) => {
+        if (event.key == "Enter") {
+            handleLogin();
+        }
+    };
+
     const handleLogin = async () => {
         try {
             const res = await axios.post(
@@ -88,26 +94,27 @@ export default function LoginScreen() {
                             className="input"
                             type="text"
                             value={sessionID}
-                            onChange={(e) => setSessionID(e.target.value)}
                             placeholder="Enter Session ID"
+                            onChange={(e) => setSessionID(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                         <input
                             className="input"
                             type="password"
                             value={passkey}
-                            onChange={(e) => setPasskey(e.target.value)}
                             placeholder="Enter Passkey"
+                            onChange={(e) => setPasskey(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                         <input
                             className="input"
                             type="password"
                             value={adminKey}
-                            onChange={(e) => setAdminKey(e.target.value)}
                             placeholder="Enter Admin Key (Optional)"
+                            onChange={(e) => setAdminKey(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
-                        {failedLogin && (
-                            <div className="error-message">Could not find a session with those credentials!</div>
-                        )}
+                        {failedLogin && <div className="error-message">Could not find a session with those credentials!</div>}
                         <button
                             onClick={handleLogin}
                             className="submit-button"
