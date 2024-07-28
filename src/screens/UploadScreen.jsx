@@ -86,6 +86,11 @@ export default function UploadScreen() {
         }
     };
 
+    const handleClearResumes = () => {
+        setResumes([]);
+        setNumResumes(0);
+    };
+
     return (
         <Screen>
             <div className="upload-boxes-container">
@@ -122,7 +127,21 @@ export default function UploadScreen() {
                         <br />
                         {`Remaining Resume Slots: ${parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)}`}
                     </div>
-                    <button className="upload-button">Upload</button>
+                    <div className="upload-buttons-container">
+                        <button
+                            className="upload-button"
+                            onClick={handleClearResumes}
+                            type="button"
+                        >
+                            Clear
+                        </button>
+                        <button
+                            className="upload-button"
+                            type="submit"
+                        >
+                            Upload
+                        </button>
+                    </div>
                     <div className="popup-text">
                         {loading && <div>{loadingText}</div>}
                         {submitted && <div>Uploaded Successfully!</div>}
