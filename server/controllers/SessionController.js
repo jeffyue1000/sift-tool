@@ -120,7 +120,7 @@ const createSession = async (req, res) => {
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
         if (sessionExists) {
-            return res.status(409).json({ sessionExists: true });
+            return res.status(200).json({ sessionExists: true });
         }
 
         //encrypt keys for security
@@ -149,32 +149,6 @@ const createSession = async (req, res) => {
         console.error("Error occurred in createSession", error);
         res.status(500).json({
             creationSuccess: false,
-            error: error.message,
-        });
-    }
-};
-
-const hasResumeCapacity = async (req, res) => {
-    //check if session has enough space to upload resumes
-    try {
-        const { numResumes, sessionID } = req.query;
-        const existingResumes = await Resume.find({ sessionID: sessionID });
-        const session = await Session.find({ sessionID: sessionID });
-
-        if (existingResumes.length + numResumes > session.maxResumes) {
-            res.status(200).json({
-                resumeOverflow: true,
-                overflowAmount: existingResumes.length + numResumes - session.maxResumes,
-            });
-        } else {
-            res.status(200).json({
-                resumeOverflow: false,
-            });
-        }
-    } catch (error) {
-        console.error("Error occurred in hasResumeCapacity", error);
-        res.status(500).json({
-            message: "Error occurred checking session resume capacity",
             error: error.message,
         });
     }
@@ -216,7 +190,6 @@ module.exports = {
     getSessionFromToken,
     logoutSession,
     updateSessionSize,
-    hasResumeCapacity,
     calculateSessionStdDev,
     getCookie,
 };

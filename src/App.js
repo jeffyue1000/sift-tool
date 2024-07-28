@@ -5,7 +5,6 @@ import ComparisonScreen from "./screens/ComparisonScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
-import CreateSessionScreen from "./screens/CreateSessionScreen";
 import { SessionAuthProvider } from "./context/SessionAuthContext";
 import { SessionProtectedRoute, AdminProtectedRoute, LoginRedirect } from "./components/ProtectedRoutes";
 import NotFound from "./components/NotFound";
@@ -37,10 +36,6 @@ function App() {
                     <Route
                         path="/upload"
                         element={<AdminProtectedRoute component={<UploadScreen />} />}
-                    />
-                    <Route
-                        path="/createsession"
-                        element={<CreateSessionScreen />}
                     />
                     <Route
                         path="*"
