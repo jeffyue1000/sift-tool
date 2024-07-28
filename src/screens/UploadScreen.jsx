@@ -11,13 +11,12 @@ export default function UploadScreen() {
     const [resumes, setResumes] = useState([]); //set of resumes to be uploaded
     const [submitted, setSubmitted] = useState(false); //check if resumes submitted
     const [numResumes, setNumResumes] = useState(0); //to display resume count for user
-    const [resumeOverflow, setResumeOverflow] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("");
     const { sessionDetails, setSessionDetails } = useSessionAuth();
 
     useEffect(() => {
-        const loadingStates = ["Loading.", "Loading..", "Loading..."];
+        const loadingStates = ["Loading", "Loading.", "Loading..", "Loading..."];
         let index = 0;
 
         const loadingInterval = setInterval(() => {
@@ -30,8 +29,6 @@ export default function UploadScreen() {
 
     const onDrop = useCallback(
         (acceptedFiles) => {
-            console.log("accepted files: ", acceptedFiles);
-            console.log("resumes: ", resumes);
             let resumeArray = [...acceptedFiles, ...resumes];
             //uses map to eliminate duplicate resumes
             const resumeMap = new Map();
@@ -39,7 +36,6 @@ export default function UploadScreen() {
                 resumeMap.set(resume.name, resume);
             });
             const uniqueResumes = Array.from(resumeMap.values());
-            console.log(uniqueResumes);
             setResumes(uniqueResumes);
             setNumResumes(uniqueResumes.length);
         },
@@ -60,15 +56,10 @@ export default function UploadScreen() {
         try {
             event.preventDefault();
             setLoading(true);
-            const hasCapacityRes = await axios.get(`http://localhost:3001/sessions/hasResumeCapacity`, {
-                params: {
-                    numResumes: numResumes,
-                    sessionID: sessionDetails.sessionID,
-                },
-            }); //check if session has space to upload
 
-            if (hasCapacityRes.data.resumeOverflow) {
-                setResumeOverflow(true);
+            if (sessionDetails.maxResumes - sessionDetails.resumeCount < numResumes) {
+                alert("Not enough capacity! Try uploading fewer resumes.");
+                setLoading(false);
                 return;
             }
             const formData = new FormData(); //create FormData object for backend to handle pdfs
@@ -97,49 +88,45 @@ export default function UploadScreen() {
 
     return (
         <Screen>
-            {!resumeOverflow ? (
-                <div className="upload-boxes-container">
-                    <div className="upload-instruction-container">
-                        <h2 className="instruction-header">Upload Resumes</h2>
-                        <div className="upload-instruction">
-                            Submit any resumes to be sifted to the dropzone on the right. You may drag and drop individual files or select
-                            multiple to be submitted at once.
+            <div className="upload-boxes-container">
+                <div className="upload-instruction-container">
+                    <h2 className="instruction-header">Upload Resumes</h2>
+                    <div className="upload-instruction">
+                        Submit any resumes to be sifted to the dropzone on the right. You may drag and drop individual files or select
+                        multiple to be submitted at once.
+                        <br />
+                        <p>
+                            Files must be named in the following format: <b>FirstName_LastName_Resume_GradYear.pdf</b>
                             <br />
-                            <p>
-                                Files must be named in the following format: <b>FirstName_LastName_Resume_GradYear.pdf</b>
-                                <br />
-                                <b>(e.g. Joe_Bruin_Resume_2026) </b>
-                            </p>
-                        </div>
+                            <b>(e.g. Joe_Bruin_Resume_2026) </b>
+                        </p>
                     </div>
-                    <form
-                        className="drop-box-container"
-                        onSubmit={uploadResumes}
-                    >
-                        <div
-                            className="drop-box"
-                            {...getRootProps()}
-                        >
-                            <input {...getInputProps()} />
-                            <FontAwesomeIcon
-                                icon={faFilePdf}
-                                className="large-icon"
-                            />
-                            {isDragActive ? <p>Drop Resume...</p> : <div>Browse Files</div>}
-                        </div>
-                        <div className="submission-details">
-                            Attached: {numResumes}
-                            <br />
-                            {`Remaining Resume Slots: ${parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)}`}
-                        </div>
-                        <button className="upload-button">Upload</button>
-                        {loading && <div>{loadingText}</div>}
-                        {submitted && <div>Uploaded Successfully!</div>}
-                    </form>
                 </div>
-            ) : (
-                <div>resumeoverflowplaceholder</div> //make a popup that tells user they have to many resumes
-            )}
+                <form
+                    className="drop-box-container"
+                    onSubmit={uploadResumes}
+                >
+                    <div
+                        className="drop-box"
+                        {...getRootProps()}
+                    >
+                        <input {...getInputProps()} />
+                        <FontAwesomeIcon
+                            icon={faFilePdf}
+                            className="large-icon"
+                        />
+                        {isDragActive ? <p>Drop Resume...</p> : <div>Browse Files</div>}
+                    </div>
+                    <div className="submission-details">
+                        Attached: {numResumes}
+                        <br />
+                        {`Remaining Resume Slots: ${parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)}`}
+                    </div>
+                    <button className="upload-button">Upload</button>
+                    {loading && <div>{loadingText}</div>}
+                    {submitted && <div>Uploaded Successfully!</div>}
+                </form>
+            </div>
         </Screen>
     );
 }
