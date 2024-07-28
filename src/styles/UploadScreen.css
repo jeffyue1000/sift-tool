@@ -58,12 +58,17 @@
 .large-icon {
     font-size: 36px;
 }
+.upload-buttons-container {
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+}
 .upload-button {
     font-family: "Nanum Myeongjo", serif;
     color: black;
     border-width: 2px;
     transition: 0.2s;
-    width: 80%;
+    width: 50%;
 }
 .upload-button:hover {
     color: #f9ede1;
