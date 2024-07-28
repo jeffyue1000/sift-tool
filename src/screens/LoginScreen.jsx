@@ -26,7 +26,7 @@ export default function LoginScreen() {
     };
 
     const handleKeyDown = (event) => {
-        if (event.key == "Enter") {
+        if (event.key === "Enter") {
             handleLogin();
         }
     };

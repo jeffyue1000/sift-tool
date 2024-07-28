@@ -123,8 +123,10 @@ export default function UploadScreen() {
                         {`Remaining Resume Slots: ${parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)}`}
                     </div>
                     <button className="upload-button">Upload</button>
-                    {loading && <div>{loadingText}</div>}
-                    {submitted && <div>Uploaded Successfully!</div>}
+                    <div className="popup-text">
+                        {loading && <div>{loadingText}</div>}
+                        {submitted && <div>Uploaded Successfully!</div>}
+                    </div>
                 </form>
             </div>
         </Screen>

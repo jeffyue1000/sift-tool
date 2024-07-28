@@ -17,7 +17,7 @@ export default function SessionCreate({ configData }) {
     const navigate = useNavigate();
 
     const handleKeyDown = (event) => {
-        if (event.key == "Enter") {
+        if (event.key === "Enter") {
             onCreateSession();
         }
     };
@@ -39,6 +39,7 @@ export default function SessionCreate({ configData }) {
             });
 
             if (res.data.sessionExists) {
+                console.log("test");
                 setSessionExists(true);
                 return;
             }
@@ -103,10 +104,13 @@ export default function SessionCreate({ configData }) {
                 onChange={(e) => setAdminKey(e.target.value)}
                 onKeyDown={handleKeyDown}
             />
-            {!passwordsMatch && <div>Passwords do not match!</div>}
-            {sessionExists && <div>Session with that ID already exists!</div>}
-            {sessionCreated && <div>Session created successfully!</div>}
-            {invalidCreate && <div>Complete all fields before submitting!</div>}
+            <div className="popup-text">
+                {!passwordsMatch && <div>Passwords do not match!</div>}
+                {sessionExists && <div>Session with that ID already exists!</div>}
+                {sessionCreated && <div>Session created successfully!</div>}
+                {invalidCreate && <div>Complete all fields before submitting!</div>}
+            </div>
+
             <button
                 onClick={onCreateSession}
                 className="submit-button"

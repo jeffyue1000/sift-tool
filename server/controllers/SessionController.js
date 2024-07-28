@@ -120,7 +120,7 @@ const createSession = async (req, res) => {
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
         if (sessionExists) {
-            return res.status(409).json({ sessionExists: true });
+            return res.status(200).json({ sessionExists: true });
         }
 
         //encrypt keys for security
@@ -190,7 +190,6 @@ module.exports = {
     getSessionFromToken,
     logoutSession,
     updateSessionSize,
-    hasResumeCapacity,
     calculateSessionStdDev,
     getCookie,
 };
