@@ -27,6 +27,7 @@ router.get("/logoutSession", logoutSession);
 router.get("/getSessionFromToken", getSessionFromToken);
 router.get("/getUserFromToken", getUserFromToken);
 router.post("/updateSessionSize", updateSessionSize);
+
 router.get("/hasResumeCapacity", hasResumeCapacity);
 router.get("/getCookies", getCookies);
 router.post("/updateUsePushOrReject", updateUsePushOrReject);

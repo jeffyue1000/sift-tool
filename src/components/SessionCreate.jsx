@@ -12,15 +12,22 @@ export default function SessionCreate({ configData }) {
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [sessionExists, setSessionExists] = useState(false);
     const [sessionCreated, setSessionCreated] = useState(false);
-    const {
-        setSessionAuthenticated,
-        setSessionDetails,
-        setAdminAuthenticated,
-    } = useSessionAuth();
-    const navigate = useNavigate();
+    const [invalidCreate, setInvalidCreate] = useState(false);
+    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
 
+  const navigate = useNavigate();
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            onCreateSession();
+        }
+    };
     const onCreateSession = async () => {
         try {
+            if (sessionID === "" || password === "" || confirmPassword === "" || adminKey === "") {
+                setInvalidCreate(true);
+                return;
+            }
             const session = {
                 sessionID: sessionID,
                 password: password,
@@ -37,6 +44,7 @@ export default function SessionCreate({ configData }) {
             );
 
             if (res.data.sessionExists) {
+                console.log("test");
                 setSessionExists(true);
                 return;
             }
@@ -78,14 +86,13 @@ export default function SessionCreate({ configData }) {
     return (
         <div className="create-session-container">
             <h2 className="create-header">Create Session</h2>
-            {/* should make button non-clickable until all are filled */}
-            {/* make a reveal button for passwords? */}
             <input
                 className="input-field"
                 type="text"
                 value={sessionID}
                 placeholder="Enter New Session ID"
                 onChange={(e) => setSessionID(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
             <input
                 className="input-field"
@@ -93,6 +100,7 @@ export default function SessionCreate({ configData }) {
                 value={password}
                 placeholder="Enter Password"
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
             <input
                 className="input-field"
@@ -100,6 +108,7 @@ export default function SessionCreate({ configData }) {
                 value={confirmPassword}
                 placeholder="Confirm Password"
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
             <input
                 className="input-field"
@@ -107,12 +116,14 @@ export default function SessionCreate({ configData }) {
                 value={adminKey}
                 placeholder="Admin Key"
                 onChange={(e) => setAdminKey(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
-            {!passwordsMatch && (
-                <div className="password-matching">Passwords do not match!</div>
-            )}
-            {sessionExists && <div>Session with that ID already exists!</div>}
-            {sessionCreated && <div>Session created successfully!</div>}
+            <div className="popup-text">
+                {!passwordsMatch && <div>Passwords do not match!</div>}
+                {sessionExists && <div>Session with that ID already exists!</div>}
+                {sessionCreated && <div>Session created successfully!</div>}
+                {invalidCreate && <div>Complete all fields before submitting!</div>}
+            </div>
             <button
                 onClick={onCreateSession}
                 className="submit-button"

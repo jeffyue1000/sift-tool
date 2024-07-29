@@ -27,6 +27,10 @@ export function SessionAuthProvider({ children }) {
     });
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        verifySession();
+    }, []);
+
     const verifySession = async () => {
         try {
             const res = await axios.get("http://localhost:3001/sessions/getCookies", {
@@ -91,11 +95,6 @@ export function SessionAuthProvider({ children }) {
             console.error("Error logging out:", error);
         }
     };
-
-    useEffect(() => {
-        verifySession();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     if (loading) {
         return <div>Loading...</div>;
