@@ -16,3 +16,8 @@ export function LoginRedirect({ component }) {
     const { sessionAuthenticated } = useSessionAuth();
     return sessionAuthenticated ? <Navigate to="/compare" /> : component;
 }
+
+export function UserProtectedRoute({ component }) {
+    const { sessionAuthenticated, userAuthenticated } = useSessionAuth();
+    return sessionAuthenticated ? userAuthenticated ? <Navigate to="/rankings" /> : component : <Navigate to="/login" />;
+}

@@ -3,11 +3,7 @@ const multer = require("multer");
 
 const storage = multer.memoryStorage(); //file uploads get stored in RAM
 const upload = multer({ storage: storage });
-const uploadResumeConfig = upload.fields([
-    { name: "resumes" },
-    { name: "sessionID" },
-    { name: "duration" },
-]); //middleware to handle resume upload
+const uploadResumeConfig = upload.fields([{ name: "resumes" }, { name: "sessionID" }, { name: "duration" }]); //middleware to handle resume upload
 
 const {
     uploadResumes,
@@ -15,6 +11,8 @@ const {
     getAllResumes,
     getComparisonResumes,
     compareResumes,
+    updateAutoPush,
+    updateAutoReject,
 } = require("../controllers/ResumeController");
 
 const router = express.Router();
@@ -24,5 +22,7 @@ router.get("/getResumePDF", getResumePDF);
 router.get("/getAllResumes", getAllResumes);
 router.get("/getComparisonResumes", getComparisonResumes);
 router.post("/compareResumes", compareResumes);
+router.post("/updateAutoPush", updateAutoPush);
+router.post("/updateAutoReject", updateAutoReject);
 
 module.exports = router;

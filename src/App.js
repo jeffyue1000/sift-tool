@@ -5,8 +5,11 @@ import ComparisonScreen from "./screens/ComparisonScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
+import AdminSettingsScreen from "./screens/AdminSettingsScreen";
+import SelectUserScreen from "./screens/SelectUserScreen";
+
 import { SessionAuthProvider } from "./context/SessionAuthContext";
-import { SessionProtectedRoute, AdminProtectedRoute, LoginRedirect } from "./components/ProtectedRoutes";
+import { SessionProtectedRoute, AdminProtectedRoute, UserProtectedRoute, LoginRedirect } from "./components/ProtectedRoutes";
 import NotFound from "./components/NotFound";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import "./App.css";
@@ -25,13 +28,22 @@ function App() {
                         path="/login"
                         element={<LoginRedirect component={<LoginScreen />} />}
                     />
+
+                    <Route
+                        path="/rankings"
+                        element={<SessionProtectedRoute component={<RankingScreen />} />}
+                    />
                     <Route
                         path="/compare"
                         element={<SessionProtectedRoute component={<ComparisonScreen />} />}
                     />
                     <Route
-                        path="/rankings"
-                        element={<SessionProtectedRoute component={<RankingScreen />} />}
+                        path="/users"
+                        element={<UserProtectedRoute component={<SelectUserScreen />} />}
+                    />
+                    <Route
+                        path="/admin"
+                        element={<AdminProtectedRoute component={<AdminSettingsScreen />} />}
                     />
                     <Route
                         path="/upload"

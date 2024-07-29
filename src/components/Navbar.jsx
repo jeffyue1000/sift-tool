@@ -5,7 +5,7 @@ import "../styles/Navbar.css";
 
 export default function Navbar() {
     const [click, setClick] = useState(false);
-    const { sessionAuthenticated, adminAuthenticated, logout } = useSessionAuth();
+    const { sessionAuthenticated, adminAuthenticated, userAuthenticated, logout } = useSessionAuth();
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
@@ -38,11 +38,33 @@ export default function Navbar() {
                 {adminAuthenticated && (
                     <li className="nav-item">
                         <Link
+                            to="/admin"
+                            className="nav-links"
+                            onClick={closeMobileMenu}
+                        >
+                            Admin
+                        </Link>
+                    </li>
+                )}
+                {adminAuthenticated && (
+                    <li className="nav-item">
+                        <Link
                             to="/upload"
                             className="nav-links"
                             onClick={closeMobileMenu}
                         >
                             Upload
+                        </Link>
+                    </li>
+                )}
+                {sessionAuthenticated && !userAuthenticated && (
+                    <li className="nav-item">
+                        <Link
+                            to="/users"
+                            className="nav-links"
+                            onClick={closeMobileMenu}
+                        >
+                            Users
                         </Link>
                     </li>
                 )}

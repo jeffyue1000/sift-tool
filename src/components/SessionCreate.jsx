@@ -14,7 +14,8 @@ export default function SessionCreate({ configData }) {
     const [sessionCreated, setSessionCreated] = useState(false);
     const [invalidCreate, setInvalidCreate] = useState(false);
     const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
-    const navigate = useNavigate();
+
+  const navigate = useNavigate();
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
@@ -34,9 +35,13 @@ export default function SessionCreate({ configData }) {
                 maxResumes: configData.maxResumes,
                 duration: configData.duration,
             };
-            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session, {
-                withCredentials: "true",
-            });
+            const res = await axios.post(
+                `http://localhost:3001/sessions/createSession`,
+                session,
+                {
+                    withCredentials: "true",
+                }
+            );
 
             if (res.data.sessionExists) {
                 console.log("test");
@@ -46,16 +51,25 @@ export default function SessionCreate({ configData }) {
             if (res.data.creationSuccess) {
                 setSessionAuthenticated(true);
                 setAdminAuthenticated(true);
+                const session = res.data.session;
                 setSessionDetails({
-                    sessionID: res.data.session.sessionID,
-                    duration: res.data.session.duration,
-                    resumeCount: res.data.session.resumeCount,
-                    maxResumes: res.data.session.maxResumes,
-                    totalComparisons: res.data.session.totalComparisons,
+                    sessionID: session.sessionID,
+                    duration: session.duration,
+                    resumeCount: session.resumeCount,
+                    maxResumes: session.maxResumes,
+                    totalComparisons: session.totalComparisons,
+                    useReject: session.useReject,
+                    usePush: session.usePush,
+                    rejectRequireAdmin: session.rejectRequireAdmin,
+                    pushRequireAdmin: session.pushRequireAdmin,
+                    rejectQuota: session.rejectQuota,
+                    pushQuota: session.pushQuota,
+                    useTimer: session.useTimer,
+                    compareTimer: session.compareTimer,
                 });
                 setSessionCreated(true);
             }
-            navigate("/upload");
+            navigate("/users");
         } catch (error) {
             console.error("Error creating session", error);
         }
@@ -110,7 +124,6 @@ export default function SessionCreate({ configData }) {
                 {sessionCreated && <div>Session created successfully!</div>}
                 {invalidCreate && <div>Complete all fields before submitting!</div>}
             </div>
-
             <button
                 onClick={onCreateSession}
                 className="submit-button"

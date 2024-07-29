@@ -8,6 +8,57 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const createAndSetSessionCookie = require("../helpers/createAndSetSessionCookie");
+const createAndSetUserCookie = require("../helpers/createAndSetUserCookie");
+
+const updateRejectOrPushQuota = async (req, res) => {
+    try {
+        const { quota, sessionID, type } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = type === "push" ? { pushQuota: quota } : { rejectQuota: -1 * quota };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateRejectOrPushQuota", error);
+        res.status(500).json({
+            message: "Error updating rejectQuota or pushQuota",
+        });
+    }
+};
+const updateRequireAdminPushOrReject = async (req, res) => {
+    try {
+        const { checked, sessionID, type } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = type === "push" ? { pushRequireAdmin: checked } : { rejectRequireAdmin: checked };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateAdminRequiresPushOrReject", error);
+        res.status(500).json({
+            message: "Error updating requireAdminReject or requireAdminPush",
+        });
+    }
+};
+const updateUsePushOrReject = async (req, res) => {
+    try {
+        const { checked, sessionID, type } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = type === "push" ? { usePush: checked } : { useReject: checked };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateUsePushOrReject", error);
+        res.status(500).json({
+            message: "Error updating useReject or usePush",
+            error: error.message,
+        });
+    }
+};
 
 const calculateSessionStdDev = async (sessionID) => {
     try {
@@ -22,18 +73,24 @@ const calculateSessionStdDev = async (sessionID) => {
         return Math.sqrt(deviations / session.resumeCount);
     } catch (error) {
         console.error("Error occurred in calculateSessionStdDev", error);
+        res.status(500).json({
+            message: "Error calculating standard deviation",
+            error: error.message,
+        });
     }
 };
-const getCookie = async (req, res) => {
+const getCookies = async (req, res) => {
     try {
         const encodedSessionToken = req.cookies.session;
+        const encodedUserToken = req.cookies.user;
         res.status(200).json({
-            cookieToken: encodedSessionToken,
+            sessionCookieToken: encodedSessionToken,
+            userCookieToken: encodedUserToken,
         });
     } catch (error) {
-        console.error("Error occurred in getCookie", error);
+        console.error("Error occurred in getCookies", error);
         res.status(500).json({
-            message: "Erorr getting cookie",
+            message: "Error getting cookie",
             error: error.message,
         });
     }
@@ -65,9 +122,41 @@ const getSessionFromToken = async (req, res) => {
     }
 };
 
+const getUserFromToken = async (req, res) => {
+    try {
+        const { encodedUserToken } = req.query;
+        if (encodedUserToken) {
+            jwt.verify(encodedUserToken, process.env.TOKEN_SECRET),
+                async (err, decoded) => {
+                    if (err) {
+                        console.error("JWT verification error: ", err);
+                        return res.status(401).json({ message: "Failed to authenticate token" });
+                    }
+                    res.status(200).json({ user: decoded.user });
+                };
+        } else {
+            res.status(401).json({
+                message: "User cookie not found",
+            });
+        }
+    } catch (error) {
+        console.error("Error occurred in getUserFromToken", error);
+        res.status(500).json({
+            message: "Error checking user token",
+            error: error.message,
+        });
+    }
+};
+
 const logoutSession = async (req, res) => {
-    //logout user by clearing session cookie
+    //logout user by clearing cookies
     res.cookie("session", "", {
+        httpOnly: true,
+        // secure: true,
+        sameSite: "Strict",
+        maxAge: 0,
+    });
+    res.cookie("user", "", {
         httpOnly: true,
         // secure: true,
         sameSite: "Strict",
@@ -183,13 +272,110 @@ const updateSessionSize = async (req, res) => {
         });
     }
 };
+const updateUseTimer = async (req, res) => {
+    try {
+        const { sessionID, checked } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = { useTimer: checked };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateUseTimer", error);
+        res.status(500).json({
+            message: "Error occurred updating useTimer",
+            error: error.message,
+        });
+    }
+};
+const updateCompareTimer = async (req, res) => {
+    try {
+        const { sessionID, time } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = { compareTimer: time };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateCompareTimer", error);
+        res.status(500).json({
+            message: "Error occurred updating compare timer",
+            error: error.message,
+        });
+    }
+};
+
+const addUser = async (req, res) => {
+    try {
+        const { sessionID, user } = req.body;
+        const session = await Session.findOne({ sessionID: sessionID });
+        session.users.set(user, 0);
+        await session.save();
+        await createAndSetUserCookie(user, res);
+        res.status(200).json({
+            updateSuccessful: true,
+            user: user,
+        });
+    } catch (error) {
+        console.error("Error occurred in addUser: ", error);
+        res.status(500).json({
+            message: "Error occurred adding user",
+            error: error.message,
+        });
+    }
+};
+
+const getUsers = async (req, res) => {
+    try {
+        const { sessionID } = req.query;
+        const session = await Session.findOne({ sessionID: sessionID });
+        res.status(200).json({
+            getSuccess: true,
+            users: session.users,
+        });
+    } catch (error) {
+        console.error("Error occurred in getUsers: ", error);
+        res.status(500).json({
+            message: "Error occurred getting users",
+            error: error.message,
+        });
+    }
+};
+
+const setUser = async (req, res) => {
+    try {
+        const { user } = req.body;
+        await createAndSetUserCookie(user, res);
+        res.status(200).json({
+            updateSuccessful: true,
+            user: user,
+        });
+    } catch (error) {
+        console.error("Error occurred in setUser: ", error);
+        res.status(500).json({
+            message: "Error occurred setting user",
+            error: error.message,
+        });
+    }
+};
 
 module.exports = {
     createSession,
     loginSession,
     getSessionFromToken,
+    getUserFromToken,
     logoutSession,
     updateSessionSize,
     calculateSessionStdDev,
-    getCookie,
+    getCookies,
+    updateCompareTimer,
+    updateUseTimer,
+    updateUsePushOrReject,
+    updateRequireAdminPushOrReject,
+    updateRejectOrPushQuota,
+    addUser,
+    getUsers,
+    setUser,
 };

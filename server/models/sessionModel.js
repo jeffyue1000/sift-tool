@@ -35,10 +35,47 @@ const sessionSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    useReject: {
+        type: Boolean,
+        default: false,
+    },
+    usePush: {
+        type: Boolean,
+        default: false,
+    },
+    rejectRequireAdmin: {
+        type: Boolean,
+        default: true,
+    },
+    pushRequireAdmin: {
+        type: Boolean,
+        default: true,
+    },
+    rejectQuota: {
+        type: Number,
+        default: -1,
+    },
+    pushQuota: {
+        type: Number,
+        default: 1,
+    },
+    useTimer: {
+        type: Boolean,
+        default: false,
+    },
+    compareTimer: {
+        type: Number,
+        default: 0,
+    },
     expireAt: {
         type: Date,
         required: true,
         expires: 0,
+    },
+    users: {
+        type: Map,
+        of: Number,
+        default: {},
     },
 });
 

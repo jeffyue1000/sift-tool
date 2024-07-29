@@ -15,9 +15,41 @@ export default function ComparisonScreen() {
         rightURL: "",
     });
     const [canCompare, setCanCompare] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(10);
-    const [isDisabled, setIsDisabled] = useState(true);
+    const [useTimer, setUseTimer] = useState(false);
+    const [timeLeft, setTimeLeft] = useState();
+    const [isDisabled, setIsDisabled] = useState(false);
     const { sessionDetails } = useSessionAuth();
+
+    useEffect(() => {
+        if (parseInt(sessionDetails.resumeCount) >= 2) {
+            setCanCompare(true);
+            setUseTimer(sessionDetails.useTimer);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (canCompare) {
+            getComparisonResumes();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [canCompare]);
+
+    useEffect(() => {
+        getResumePdfs();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resumes]);
+
+    useEffect(() => {
+        if (useTimer) {
+            if (timeLeft > 0) {
+                const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); //decrement by one every 1000 milliseconds
+                return () => clearTimeout(timerId);
+            } else {
+                setIsDisabled(false);
+            }
+        }
+    }, [timeLeft, useTimer]);
 
     const getComparisonResumes = async () => {
         try {
@@ -27,13 +59,19 @@ export default function ComparisonScreen() {
                     resumeCount: sessionDetails.resumeCount,
                 },
             });
+            if (res.data.message === "Not enough resumes to compare") {
+                setCanCompare(false);
+                return;
+            }
             if (res.data.leftResume && res.data.rightResume) {
                 setResumes({
                     leftResume: res.data.leftResume,
                     rightResume: res.data.rightResume,
                 });
-                // setIsDisabled(true);
-                setTimeLeft(10); //10 second countdown timer before picking rsumes
+                if (useTimer) {
+                    setIsDisabled(true);
+                    setTimeLeft(sessionDetails.compareTimer);
+                }
             }
         } catch (error) {
             console.error("Error getting resumes for comparison", error);
@@ -59,14 +97,15 @@ export default function ComparisonScreen() {
             console.error("Error getting resume PDFs", error);
         }
     };
+
     const handleWinner = async (winner) => {
         try {
-            console.log(sessionDetails.totalComparisons);
             await axios.post("http://localhost:3001/resumes/compareResumes", {
                 ...resumes,
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
                 totalComparisons: sessionDetails.totalComparisons,
+                user: sessionDetails.user,
             });
             getComparisonResumes();
         } catch (error) {
@@ -74,52 +113,101 @@ export default function ComparisonScreen() {
         }
     };
 
-    useEffect(() => {
-        if (parseInt(sessionDetails.resumeCount) >= 2) {
-            setCanCompare(true);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        if (canCompare) {
+    const handleAutoPush = async (resume) => {
+        try {
+            const request =
+                resume === "left"
+                    ? {
+                          resume: resumes.leftResume,
+                          pushQuota: sessionDetails.pushQuota,
+                      }
+                    : {
+                          resume: resumes.rightResume,
+                          pushQuota: sessionDetails.pushQuota,
+                      };
+            await axios.post(`http://localhost:3001/resumes/updateAutoPush`, request);
             getComparisonResumes();
+        } catch (error) {
+            console.error("Error updating auto push", error);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [canCompare]);
+    };
 
-    useEffect(() => {
-        getResumePdfs();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resumes]);
-
-    useEffect(() => {
-        if (timeLeft > 0) {
-            const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); //decrement by one every 1000 milliseconds
-            return () => clearTimeout(timerId);
-        } else {
-            setIsDisabled(false);
+    const handleAutoReject = async (resume) => {
+        try {
+            const request =
+                resume === "left"
+                    ? {
+                          resume: resumes.leftResume,
+                          rejectQuota: sessionDetails.rejectQuota,
+                      }
+                    : {
+                          resume: resumes.rightResume,
+                          rejectQuota: sessionDetails.rejectQuota,
+                      };
+            await axios.post(`http://localhost:3001/resumes/updateAutoReject`, request);
+            getComparisonResumes();
+        } catch (error) {
+            console.error("Error updating auto reject", error);
         }
-    }, [timeLeft]);
+    };
 
     return (
         <Screen>
             {canCompare ? (
                 <div className="compare-container">
-                    <div className="timer-container">
-                        <div className="timer">{timeLeft}</div>
-                    </div>
+                    <div className="timer-container">{useTimer && <div className="timer">{timeLeft}</div>}</div>
                     <div className="resumes">
-                        <ResumePDF
-                            resumeURL={resumeUrls.leftURL}
-                            onClick={() => handleWinner("leftWin")}
-                            disabled={isDisabled}
-                        />
-                        <ResumePDF
-                            resumeURL={resumeUrls.rightURL}
-                            onClick={() => handleWinner("rightWin")}
-                            disabled={isDisabled}
-                        />
+                        <div className="resume-render-container">
+                            <div className="auto-btns-container">
+                                {sessionDetails.usePush && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoPush("left")}
+                                    >
+                                        Push
+                                    </button>
+                                )}
+                                {sessionDetails.useReject && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoReject("left")}
+                                    >
+                                        Reject
+                                    </button>
+                                )}
+                            </div>
+                            <ResumePDF
+                                resumeURL={resumeUrls.leftURL}
+                                onClick={() => handleWinner("leftWin")}
+                                disabled={isDisabled}
+                            />
+                        </div>
+                        <div className="resume-render-container">
+                            <ResumePDF
+                                resumeURL={resumeUrls.rightURL}
+                                onClick={() => handleWinner("rightWin")}
+                                disabled={isDisabled}
+                            />
+                            <div className="auto-btns-container">
+                                {sessionDetails.usePush && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoPush("right")}
+                                    >
+                                        Push
+                                    </button>
+                                )}
+
+                                {sessionDetails.useReject && (
+                                    <button
+                                        className="auto-btn"
+                                        onClick={() => handleAutoReject("right")}
+                                    >
+                                        Reject
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             ) : (

@@ -10,7 +10,7 @@
 .timer-container {
     display: flex;
     justify-content: center;
-    width: 100%;
+    width: 3.5%;
 }
 .timer {
     font-size: 1.5em;
@@ -27,4 +27,30 @@
 .resumes {
     display: flex;
     flex-direction: row;
+}
+.resume-render-container {
+    display: flex;
+    flex: row-reverse;
+}
+
+.auto-btns-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.auto-btn {
+    width: 100px;
+    padding: 10px 15px;
+    border: 1px solid #000000;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
+}
+
+.auto-btn:hover {
+    color: #f9ede1;
+    background-color: #65aed5;
 }
