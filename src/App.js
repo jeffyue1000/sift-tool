@@ -7,7 +7,7 @@ import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
 import AdminSettingsScreen from "./screens/AdminSettingsScreen";
 import SelectUserScreen from "./screens/SelectUserScreen";
-
+import CreateClubScreen from "./screens/CreateClubScreen";
 import { SessionAuthProvider } from "./context/SessionAuthContext";
 import { SessionProtectedRoute, AdminProtectedRoute, UserProtectedRoute, LoginRedirect } from "./components/ProtectedRoutes";
 import NotFound from "./components/NotFound";
@@ -28,7 +28,10 @@ function App() {
                         path="/login"
                         element={<LoginRedirect component={<LoginScreen />} />}
                     />
-
+                    <Route
+                        path="/create-club"
+                        element={<CreateClubScreen />}
+                    />
                     <Route
                         path="/rankings"
                         element={<SessionProtectedRoute component={<RankingScreen />} />}

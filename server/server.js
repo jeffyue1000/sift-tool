@@ -18,9 +18,11 @@ dbConnect();
 
 const ResumeRoutes = require("./routes/ResumeRoutes");
 const SessionRoutes = require("./routes/SessionRoutes");
+const ClubRoutes = require("./routes/ClubRoutes");
 
 app.use("/resumes", ResumeRoutes);
 app.use("/sessions", SessionRoutes);
+app.use("/clubs", ClubRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

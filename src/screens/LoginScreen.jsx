@@ -98,7 +98,7 @@ export default function LoginScreen() {
                     </div>
                 )}
                 {currentTab === "login" && (
-                    <div className="section-container login-container">
+                    <div className="login-container">
                         <h2 className="join-header">Join Session</h2>
                         <input
                             className="input"

@@ -6,7 +6,7 @@ body {
     margin: 0;
 }
 
-.main-container {
+.club-create-container {
     width: 600px;
     background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
     border-radius: 8px;
@@ -15,39 +15,9 @@ body {
     overflow: hidden;
 }
 
-.tabs {
-    display: flex;
-    justify-content: center;
-}
-
-.tab {
-    padding: 16px;
-    cursor: pointer;
-    font-family: "Nanum Myeongjo", serif;
-    flex: 1;
-    background-color: transparent;
-    color: rgb(0, 0, 0);
-    font-weight: bold;
-    transition: 0.2s;
-}
-
-.tab:hover,
-.tab.active {
-    color: #f9ede1;
-    background-color: #65aed5;
-}
-
-.tab-content {
-    padding: 40px;
-}
-
-.join-header {
+.create-header {
     margin-top: -12px;
     margin-bottom: 30px;
-}
-
-.login-container {
-    width: 100%;
 }
 
 .input {
@@ -58,6 +28,12 @@ body {
     border-bottom: 2px solid 1px solid #000000;
     font-size: 16px;
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1em;
+    border-radius: 8px;
+    background-color: #f9ede1;
 }
 
 button {
@@ -72,7 +48,9 @@ button {
     font-size: 16px;
     text-decoration: bold;
 }
-
+.popup-text {
+    margin-top: 10px;
+}
 .error-message {
     margin-top: 10px;
 }
@@ -82,13 +60,4 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.input {
-    /* font-family: "Nanum Myeongjo", serif; */
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 1em;
-    border-radius: 8px;
-    background-color: #f9ede1;
 }
