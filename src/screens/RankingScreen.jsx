@@ -44,7 +44,7 @@ export default function RankingScreen() {
     const showResume = async (index) => {
         try {
             const res = await axios.get(`http://localhost:3001/resumes/getResumePDF`, {
-                params: { id: applicants[index]._id },
+                params: { id: currentApplicants[index]._id },
             });
             if (res.data.getPdfSuccess) {
                 window.open(res.data.url, "_blank");
@@ -54,17 +54,22 @@ export default function RankingScreen() {
         }
     };
 
-    const gradYears = ["All", ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort((a, b) => parseInt(b) - parseInt(a))];
+    const gradYears = [
+        "All",
+        ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort((a, b) => parseInt(b) - parseInt(a)),
+    ];
 
     const filteredApplicants =
-        selectedGradYear === "All" ? applicants : applicants.filter((applicant) => applicant.gradYear === selectedGradYear);
+        selectedGradYear === "All"
+            ? applicants
+            : applicants.filter((applicant) => applicant.gradYear === selectedGradYear);
 
     const rankingsApplicants = filteredApplicants.filter((applicant) => !applicant.excluded);
     const pushedApplicants = filteredApplicants.filter((applicant) => applicant.auto > 0 && applicant.excluded);
     const rejectedApplicants = filteredApplicants.filter((applicant) => applicant.auto < 0 && applicant.excluded);
     const totalPages = Math.ceil(
-        (currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants).length /
-            MAX_ITEMS_PER_PAGE
+        (currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants)
+            .length / MAX_ITEMS_PER_PAGE
     );
     const currentApplicants = (
         currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants
