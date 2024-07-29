@@ -44,7 +44,7 @@ export default function RankingScreen() {
     const showResume = async (index) => {
         try {
             const res = await axios.get(`http://localhost:3001/resumes/getResumePDF`, {
-                params: { id: applicants[index]._id },
+                params: { id: currentApplicants[index]._id },
             });
             if (res.data.getPdfSuccess) {
                 window.open(res.data.url, "_blank");

@@ -12,7 +12,7 @@ export default function AdminSettingsScreen() {
     const [usePush, setUsePush] = useState(false);
     const [rejectAdmin, setRejectAdmin] = useState(false);
     const [pushAdmin, setPushAdmin] = useState(false);
-    const [rejectQuota, setRejectQuota] = useState(-1);
+    const [rejectQuota, setRejectQuota] = useState(1);
     const [pushQuota, setPushQuota] = useState(1);
     const [useTimer, setUseTimer] = useState(false);
     const [compareTimer, setCompareTimer] = useState(5);
