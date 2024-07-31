@@ -7,7 +7,6 @@ const {
     getSessionFromToken,
     getUserFromToken,
     updateSessionSize,
-    hasResumeCapacity,
     getCookies,
     updateUsePushOrReject,
     updateRequireAdminPushOrReject,
@@ -28,7 +27,6 @@ router.get("/getSessionFromToken", getSessionFromToken);
 router.get("/getUserFromToken", getUserFromToken);
 router.post("/updateSessionSize", updateSessionSize);
 
-router.get("/hasResumeCapacity", hasResumeCapacity);
 router.get("/getCookies", getCookies);
 router.post("/updateUsePushOrReject", updateUsePushOrReject);
 router.post("/updateRequireAdminPushOrReject", updateRequireAdminPushOrReject);
