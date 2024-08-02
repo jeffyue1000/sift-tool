@@ -48,7 +48,7 @@ const getComparisonResumes = async (req, res) => {
             ) {
                 return res.status(200).json({
                     leftResume: leftResume,
-                    rightResume: allResumes[i],
+                    rightResume: filteredAllResumes[i],
                 });
             }
         }
