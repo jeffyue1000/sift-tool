@@ -8,10 +8,16 @@ import UploadScreen from "./screens/UploadScreen";
 import AdminSettingsScreen from "./screens/AdminSettingsScreen";
 import SelectUserScreen from "./screens/SelectUserScreen";
 import CreateClubScreen from "./screens/CreateClubScreen";
+import { Navigate } from "react-router-dom";
 import { SessionAuthProvider } from "./context/SessionAuthContext";
-import { SessionProtectedRoute, AdminProtectedRoute, UserProtectedRoute, LoginRedirect } from "./components/ProtectedRoutes";
+import {
+    SessionProtectedRoute,
+    AdminProtectedRoute,
+    UserProtectedRoute,
+    ClubProtectedRoute,
+    LoginRedirect,
+} from "./components/ProtectedRoutes";
 import NotFound from "./components/NotFound";
-import WelcomeScreen from "./screens/WelcomeScreen";
 import "./App.css";
 
 function App() {
@@ -22,7 +28,7 @@ function App() {
                 <Routes>
                     <Route
                         path="/"
-                        element={<WelcomeScreen />}
+                        element={<Navigate to="/compare" />}
                     />
                     <Route
                         path="/login"
@@ -30,7 +36,7 @@ function App() {
                     />
                     <Route
                         path="/create-club"
-                        element={<CreateClubScreen />}
+                        element={<ClubProtectedRoute component={<CreateClubScreen />} />}
                     />
                     <Route
                         path="/rankings"

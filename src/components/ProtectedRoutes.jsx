@@ -21,3 +21,8 @@ export function UserProtectedRoute({ component }) {
     const { sessionAuthenticated, userAuthenticated } = useSessionAuth();
     return sessionAuthenticated ? userAuthenticated ? <Navigate to="/rankings" /> : component : <Navigate to="/login" />;
 }
+
+export function ClubProtectedRoute({ component }) {
+    const { clubAuthenticated } = useSessionAuth();
+    return clubAuthenticated ? <Navigate to="/club" /> : component;
+}

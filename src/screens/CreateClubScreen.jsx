@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Screen from "../components/Screen";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import "../styles/CreateClubScreen.css";
 
 export default function CreateClubScreen() {
     const [clubName, setClubName] = useState("");
@@ -17,10 +18,11 @@ export default function CreateClubScreen() {
         } else {
             setPasswordsMatch(true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [confirmPassword]);
 
     const handleKeyDown = (event) => {
-        if (event.key == "Enter") {
+        if (event.key === "Enter") {
             handleCreate();
         }
     };

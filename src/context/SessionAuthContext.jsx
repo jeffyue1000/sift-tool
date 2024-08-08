@@ -6,6 +6,7 @@ export const SessionAuthContext = createContext();
 export const useSessionAuth = () => useContext(SessionAuthContext);
 
 export function SessionAuthProvider({ children }) {
+    const [clubAuthenticated, setClubAuthenticated] = useState(false);
     const [sessionAuthenticated, setSessionAuthenticated] = useState(false);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
     const [userAuthenticated, setUserAuthenticated] = useState(false);
@@ -25,10 +26,14 @@ export function SessionAuthProvider({ children }) {
         compareTimer: 3,
         user: "",
     });
+    const [clubDetails, setClubDetails] = useState({
+        clubName: "default",
+    });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         verifySession();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const verifySession = async () => {
@@ -38,6 +43,7 @@ export function SessionAuthProvider({ children }) {
             });
             const sessionCookieToken = res.data.sessionCookieToken;
             const userCookieToken = res.data.userCookieToken;
+            const clubCookieToken = res.data.clubCookieToken;
             if (sessionCookieToken) {
                 const res = await axios.get("http://localhost:3001/sessions/getSessionFromToken", {
                     params: { encodedSessionToken: sessionCookieToken },
@@ -68,6 +74,7 @@ export function SessionAuthProvider({ children }) {
                         const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
                             params: { encodedUsertoken: userCookieToken },
                         });
+                        setUserAuthenticated(true);
                         setSessionDetails({ ...sessionDetails, user: userRes.data.user });
                     }
                 }
@@ -75,6 +82,15 @@ export function SessionAuthProvider({ children }) {
                 setSessionAuthenticated(false);
                 setAdminAuthenticated(false);
                 setUserAuthenticated(false);
+            }
+            if (clubCookieToken) {
+                const res = await axios.get("http://localhost:3001/clubs/getClubFromToken", {
+                    params: { encodedClubToken: clubCookieToken },
+                });
+                setClubAuthenticated(true);
+                setClubDetails({ ...clubDetails, clubName: res.data.name });
+            } else {
+                setClubAuthenticated(false);
             }
         } catch (error) {
             console.error("Error verifying session", error);
@@ -109,8 +125,12 @@ export function SessionAuthProvider({ children }) {
                 setAdminAuthenticated,
                 userAuthenticated,
                 setUserAuthenticated,
+                clubAuthenticated,
+                setClubAuthenticated,
                 sessionDetails,
                 setSessionDetails,
+                clubDetails,
+                setClubDetails,
                 logout,
                 verifySession,
             }}

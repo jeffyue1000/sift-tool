@@ -83,14 +83,16 @@ const getCookies = async (req, res) => {
     try {
         const encodedSessionToken = req.cookies.session;
         const encodedUserToken = req.cookies.user;
+        const encodedClubCookie = req.cookies.club;
         res.status(200).json({
             sessionCookieToken: encodedSessionToken,
             userCookieToken: encodedUserToken,
+            clubCookieToken: encodedClubCookie,
         });
     } catch (error) {
         console.error("Error occurred in getCookies", error);
         res.status(500).json({
-            message: "Error getting cookie",
+            message: "Error getting session cookies",
             error: error.message,
         });
     }
@@ -98,20 +100,26 @@ const getCookies = async (req, res) => {
 const getSessionFromToken = async (req, res) => {
     try {
         const { encodedSessionToken } = req.query;
-        jwt.verify(encodedSessionToken, process.env.TOKEN_SECRET, async (err, decoded) => {
-            if (err) {
-                console.error("JWT Verification Error:", err);
-                return res.status(401).json({ message: "Failed to authenticate token" });
-            }
-            const session = await Session.findOne({
-                sessionID: decoded.sessionID,
+        if (encodedSessionToken) {
+            jwt.verify(encodedSessionToken, process.env.TOKEN_SECRET, async (err, decoded) => {
+                if (err) {
+                    console.error("JWT Verification Error:", err);
+                    return res.status(401).json({ message: "Failed to authenticate token" });
+                }
+                const session = await Session.findOne({
+                    sessionID: decoded.sessionID,
+                });
+                if (session) {
+                    res.status(200).json({ valid: true, session: session, isAdmin: decoded.isAdmin });
+                } else {
+                    res.status(404).json({ valid: false });
+                }
             });
-            if (session) {
-                res.status(200).json({ valid: true, session: session, isAdmin: decoded.isAdmin });
-            } else {
-                res.status(404).json({ valid: false });
-            }
-        });
+        } else {
+            res.status(401).json({
+                valid: false,
+            });
+        }
     } catch (error) {
         console.error("Error occurred in getSessionFromToken", error);
         res.status(500).json({

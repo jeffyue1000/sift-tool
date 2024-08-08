@@ -179,7 +179,7 @@ const compareResumes = async (req, res) => {
             totalComparisons: totalComparisons + 1,
             $inc: { [`users.${user}`]: 1 },
         };
-        const session = await Session.findOneAndUpdate(filterSession, updateSession);
+        await Session.findOneAndUpdate(filterSession, updateSession);
 
         const leftExpected = 1.0 / (1.0 + Math.pow(10, (rightResume.eloScore - leftResume.eloScore) / 400.0));
         const rightExpected = 1.0 / (1.0 + Math.pow(10, (leftResume.eloScore - rightResume.eloScore) / 400.0));

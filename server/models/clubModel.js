@@ -23,7 +23,7 @@ const clubSchema = new mongoose.Schema({
     },
 });
 
-resumeSchema.index({ name: 1 });
+clubSchema.index({ name: 1 });
 
 const Club = mongoose.models.club || mongoose.model("club", clubSchema);
 

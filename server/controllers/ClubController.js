@@ -1,6 +1,10 @@
 const Club = require("../models/clubModel");
-const Session = require("../models/sessionModel");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const createAndSetClubCookie = require("../helpers/createAndSetClubCookie");
 
 const createClub = async (req, res) => {
@@ -36,4 +40,28 @@ const createClub = async (req, res) => {
     }
 };
 
-module.exports = { createClub };
+const getClubFromToken = async (req, res) => {
+    try {
+        const { encodedClubToken } = req.query;
+        if (encodedClubToken) {
+            jwt.verify(encodedClubToken, process.env.TOKEN_SECRET, async (err, decoded) => {
+                if (err) {
+                    console.error("JWT verification error: ", err);
+                    return res.status(401).json({ message: "Failed to authenticate token" });
+                }
+                res.status(200).json({ name: decoded.name });
+            });
+        } else {
+            res.status(401).json({
+                message: "User cookie not found",
+            });
+        }
+    } catch (error) {
+        console.error("Error occurred in getClubFromToken", error);
+        res.status(500).json({
+            message: "Error checking user token",
+            error: error.message,
+        });
+    }
+};
+module.exports = { createClub, getClubFromToken };
