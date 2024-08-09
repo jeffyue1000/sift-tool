@@ -8,6 +8,7 @@ import UploadScreen from "./screens/UploadScreen";
 import AdminSettingsScreen from "./screens/AdminSettingsScreen";
 import SelectUserScreen from "./screens/SelectUserScreen";
 import CreateClubScreen from "./screens/CreateClubScreen";
+import ClubScreen from "./screens/ClubScreen";
 import { Navigate } from "react-router-dom";
 import { SessionAuthProvider } from "./context/SessionAuthContext";
 import {
@@ -28,7 +29,7 @@ function App() {
                 <Routes>
                     <Route
                         path="/"
-                        element={<Navigate to="/compare" />}
+                        element={<Navigate to="/login" />}
                     />
                     <Route
                         path="/login"
@@ -36,7 +37,11 @@ function App() {
                     />
                     <Route
                         path="/create-club"
-                        element={<ClubProtectedRoute component={<CreateClubScreen />} />}
+                        element={<LoginRedirect component={<CreateClubScreen />} />}
+                    />
+                    <Route
+                        path="/club"
+                        element={<ClubProtectedRoute component={<ClubScreen />} />}
                     />
                     <Route
                         path="/rankings"

@@ -1,0 +1,45 @@
+.input-field {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    border: none;
+    border-bottom: 2px solid 1px solid #000000;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.club-login-container {
+    width: 100%;
+}
+
+.club-login-header {
+    margin-top: -12px;
+    margin-bottom: 30px;
+}
+
+.error-message {
+    margin-top: 10px;
+    font-family: "Poppins", sans-serif;
+}
+
+.submit-button {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1em;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: transparent;
+    color: rgb(245, 240, 240);
+    border: 1px solid #000000;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: bold;
+}
+
+.register-text {
+    font-family: "Poppins", sans-serif;
+    margin-top: 10px;
+}

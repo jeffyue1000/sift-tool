@@ -2,11 +2,35 @@ const Club = require("../models/clubModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
-
+const bcrypt = require("bcrypt");
 dotenv.config();
 
 const createAndSetClubCookie = require("../helpers/createAndSetClubCookie");
 
+const loginClub = async (req, res) => {
+    try {
+        const { clubName, passkey } = req.body;
+        const club = await Club.findOne({ name: clubName });
+
+        if (!club) {
+            return res.status(401).json({ validLogin: false });
+        }
+
+        const passkeyMatch = await bcrypt.compare(passkey, club.passkey);
+
+        if (passkeyMatch) {
+            await createAndSetClubCookie(clubName, res);
+            res.status(200).json({
+                validLogin: true,
+                club: club,
+            });
+        } else {
+            res.status(401).json({ validLogin: false });
+        }
+    } catch (error) {
+        console.error("Error occurred in loginClub: ", error);
+    }
+};
 const createClub = async (req, res) => {
     try {
         const { name, password } = req.body;
@@ -21,7 +45,7 @@ const createClub = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const club = new Club({
             name: name,
-            password: hashedPassword,
+            passkey: hashedPassword,
         });
 
         await club.save();
@@ -64,4 +88,8 @@ const getClubFromToken = async (req, res) => {
         });
     }
 };
-module.exports = { createClub, getClubFromToken };
+module.exports = {
+    createClub,
+    getClubFromToken,
+    loginClub,
+};

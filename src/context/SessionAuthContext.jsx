@@ -101,12 +101,13 @@ export function SessionAuthProvider({ children }) {
 
     const logout = async () => {
         try {
-            await axios.get("http://localhost:3001/sessions/logoutSession", {
+            await axios.get("http://localhost:3001/sessions/logout", {
                 withCredentials: true,
             });
             setSessionAuthenticated(false);
             setAdminAuthenticated(false);
             setUserAuthenticated(false);
+            setClubAuthenticated(false);
         } catch (error) {
             console.error("Error logging out:", error);
         }

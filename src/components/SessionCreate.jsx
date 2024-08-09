@@ -76,7 +76,7 @@ export default function SessionCreate({ configData }) {
         } else {
             setPasswordsMatch(false);
         }
-    }, [confirmPassword, password, adminKey]);
+    }, [confirmPassword, password]);
 
     return (
         <div className="create-session-container">

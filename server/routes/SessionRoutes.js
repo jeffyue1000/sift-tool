@@ -3,7 +3,7 @@ const express = require("express");
 const {
     createSession,
     loginSession,
-    logoutSession,
+    logout,
     getSessionFromToken,
     getUserFromToken,
     updateSessionSize,
@@ -22,7 +22,7 @@ const router = express.Router();
 
 router.post("/createSession", createSession);
 router.post("/loginSession", loginSession);
-router.get("/logoutSession", logoutSession);
+router.get("/logout", logout);
 router.get("/getSessionFromToken", getSessionFromToken);
 router.get("/getUserFromToken", getUserFromToken);
 router.post("/updateSessionSize", updateSessionSize);

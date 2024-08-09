@@ -6,13 +6,38 @@ body {
     margin: 0;
 }
 
-.club-create-container {
+.main-container {
     width: 600px;
     background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     overflow: hidden;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+}
+
+.create-club-tag {
+    padding: 16px;
+    cursor: pointer;
+    font-family: "Nanum Myeongjo", serif;
+    flex: 1;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    /* font-size: 1.3em; */
+    color: #f9ede1;
+    background-color: #65aed5;
+}
+
+.club-create-content {
+    padding: 40px;
+}
+.club-create-container {
+    width: 100%;
 }
 
 .create-header {
@@ -48,11 +73,10 @@ button {
     font-size: 16px;
     text-decoration: bold;
 }
-.popup-text {
-    margin-top: 10px;
-}
+
 .error-message {
     margin-top: 10px;
+    font-family: "Poppins", sans-serif;
 }
 
 #root {

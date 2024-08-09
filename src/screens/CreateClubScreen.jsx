@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Screen from "../components/Screen";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/CreateClubScreen.css";
@@ -19,7 +18,7 @@ export default function CreateClubScreen() {
             setPasswordsMatch(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [confirmPassword]);
+    }, [confirmPassword, password]);
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
@@ -44,44 +43,49 @@ export default function CreateClubScreen() {
         }
     };
     return (
-        <Screen>
-            <div className="club-create-container">
-                <h2 className="create-header">Create New Club</h2>
-                <input
-                    className="input"
-                    type="text"
-                    value={clubName}
-                    placeholder="Enter Club Name"
-                    onChange={(e) => setClubName(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-                <input
-                    className="input"
-                    type="password"
-                    value={password}
-                    placeholder="Enter Password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-                <input
-                    className="input"
-                    type="password"
-                    value={confirmPassword}
-                    placeholder="Confirm Password"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                />
-                <div className="popup-text">
-                    {!passwordsMatch && <div>Passwords do not match!</div>}
-                    {failedCreate && <div className="error-message">Club with that name already exists!</div>}
-                </div>
-                <button
-                    onClick={handleCreate}
-                    className="submit-button"
-                >
-                    Create
-                </button>
+        <div className="main-container">
+            <div className="tabs">
+                <button className="create-club-tag">Create Club</button>
             </div>
-        </Screen>
+            <div className="club-create-content">
+                <div className="club-create-container">
+                    <h2 className="create-header">Create New Club</h2>
+                    <input
+                        className="input"
+                        type="text"
+                        value={clubName}
+                        placeholder="Enter Club Name"
+                        onChange={(e) => setClubName(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <input
+                        className="input"
+                        type="password"
+                        value={password}
+                        placeholder="Enter Password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <input
+                        className="input"
+                        type="password"
+                        value={confirmPassword}
+                        placeholder="Confirm Password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <div className="popup-text">
+                        {!passwordsMatch && <div className="error-message">Passwords do not match!</div>}
+                        {failedCreate && <div className="error-message">Club with that name already exists!</div>}
+                    </div>
+                    <button
+                        onClick={handleCreate}
+                        className="submit-button"
+                    >
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }

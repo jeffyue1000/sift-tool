@@ -13,8 +13,13 @@ export function AdminProtectedRoute({ component }) {
 }
 
 export function LoginRedirect({ component }) {
-    const { sessionAuthenticated } = useSessionAuth();
-    return sessionAuthenticated ? <Navigate to="/compare" /> : component;
+    const { sessionAuthenticated, clubAuthenticated } = useSessionAuth();
+    if ((clubAuthenticated && sessionAuthenticated) || sessionAuthenticated) {
+        return <Navigate to="/compare" />;
+    } else if (clubAuthenticated) {
+        return <Navigate to="/club" />;
+    }
+    return component;
 }
 
 export function UserProtectedRoute({ component }) {
@@ -24,5 +29,5 @@ export function UserProtectedRoute({ component }) {
 
 export function ClubProtectedRoute({ component }) {
     const { clubAuthenticated } = useSessionAuth();
-    return clubAuthenticated ? <Navigate to="/club" /> : component;
+    return clubAuthenticated ? component : <Navigate to="/login" />;
 }

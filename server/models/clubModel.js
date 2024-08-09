@@ -5,7 +5,7 @@ const clubSchema = new mongoose.Schema({
         type: String,
         required: [true, "Club name is required"],
     },
-    password: {
+    passkey: {
         type: String,
         required: [true, "Password is required"],
     },

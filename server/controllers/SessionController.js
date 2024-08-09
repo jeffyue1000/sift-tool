@@ -156,7 +156,7 @@ const getUserFromToken = async (req, res) => {
     }
 };
 
-const logoutSession = async (req, res) => {
+const logout = async (req, res) => {
     //logout user by clearing cookies
     res.cookie("session", "", {
         httpOnly: true,
@@ -165,6 +165,12 @@ const logoutSession = async (req, res) => {
         maxAge: 0,
     });
     res.cookie("user", "", {
+        httpOnly: true,
+        // secure: true,
+        sameSite: "Strict",
+        maxAge: 0,
+    });
+    res.cookie("club", "", {
         httpOnly: true,
         // secure: true,
         sameSite: "Strict",
@@ -374,7 +380,7 @@ module.exports = {
     loginSession,
     getSessionFromToken,
     getUserFromToken,
-    logoutSession,
+    logout,
     updateSessionSize,
     calculateSessionStdDev,
     getCookies,

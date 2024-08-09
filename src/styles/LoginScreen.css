@@ -15,7 +15,7 @@ body {
     overflow: hidden;
 }
 
-.tabs {
+.create-tabs {
     display: flex;
     justify-content: center;
 }
@@ -74,6 +74,7 @@ button {
 }
 
 .error-message {
+    font-family: "Poppins", sans-serif;
     margin-top: 10px;
 }
 
@@ -84,11 +85,27 @@ button {
     align-items: center;
 }
 .input {
-    /* font-family: "Nanum Myeongjo", serif; */
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1em;
     border-radius: 8px;
     background-color: #f9ede1;
+}
+
+.submit-button {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1em;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: transparent;
+    color: rgb(245, 240, 240);
+    border: 1px solid #000000;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: bold;
 }
