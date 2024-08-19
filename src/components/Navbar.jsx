@@ -26,15 +26,6 @@ export default function Navbar() {
                 <i className={click ? "fas fa-times" : "fas fa-bars"} />
             </div>
             <ul className={click ? "nav-menu active" : "nav-menu"}>
-                <li className="nav-item">
-                    <Link
-                        to="/"
-                        className="nav-links"
-                        onClick={closeMobileMenu}
-                    >
-                        Home
-                    </Link>
-                </li>
                 {adminAuthenticated && (
                     <li className="nav-item">
                         <Link
@@ -90,7 +81,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                 )}
-                {sessionAuthenticated ? (
+                {sessionAuthenticated && (
                     <li className="nav-item">
                         <Link
                             to="#"
@@ -102,16 +93,6 @@ export default function Navbar() {
                             }}
                         >
                             Logout
-                        </Link>
-                    </li>
-                ) : (
-                    <li className="nav-item">
-                        <Link
-                            to="/login"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Login
                         </Link>
                     </li>
                 )}

@@ -3,6 +3,7 @@ import axios from "axios";
 import ApplicantRank from "../components/ApplicantRank";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import "../styles/RankingScreen.css";
+import { CSVLink } from "react-csv";
 
 const MAX_ITEMS_PER_PAGE = 20;
 
@@ -11,7 +12,27 @@ export default function RankingScreen() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedGradYear, setSelectedGradYear] = useState("All");
     const [currentTab, setCurrentTab] = useState("rankings");
-    const { sessionDetails, verifySession } = useSessionAuth();
+    const [csvData, setCsvData] = useState([]);
+    const { sessionDetails, verifySession, adminAuthenticated } = useSessionAuth();
+    const headers = [
+        { label: "Name", key: "name" },
+        { label: "Grad Year", key: "gradYear" },
+        { label: "Elo Score", key: "eloScore" },
+        { label: "Pushed", key: "pushed" },
+        { label: "Rejected", key: "rejected" },
+    ];
+
+    const generateCSVData = () => {
+        setCsvData(
+            applicants.map((applicant) => ({
+                name: applicant.name,
+                gradYear: applicant.gradYear,
+                eloScore: Math.round(applicant.eloScore * 10) / 10,
+                pushed: applicant.auto > 0 && applicant.excluded ? "True" : "False",
+                rejected: applicant.auto < 0 && applicant.excluded ? "True" : "False",
+            }))
+        );
+    };
 
     const fetchApplicants = async () => {
         try {
@@ -54,17 +75,22 @@ export default function RankingScreen() {
         }
     };
 
-    const gradYears = ["All", ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort((a, b) => parseInt(b) - parseInt(a))];
+    const gradYears = [
+        "All",
+        ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort((a, b) => parseInt(b) - parseInt(a)),
+    ];
 
     const filteredApplicants =
-        selectedGradYear === "All" ? applicants : applicants.filter((applicant) => applicant.gradYear === selectedGradYear);
+        selectedGradYear === "All"
+            ? applicants
+            : applicants.filter((applicant) => applicant.gradYear === selectedGradYear);
 
     const rankingsApplicants = filteredApplicants.filter((applicant) => !applicant.excluded);
     const pushedApplicants = filteredApplicants.filter((applicant) => applicant.auto > 0 && applicant.excluded);
     const rejectedApplicants = filteredApplicants.filter((applicant) => applicant.auto < 0 && applicant.excluded);
     const totalPages = Math.ceil(
-        (currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants).length /
-            MAX_ITEMS_PER_PAGE
+        (currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants)
+            .length / MAX_ITEMS_PER_PAGE
     );
     const currentApplicants = (
         currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants
@@ -72,6 +98,19 @@ export default function RankingScreen() {
 
     return (
         <div className="ranking-container-wrapper">
+            {adminAuthenticated && (
+                <CSVLink
+                    className="export-csv-button"
+                    data={csvData}
+                    headers={headers}
+                    filename="Sift_Rankings.csv"
+                    onClick={() => {
+                        generateCSVData();
+                    }}
+                >
+                    Export to CSV
+                </CSVLink>
+            )}
             <div className="ranking-container">
                 <div className="ranking-tabs">
                     <button
@@ -106,7 +145,7 @@ export default function RankingScreen() {
                         </button>
                     )}
                 </div>
-                {/* <h1 className="header">Aggregate Rankings</h1> */}
+                <div className="total-comparisons">Total Comparisons: {sessionDetails.totalComparisons}</div>
                 {currentTab === "rankings" && (
                     <div className="ranking-screen">
                         {currentApplicants.map((applicant, index) => (
