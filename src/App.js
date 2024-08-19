@@ -7,11 +7,15 @@ import RankingScreen from "./screens/RankingScreen";
 import UploadScreen from "./screens/UploadScreen";
 import AdminSettingsScreen from "./screens/AdminSettingsScreen";
 import SelectUserScreen from "./screens/SelectUserScreen";
-
 import { SessionAuthProvider } from "./context/SessionAuthContext";
-import { SessionProtectedRoute, AdminProtectedRoute, UserProtectedRoute, LoginRedirect } from "./components/ProtectedRoutes";
+import {
+    SessionProtectedRoute,
+    AdminProtectedRoute,
+    UserProtectedRoute,
+    LoginRedirect,
+} from "./components/ProtectedRoutes";
 import NotFound from "./components/NotFound";
-import WelcomeScreen from "./screens/WelcomeScreen";
+import { Navigate } from "react-router-dom";
 import "./App.css";
 
 function App() {
@@ -22,7 +26,7 @@ function App() {
                 <Routes>
                     <Route
                         path="/"
-                        element={<WelcomeScreen />}
+                        element={<Navigate to="/login" />}
                     />
                     <Route
                         path="/login"
