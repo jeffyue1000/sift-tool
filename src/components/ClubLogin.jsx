@@ -15,10 +15,18 @@ export default function SessionConfig() {
 
     const handleLogin = async () => {
         try {
-            const res = await axios.post(`http://localhost:3001/clubs/loginClub`, { clubName, passkey }, { withCredentials: true });
+            const res = await axios.post(
+                `http://localhost:3001/clubs/loginClub`,
+                { clubName, passkey },
+                { withCredentials: true }
+            );
             if (res.data.validLogin) {
                 setClubAuthenticated(true);
-                setClubDetails({ clubName: clubName });
+                setClubDetails({
+                    clubName: res.data.club.name,
+                    sessionBudget: res.data.club.sessionBudget,
+                    activeSession: res.data.club.activeSession,
+                });
                 navigate("/club");
             } else {
                 setFailedLogin(true);
@@ -59,7 +67,7 @@ export default function SessionConfig() {
                 onClick={handleLogin}
                 className="submit-button"
             >
-                Enter Session
+                Enter Club
             </button>
             <div className="register-text">
                 Club not registered? Click <Link to="/create-club">here</Link>!

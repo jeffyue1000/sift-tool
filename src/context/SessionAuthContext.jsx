@@ -87,8 +87,16 @@ export function SessionAuthProvider({ children }) {
                 const res = await axios.get("http://localhost:3001/clubs/getClubFromToken", {
                     params: { encodedClubToken: clubCookieToken },
                 });
-                setClubAuthenticated(true);
-                setClubDetails({ ...clubDetails, clubName: res.data.name });
+                if (res.data.valid) {
+                    setClubAuthenticated(true);
+                    setClubDetails({
+                        clubName: res.data.club.name,
+                        sessionBudget: res.data.club.sessionBudget,
+                        activeSession: res.data.club.activeSession,
+                    });
+                } else {
+                    setClubAuthenticated(false);
+                }
             } else {
                 setClubAuthenticated(false);
             }

@@ -2,7 +2,6 @@ const Club = require("../models/clubModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
-const bcrypt = require("bcrypt");
 dotenv.config();
 
 const createAndSetClubCookie = require("../helpers/createAndSetClubCookie");
@@ -73,7 +72,13 @@ const getClubFromToken = async (req, res) => {
                     console.error("JWT verification error: ", err);
                     return res.status(401).json({ message: "Failed to authenticate token" });
                 }
-                res.status(200).json({ name: decoded.name });
+                const club = await Club.findOne({ name: decoded.name });
+
+                if (club) {
+                    res.status(200).json({ valid: true, club: club });
+                } else {
+                    res.status(404).json({ valid: false });
+                }
             });
         } else {
             res.status(401).json({

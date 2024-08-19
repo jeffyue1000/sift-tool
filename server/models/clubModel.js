@@ -11,15 +11,10 @@ const clubSchema = new mongoose.Schema({
     },
     sessionBudget: {
         type: Number,
-        default: 0,
+        default: 10000,
     },
-    activeSessions: {
-        type: Array,
-        default: [],
-    },
-    expiredSessions: {
-        type: Array,
-        default: [],
+    activeSession: {
+        type: Object,
     },
 });
 

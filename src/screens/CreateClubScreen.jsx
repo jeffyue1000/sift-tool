@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSessionAuth } from "../context/SessionAuthContext";
 import axios from "axios";
 import "../styles/CreateClubScreen.css";
 
@@ -9,6 +10,8 @@ export default function CreateClubScreen() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const [failedCreate, setFailedCreate] = useState(false);
+    const { setClubAuthenticated, clubDetails, setClubDetails } = useSessionAuth();
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,7 +40,13 @@ export default function CreateClubScreen() {
                 setFailedCreate(true);
                 return;
             }
-            navigate("");
+            setClubAuthenticated(true);
+            setClubDetails({
+                clubName: res.data.club.name,
+                sessionBudget: res.data.club.sessionBudget,
+                activeSession: res.data.club.activeSession,
+            });
+            navigate("/club");
         } catch (error) {
             console.error("Error creating new club: ", error);
         }
