@@ -26,7 +26,7 @@ export default function Navbar() {
                 <i className={click ? "fas fa-times" : "fas fa-bars"} />
             </div>
             <ul className={click ? "nav-menu active" : "nav-menu"}>
-                {adminAuthenticated && (
+                {adminAuthenticated && userAuthenticated && (
                     <li className="nav-item">
                         <Link
                             to="/admin"
@@ -37,7 +37,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                 )}
-                {adminAuthenticated && (
+                {adminAuthenticated && userAuthenticated && (
                     <li className="nav-item">
                         <Link
                             to="/upload"
@@ -48,18 +48,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                 )}
-                {sessionAuthenticated && !userAuthenticated && (
-                    <li className="nav-item">
-                        <Link
-                            to="/users"
-                            className="nav-links"
-                            onClick={closeMobileMenu}
-                        >
-                            Users
-                        </Link>
-                    </li>
-                )}
-                {sessionAuthenticated && (
+                {sessionAuthenticated && userAuthenticated && (
                     <li className="nav-item">
                         <Link
                             to="/compare"
@@ -70,7 +59,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                 )}
-                {sessionAuthenticated && (
+                {sessionAuthenticated && userAuthenticated && (
                     <li className="nav-item">
                         <Link
                             to="/rankings"
