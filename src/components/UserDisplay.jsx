@@ -29,7 +29,7 @@ export default function UserDisplay() {
     };
 
     return (
-        <div className="user-box">
+        <div className="users-box">
             {users.map(([user, comparisons], index) => (
                 <User
                     key={index}

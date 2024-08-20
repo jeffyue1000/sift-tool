@@ -8,6 +8,7 @@ import "../styles/SelectUserScreen.css";
 export default function SelectUserScreen() {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState("");
+    const [selectUserDisabled, setSelectUserDisabled] = useState(true);
     const [newUser, setNewUser] = useState("");
     const [showAddUser, setShowAddUser] = useState(false);
     const { sessionDetails, setSessionDetails, setUserAuthenticated } = useSessionAuth();
@@ -39,9 +40,10 @@ export default function SelectUserScreen() {
         if (user === "create-user") {
             setShowAddUser(true);
         } else {
+            setSelectedUser(user);
             setShowAddUser(false);
+            setSelectUserDisabled(false);
         }
-        setSelectedUser(user);
     };
 
     const handleUserChosen = async () => {
@@ -78,27 +80,38 @@ export default function SelectUserScreen() {
         <Screen>
             <div className="select-user-container">
                 <h1>Select User Before Proceeding: </h1>
-                <select
-                    className="user-options"
-                    value={selectedUser}
-                    onChange={handleSelectedChange}
-                >
-                    <option
-                        value=""
-                        disabled
+                <div>
+                    <select
+                        className="user-options"
+                        value={selectedUser}
+                        onChange={handleSelectedChange}
                     >
-                        Select an option
-                    </option>
-                    {users.map((user, index) => (
                         <option
-                            key={index}
-                            value={user}
+                            value=""
+                            disabled
                         >
-                            {user}
+                            Select an option
                         </option>
-                    ))}
-                    <option value="create-user">Create new user</option>
-                </select>
+                        {users.map((user, index) => (
+                            <option
+                                key={index}
+                                value={user}
+                            >
+                                {user}
+                            </option>
+                        ))}
+                        <option value="create-user">Create new user</option>
+                    </select>
+                    {!showAddUser && !selectUserDisabled && (
+                        <button
+                            className="select-user-button"
+                            onClick={handleUserChosen}
+                        >
+                            Select User
+                        </button>
+                    )}
+                </div>
+
                 {showAddUser && (
                     <div className="add-user-box">
                         <input
@@ -115,14 +128,6 @@ export default function SelectUserScreen() {
                             Add User
                         </button>
                     </div>
-                )}
-                {!showAddUser && (
-                    <button
-                        className="select-user-button"
-                        onClick={handleUserChosen}
-                    >
-                        Select User
-                    </button>
                 )}
             </div>
         </Screen>

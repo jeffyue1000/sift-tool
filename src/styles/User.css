@@ -1,14 +1,15 @@
 .user-box {
     border: 1px solid #000000;
     border-radius: 8px;
-    padding: 16px;
-    margin: 16px;
+    padding: 10px;
+    margin: 10px;
     width: 300px;
-    height: 40px;
-    box-shadow: -4px 4px 8px #464649;
+    height: 20px;
+    box-shadow: -2px 2px 4px #464649;
     transition: transform 0.2s;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: 16px;
     background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
