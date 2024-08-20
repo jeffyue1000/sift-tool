@@ -3,6 +3,7 @@ import Screen from "../components/Screen";
 import { useNavigate } from "react-router-dom";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import axios from "axios";
+import "../styles/SelectUserScreen.css";
 
 export default function SelectUserScreen() {
     const [users, setUsers] = useState([]);
@@ -45,7 +46,11 @@ export default function SelectUserScreen() {
 
     const handleUserChosen = async () => {
         try {
-            const res = await axios.post(`http://localhost:3001/sessions/setUser`, { user: selectedUser }, { withCredentials: true });
+            const res = await axios.post(
+                `http://localhost:3001/sessions/setUser`,
+                { user: selectedUser },
+                { withCredentials: true }
+            );
             setSessionDetails({ ...sessionDetails, user: res.data.user });
             setUserAuthenticated(true);
             navigate("/compare");
@@ -71,39 +76,55 @@ export default function SelectUserScreen() {
 
     return (
         <Screen>
-            <h1>Select or Create User Before Proceeding: </h1>
-            <select
-                value={selectedUser}
-                onChange={handleSelectedChange}
-            >
-                <option
-                    value=""
-                    disabled
+            <div className="select-user-container">
+                <h1>Select User Before Proceeding: </h1>
+                <select
+                    className="user-options"
+                    value={selectedUser}
+                    onChange={handleSelectedChange}
                 >
-                    Select an option
-                </option>
-                {users.map((user, index) => (
                     <option
-                        key={index}
-                        value={user}
+                        value=""
+                        disabled
                     >
-                        {user}
+                        Select an option
                     </option>
-                ))}
-                <option value="create-user">Create new user</option>
-            </select>
-            {showAddUser && (
-                <div>
-                    <input
-                        type="text"
-                        value={newUser}
-                        onChange={(e) => setNewUser(e.target.value)}
-                        placeholder="Enter your name"
-                    />
-                    <button onClick={handleCreateUser}>Add User</button>
-                </div>
-            )}
-            {!showAddUser && <button onClick={handleUserChosen}>Select User</button>}
+                    {users.map((user, index) => (
+                        <option
+                            key={index}
+                            value={user}
+                        >
+                            {user}
+                        </option>
+                    ))}
+                    <option value="create-user">Create new user</option>
+                </select>
+                {showAddUser && (
+                    <div className="add-user-box">
+                        <input
+                            className="new-user-input"
+                            type="text"
+                            value={newUser}
+                            onChange={(e) => setNewUser(e.target.value)}
+                            placeholder="Enter your name"
+                        />
+                        <button
+                            className="select-user-button"
+                            onClick={handleCreateUser}
+                        >
+                            Add User
+                        </button>
+                    </div>
+                )}
+                {!showAddUser && (
+                    <button
+                        className="select-user-button"
+                        onClick={handleUserChosen}
+                    >
+                        Select User
+                    </button>
+                )}
+            </div>
         </Screen>
     );
 }

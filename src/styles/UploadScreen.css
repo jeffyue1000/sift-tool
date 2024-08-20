@@ -16,9 +16,10 @@
     box-shadow: -7px 8px 8px #464649;
     border: 1px solid black;
     border-radius: 8px;
-    width: 25vw;
+    width: 30vw;
 }
 .upload-instruction {
+    width: auto;
     text-align: center;
     font-size: 1.1em;
     font-weight: 550;
@@ -37,6 +38,7 @@
     border: 1px solid black;
     border-radius: 8px;
     transition: 0.2s;
+    width: 30vw;
 }
 .drop-box {
     width: 80%;
