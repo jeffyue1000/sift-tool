@@ -27,7 +27,7 @@
     font-family: "Nanum Myeongjo", serif;
 }
 
-.select-user-button {
+.add-user-button {
     height: 40px;
     width: auto;
     padding: 10px;
@@ -42,7 +42,6 @@
     transition: 0.2s;
     font-family: "Nanum Myeongjo", serif;
 }
-
 .add-user-box {
     display: flex;
     flex-direction: row;
@@ -53,6 +52,22 @@
 }
 
 .new-user-input {
+    height: 100%;
+    width: auto;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    text-align: center;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
+}
+
+.select-user-button {
     height: 100%;
     width: auto;
     padding: 10px;

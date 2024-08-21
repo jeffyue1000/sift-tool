@@ -39,6 +39,7 @@ export default function SelectUserScreen() {
 
         if (user === "create-user") {
             setShowAddUser(true);
+            setSelectedUser(user);
         } else {
             setSelectedUser(user);
             setShowAddUser(false);
@@ -104,7 +105,7 @@ export default function SelectUserScreen() {
                     </select>
                     {!showAddUser && !selectUserDisabled && (
                         <button
-                            className="select-user-button"
+                            className="add-user-button"
                             onClick={handleUserChosen}
                         >
                             Select User
@@ -121,12 +122,12 @@ export default function SelectUserScreen() {
                             onChange={(e) => setNewUser(e.target.value)}
                             placeholder="Enter your name"
                         />
-                        <button
+                        <div
                             className="select-user-button"
                             onClick={handleCreateUser}
                         >
                             Add User
-                        </button>
+                        </div>
                     </div>
                 )}
             </div>
