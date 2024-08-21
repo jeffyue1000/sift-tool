@@ -1,0 +1,89 @@
+.select-user-container {
+    width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
+    padding: 20px;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-options {
+    height: 40px;
+    width: auto;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    text-align: center;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
+}
+
+.add-user-button {
+    height: 40px;
+    width: auto;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    text-align: center;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
+}
+.add-user-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.new-user-input {
+    height: 100%;
+    width: auto;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    text-align: center;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
+}
+
+.select-user-button {
+    height: 100%;
+    width: auto;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    text-align: center;
+    background-color: transparent;
+    color: black;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+    font-family: "Nanum Myeongjo", serif;
+}
+
+.select-user-button:hover {
+    color: #f9ede1;
+    background-color: #65aed5;
+}

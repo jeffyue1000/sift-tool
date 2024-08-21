@@ -3,10 +3,12 @@ import Screen from "../components/Screen";
 import { useNavigate } from "react-router-dom";
 import { useSessionAuth } from "../context/SessionAuthContext";
 import axios from "axios";
+import "../styles/SelectUserScreen.css";
 
 export default function SelectUserScreen() {
     const [users, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState("");
+    const [selectUserDisabled, setSelectUserDisabled] = useState(true);
     const [newUser, setNewUser] = useState("");
     const [showAddUser, setShowAddUser] = useState(false);
     const { sessionDetails, setSessionDetails, setUserAuthenticated } = useSessionAuth();
@@ -37,15 +39,21 @@ export default function SelectUserScreen() {
 
         if (user === "create-user") {
             setShowAddUser(true);
+            setSelectedUser(user);
         } else {
+            setSelectedUser(user);
             setShowAddUser(false);
+            setSelectUserDisabled(false);
         }
-        setSelectedUser(user);
     };
 
     const handleUserChosen = async () => {
         try {
-            const res = await axios.post(`http://localhost:3001/sessions/setUser`, { user: selectedUser }, { withCredentials: true });
+            const res = await axios.post(
+                `http://localhost:3001/sessions/setUser`,
+                { user: selectedUser },
+                { withCredentials: true }
+            );
             setSessionDetails({ ...sessionDetails, user: res.data.user });
             setUserAuthenticated(true);
             navigate("/compare");
@@ -71,39 +79,58 @@ export default function SelectUserScreen() {
 
     return (
         <Screen>
-            <h1>Select or Create User Before Proceeding: </h1>
-            <select
-                value={selectedUser}
-                onChange={handleSelectedChange}
-            >
-                <option
-                    value=""
-                    disabled
-                >
-                    Select an option
-                </option>
-                {users.map((user, index) => (
-                    <option
-                        key={index}
-                        value={user}
-                    >
-                        {user}
-                    </option>
-                ))}
-                <option value="create-user">Create new user</option>
-            </select>
-            {showAddUser && (
+            <div className="select-user-container">
+                <h1>Select User Before Proceeding: </h1>
                 <div>
-                    <input
-                        type="text"
-                        value={newUser}
-                        onChange={(e) => setNewUser(e.target.value)}
-                        placeholder="Enter your name"
-                    />
-                    <button onClick={handleCreateUser}>Add User</button>
+                    <select
+                        className="user-options"
+                        value={selectedUser}
+                        onChange={handleSelectedChange}
+                    >
+                        <option
+                            value=""
+                            disabled
+                        >
+                            Select an option
+                        </option>
+                        {users.map((user, index) => (
+                            <option
+                                key={index}
+                                value={user}
+                            >
+                                {user}
+                            </option>
+                        ))}
+                        <option value="create-user">Create new user</option>
+                    </select>
+                    {!showAddUser && !selectUserDisabled && (
+                        <button
+                            className="add-user-button"
+                            onClick={handleUserChosen}
+                        >
+                            Select User
+                        </button>
+                    )}
                 </div>
-            )}
-            {!showAddUser && <button onClick={handleUserChosen}>Select User</button>}
+
+                {showAddUser && (
+                    <div className="add-user-box">
+                        <input
+                            className="new-user-input"
+                            type="text"
+                            value={newUser}
+                            onChange={(e) => setNewUser(e.target.value)}
+                            placeholder="Enter your name"
+                        />
+                        <div
+                            className="select-user-button"
+                            onClick={handleCreateUser}
+                        >
+                            Add User
+                        </div>
+                    </div>
+                )}
+            </div>
         </Screen>
     );
 }

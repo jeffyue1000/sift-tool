@@ -22,6 +22,7 @@
     margin-top: 140px;
     margin-right: 16px;
     font-family: "Nanum Myeongjo", serif;
+    text-decoration: none;
 }
 
 .export-csv-button:hover {

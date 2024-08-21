@@ -65,12 +65,13 @@ button {
     padding: 10px;
     margin-top: 20px;
     background-color: transparent;
-    color: rgb(245, 240, 240);
+    color: black;
     border: 1px solid #000000;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
     text-decoration: bold;
+    font-family: "Nanum Myeongjo", serif;
 }
 
 .error-message {
