@@ -70,7 +70,10 @@ export function SessionAuthProvider({ children }) {
                             params: { encodedUserToken: userCookieToken },
                         });
                         setUserAuthenticated(true);
-                        setSessionDetails({ ...sessionDetails, user: userRes.data.user });
+                        setSessionDetails((prevSessionDetails) => ({
+                            ...prevSessionDetails,
+                            user: userRes.data.user,
+                        }));
                     }
                 }
             } else {
