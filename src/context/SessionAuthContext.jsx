@@ -67,13 +67,14 @@ export function SessionAuthProvider({ children }) {
 
                     if (userCookieToken) {
                         const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
-                            params: { encodedUsertoken: userCookieToken },
+                            params: { encodedUserToken: userCookieToken },
                         });
                         setUserAuthenticated(true);
                         setSessionDetails({ ...sessionDetails, user: userRes.data.user });
                     }
                 }
             } else {
+                console.log("every false");
                 setSessionAuthenticated(false);
                 setAdminAuthenticated(false);
                 setUserAuthenticated(false);

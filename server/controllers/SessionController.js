@@ -14,10 +14,7 @@ const updateRejectOrPushQuota = async (req, res) => {
     try {
         const { quota, sessionID, type } = req.body;
         const filter = { sessionID: sessionID };
-        const update =
-            type === "push"
-                ? { pushQuota: quota }
-                : { rejectQuota: -1 * quota };
+        const update = type === "push" ? { pushQuota: quota } : { rejectQuota: -1 * quota };
         await Session.findOneAndUpdate(filter, update);
         res.status(200).json({
             updateSuccess: true,
@@ -33,19 +30,13 @@ const updateRequireAdminPushOrReject = async (req, res) => {
     try {
         const { checked, sessionID, type } = req.body;
         const filter = { sessionID: sessionID };
-        const update =
-            type === "push"
-                ? { pushRequireAdmin: checked }
-                : { rejectRequireAdmin: checked };
+        const update = type === "push" ? { pushRequireAdmin: checked } : { rejectRequireAdmin: checked };
         await Session.findOneAndUpdate(filter, update);
         res.status(200).json({
             updateSuccess: true,
         });
     } catch (error) {
-        console.error(
-            "Error occurred in updateAdminRequiresPushOrReject",
-            error
-        );
+        console.error("Error occurred in updateAdminRequiresPushOrReject", error);
         res.status(500).json({
             message: "Error updating requireAdminReject or requireAdminPush",
         });
@@ -55,8 +46,7 @@ const updateUsePushOrReject = async (req, res) => {
     try {
         const { checked, sessionID, type } = req.body;
         const filter = { sessionID: sessionID };
-        const update =
-            type === "push" ? { usePush: checked } : { useReject: checked };
+        const update = type === "push" ? { usePush: checked } : { useReject: checked };
         await Session.findOneAndUpdate(filter, update);
         res.status(200).json({
             updateSuccess: true,
@@ -108,30 +98,24 @@ const getCookies = async (req, res) => {
 const getSessionFromToken = async (req, res) => {
     try {
         const { encodedSessionToken } = req.query;
-        jwt.verify(
-            encodedSessionToken,
-            process.env.TOKEN_SECRET,
-            async (err, decoded) => {
-                if (err) {
-                    console.error("JWT Verification Error:", err);
-                    return res
-                        .status(401)
-                        .json({ message: "Failed to authenticate token" });
-                }
-                const session = await Session.findOne({
-                    sessionID: decoded.sessionID,
-                });
-                if (session) {
-                    res.status(200).json({
-                        valid: true,
-                        session: session,
-                        isAdmin: decoded.isAdmin,
-                    });
-                } else {
-                    res.status(404).json({ valid: false });
-                }
+        jwt.verify(encodedSessionToken, process.env.TOKEN_SECRET, async (err, decoded) => {
+            if (err) {
+                console.error("JWT Verification Error:", err);
+                return res.status(401).json({ message: "Failed to authenticate token" });
             }
-        );
+            const session = await Session.findOne({
+                sessionID: decoded.sessionID,
+            });
+            if (session) {
+                res.status(200).json({
+                    valid: true,
+                    session: session,
+                    isAdmin: decoded.isAdmin,
+                });
+            } else {
+                res.status(404).json({ valid: false });
+            }
+        });
     } catch (error) {
         console.error("Error occurred in getSessionFromToken", error);
         res.status(500).json({
@@ -145,17 +129,15 @@ const getSessionFromToken = async (req, res) => {
 const getUserFromToken = async (req, res) => {
     try {
         const { encodedUserToken } = req.query;
+
         if (encodedUserToken) {
-            jwt.verify(encodedUserToken, process.env.TOKEN_SECRET),
-                async (err, decoded) => {
-                    if (err) {
-                        console.error("JWT verification error: ", err);
-                        return res
-                            .status(401)
-                            .json({ message: "Failed to authenticate token" });
-                    }
-                    res.status(200).json({ user: decoded.user });
-                };
+            jwt.verify(encodedUserToken, process.env.TOKEN_SECRET, (err, decoded) => {
+                if (err) {
+                    console.error("JWT verification error: ", err);
+                    return res.status(401).json({ message: "Failed to authenticate token" });
+                }
+                res.status(200).json({ user: decoded.user });
+            });
         } else {
             res.status(401).json({
                 message: "User cookie not found",
@@ -227,8 +209,7 @@ const loginSession = async (req, res) => {
 
 const createSession = async (req, res) => {
     try {
-        const { sessionID, password, adminKey, maxResumes, duration } =
-            req.body;
+        const { sessionID, password, adminKey, maxResumes, duration } = req.body;
         const sessionExists = await Session.findOne({ sessionID: sessionID });
 
         if (sessionExists) {
@@ -239,9 +220,7 @@ const createSession = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const hashedAdminKey = await bcrypt.hash(adminKey, salt);
-        const expireAt = new Date(
-            Date.now() + duration * 7 * 24 * 60 * 60 * 1000
-        ); //duration in weeks
+        const expireAt = new Date(Date.now() + duration * 7 * 24 * 60 * 60 * 1000); //duration in weeks
         const session = new Session({
             sessionID: sessionID,
             passkey: hashedPassword,
@@ -275,8 +254,7 @@ const updateSessionSize = async (req, res) => {
         const session = await Session.findOne({ sessionID: sessionID }); //consider using findOneandUpdate
 
         if (resumes.length <= session.maxResumes) {
-            session.totalScore +=
-                DEFAULT_ELO * (resumes.length - session.resumeCount);
+            session.totalScore += DEFAULT_ELO * (resumes.length - session.resumeCount);
             session.resumeCount = resumes.length;
             await session.save();
             res.status(200).json({
