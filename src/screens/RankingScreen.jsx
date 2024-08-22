@@ -40,7 +40,6 @@ export default function RankingScreen() {
             const response = await axios.get(`http://localhost:3001/resumes/getAllResumes`, {
                 params: { sessionID: sessionDetails.sessionID },
             });
-            console.log(response.data);
             setApplicants(response.data);
         } catch (error) {
             console.error("Error fetching applicant data", error);
