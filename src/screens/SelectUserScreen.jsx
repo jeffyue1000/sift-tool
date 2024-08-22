@@ -81,7 +81,7 @@ export default function SelectUserScreen() {
         <Screen>
             <div className="select-user-container">
                 <h1>Select User Before Proceeding: </h1>
-                <div>
+                <div className="select-user-box">
                     <select
                         className="user-options"
                         value={selectedUser}
@@ -105,7 +105,7 @@ export default function SelectUserScreen() {
                     </select>
                     {!showAddUser && !selectUserDisabled && (
                         <button
-                            className="add-user-button"
+                            className="select-user-button"
                             onClick={handleUserChosen}
                         >
                             Select User
@@ -123,7 +123,7 @@ export default function SelectUserScreen() {
                             placeholder="Enter your name"
                         />
                         <div
-                            className="select-user-button"
+                            className="add-user-button"
                             onClick={handleCreateUser}
                         >
                             Add User
