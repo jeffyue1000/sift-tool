@@ -65,7 +65,7 @@ const sessionSchema = new mongoose.Schema({
     },
     compareTimer: {
         type: Number,
-        default: 0,
+        default: 1,
     },
     expireAt: {
         type: Date,
