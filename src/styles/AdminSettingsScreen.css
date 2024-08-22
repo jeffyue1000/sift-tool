@@ -1,7 +1,27 @@
+.admin-wrapper {
+    width: 700px;
+    background-color: linear-gradient(to right, #b2cadd 0%, #b2cadd 100%);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    overflow: hidden;
+}
+
+.settings-tabs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.admin-container {
+    padding: 15px;
+    padding-bottom: 20px;
+}
+
 .settings-container {
     display: flex;
     flex-direction: row;
-    gap: 40px;
+    justify-content: space-around;
 }
 
 .admin-header {
@@ -22,4 +42,5 @@
 .timer-setting-container {
     display: flex;
     flex-direction: column;
+    align-self: center;
 }

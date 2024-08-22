@@ -69,6 +69,7 @@ export function SessionAuthProvider({ children }) {
                         const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
                             params: { encodedUsertoken: userCookieToken },
                         });
+                        setUserAuthenticated(true);
                         setSessionDetails({ ...sessionDetails, user: userRes.data.user });
                     }
                 }

@@ -60,6 +60,9 @@
 .large-icon {
     font-size: 36px;
 }
+.submission-details {
+    margin-top: 10px;
+}
 .upload-buttons-container {
     display: flex;
     flex-direction: row;

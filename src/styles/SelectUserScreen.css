@@ -11,6 +11,10 @@
     align-items: center;
 }
 
+.select-user-box {
+    width: 100%;
+}
+
 .user-options {
     height: 40px;
     width: auto;
@@ -27,7 +31,7 @@
     font-family: "Nanum Myeongjo", serif;
 }
 
-.add-user-button {
+.select-user-button {
     height: 40px;
     width: auto;
     padding: 10px;
@@ -67,7 +71,7 @@
     font-family: "Nanum Myeongjo", serif;
 }
 
-.select-user-button {
+.add-user-button {
     height: 100%;
     width: auto;
     padding: 10px;
