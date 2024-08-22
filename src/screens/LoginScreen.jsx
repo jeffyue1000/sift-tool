@@ -124,7 +124,9 @@ export default function LoginScreen() {
                             onChange={(e) => setAdminKey(e.target.value)}
                             onKeyDown={handleKeyDown}
                         />
-                        {failedLogin && <div className="error-message">Could not find a session with those credentials!</div>}
+                        {failedLogin && (
+                            <div className="error-message">Could not find a session with those credentials!</div>
+                        )}
                         <button
                             onClick={handleLogin}
                             className="submit-button"
