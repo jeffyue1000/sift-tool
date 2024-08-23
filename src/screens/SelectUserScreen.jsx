@@ -20,6 +20,18 @@ export default function SelectUserScreen() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleSelectUserKeyDown = (event) => {
+        if (event.key === "Enter") {
+            handleUserChosen();
+        }
+    };
+
+    const handleCreateUserKeyDown = (event) => {
+        if (event.key === "Enter") {
+            handleCreateUser();
+        }
+    };
+
     const getUsers = async () => {
         try {
             const res = await axios.get(`http://localhost:3001/sessions/getUsers`, {
@@ -34,6 +46,7 @@ export default function SelectUserScreen() {
             console.error("Error getting users: ", error);
         }
     };
+
     const handleSelectedChange = (event) => {
         const user = event.target.value;
 
@@ -107,6 +120,7 @@ export default function SelectUserScreen() {
                         <button
                             className="select-user-button"
                             onClick={handleUserChosen}
+                            onKeyDown={handleSelectUserKeyDown}
                         >
                             Select User
                         </button>
@@ -125,6 +139,7 @@ export default function SelectUserScreen() {
                         <div
                             className="add-user-button"
                             onClick={handleCreateUser}
+                            onKeyDown={handleCreateUserKeyDown}
                         >
                             Add User
                         </div>
