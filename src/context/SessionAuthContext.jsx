@@ -19,7 +19,7 @@ export function SessionAuthProvider({ children }) {
         usePush: false,
         requireAdminReject: true,
         requireAdminPush: true,
-        rejectQuota: 1,
+        rejectQuota: -1,
         pushQuota: 1,
         useTimer: false,
         compareTimer: 3,
