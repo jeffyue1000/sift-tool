@@ -15,6 +15,7 @@ export default function RankingScreen() {
     const [currentTab, setCurrentTab] = useState("rankings");
     const [csvData, setCsvData] = useState([]);
     const [updateAmount, setUpdateAmount] = useState(10);
+    // eslint-disable-next-line no-unused-vars
     const [renderCount, setRenderCount] = useState(0);
     const { sessionDetails, setSessionDetails, adminAuthenticated } = useSessionAuth();
 
@@ -64,10 +65,8 @@ export default function RankingScreen() {
                 name: applicant.name,
                 gradYear: applicant.gradYear,
                 eloScore: Math.round(applicant.eloScore * 10) / 10,
-                pushed:
-                    applicant.auto > 0 && applicant.excluded ? "True" : "False",
-                rejected:
-                    applicant.auto < 0 && applicant.excluded ? "True" : "False",
+                pushed: applicant.auto > 0 && applicant.excluded ? "True" : "False",
+                rejected: applicant.auto < 0 && applicant.excluded ? "True" : "False",
             }))
         );
     };
@@ -75,12 +74,9 @@ export default function RankingScreen() {
     const fetchApplicants = async () => {
         try {
             // Fetch all resumes in current session
-            const response = await axios.get(
-                `http://localhost:3001/resumes/getAllResumes`,
-                {
-                    params: { sessionID: sessionDetails.sessionID },
-                }
-            );
+            const response = await axios.get(`http://localhost:3001/resumes/getAllResumes`, {
+                params: { sessionID: sessionDetails.sessionID },
+            });
             setApplicants(response.data);
         } catch (error) {
             console.error("Error fetching applicant data: ", error);
@@ -98,12 +94,9 @@ export default function RankingScreen() {
 
     const showResume = async (index) => {
         try {
-            const res = await axios.get(
-                `http://localhost:3001/resumes/getResumePDF`,
-                {
-                    params: { id: currentApplicants[index]._id },
-                }
-            );
+            const res = await axios.get(`http://localhost:3001/resumes/getResumePDF`, {
+                params: { id: currentApplicants[index]._id },
+            });
             if (res.data.getPdfSuccess) {
                 window.open(res.data.url, "_blank");
             }
@@ -114,45 +107,24 @@ export default function RankingScreen() {
 
     const gradYears = [
         "All",
-        ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort(
-            (a, b) => parseInt(b) - parseInt(a)
-        ),
+        ...[...new Set(applicants.map((applicant) => applicant.gradYear))].sort((a, b) => parseInt(b) - parseInt(a)),
     ];
 
     const filteredApplicants =
         selectedGradYear === "All"
             ? applicants
-            : applicants.filter(
-                  (applicant) => applicant.gradYear === selectedGradYear
-              );
+            : applicants.filter((applicant) => applicant.gradYear === selectedGradYear);
 
-    const rankingsApplicants = filteredApplicants.filter(
-        (applicant) => !applicant.excluded
-    );
-    const pushedApplicants = filteredApplicants.filter(
-        (applicant) => applicant.auto > 0 && applicant.excluded
-    );
-    const rejectedApplicants = filteredApplicants.filter(
-        (applicant) => applicant.auto < 0 && applicant.excluded
-    );
+    const rankingsApplicants = filteredApplicants.filter((applicant) => !applicant.excluded);
+    const pushedApplicants = filteredApplicants.filter((applicant) => applicant.auto > 0 && applicant.excluded);
+    const rejectedApplicants = filteredApplicants.filter((applicant) => applicant.auto < 0 && applicant.excluded);
     const totalPages = Math.ceil(
-        (currentTab === "rankings"
-            ? rankingsApplicants
-            : currentTab === "push"
-            ? pushedApplicants
-            : rejectedApplicants
-        ).length / MAX_ITEMS_PER_PAGE
+        (currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants)
+            .length / MAX_ITEMS_PER_PAGE
     );
     const currentApplicants = (
-        currentTab === "rankings"
-            ? rankingsApplicants
-            : currentTab === "push"
-            ? pushedApplicants
-            : rejectedApplicants
-    ).slice(
-        (currentPage - 1) * MAX_ITEMS_PER_PAGE,
-        currentPage * MAX_ITEMS_PER_PAGE
-    );
+        currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants
+    ).slice((currentPage - 1) * MAX_ITEMS_PER_PAGE, currentPage * MAX_ITEMS_PER_PAGE);
 
     return (
         <Screen>
@@ -199,9 +171,7 @@ export default function RankingScreen() {
             <div className="ranking-container">
                 <div className="ranking-tabs">
                     <button
-                        className={`tab ${
-                            currentTab === "rankings" ? "active" : ""
-                        }`}
+                        className={`tab ${currentTab === "rankings" ? "active" : ""}`}
                         onClick={() => {
                             setCurrentPage(1);
                             setCurrentTab("rankings");
@@ -211,9 +181,7 @@ export default function RankingScreen() {
                     </button>
                     {pushedApplicants.length > 0 && (
                         <button
-                            className={`tab ${
-                                currentTab === "push" ? "active" : ""
-                            }`}
+                            className={`tab ${currentTab === "push" ? "active" : ""}`}
                             onClick={() => {
                                 setCurrentPage(1);
                                 setCurrentTab("push");
@@ -224,9 +192,7 @@ export default function RankingScreen() {
                     )}
                     {rejectedApplicants.length > 0 && (
                         <button
-                            className={`tab ${
-                                currentTab === "reject" ? "active" : ""
-                            }`}
+                            className={`tab ${currentTab === "reject" ? "active" : ""}`}
                             onClick={() => {
                                 setCurrentPage(1);
                                 setCurrentTab("reject");
@@ -236,9 +202,7 @@ export default function RankingScreen() {
                         </button>
                     )}
                 </div>
-                <div className="total-comparisons">
-                    Total Comparisons: {sessionDetails.totalComparisons}
-                </div>
+                <div className="total-comparisons">Total Comparisons: {sessionDetails.totalComparisons}</div>
                 {currentTab === "rankings" && (
                     <div className="ranking-screen">
                         {currentApplicants.map((applicant, index) => (
@@ -298,9 +262,7 @@ export default function RankingScreen() {
                         <button
                             key={index + 1}
                             onClick={() => handlePageChange(index + 1)}
-                            className={`page-button ${
-                                currentPage === index + 1 ? "active" : ""
-                            }`}
+                            className={`page-button ${currentPage === index + 1 ? "active" : ""}`}
                         >
                             {index + 1}
                         </button>
@@ -312,9 +274,7 @@ export default function RankingScreen() {
                     <button
                         key={year}
                         onClick={() => handleGradYearChange(year)}
-                        className={`filter-button ${
-                            selectedGradYear === year ? "active" : ""
-                        }`}
+                        className={`filter-button ${selectedGradYear === year ? "active" : ""}`}
                     >
                         {year}
                     </button>

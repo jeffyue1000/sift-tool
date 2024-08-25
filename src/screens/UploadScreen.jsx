@@ -54,7 +54,7 @@ export default function UploadScreen() {
     const uploadResumes = async (event) => {
         //prepare resumes for upload
         try {
-            if (numResumes == 0) {
+            if (numResumes === 0) {
                 alert("Add more resumes before uploading!");
                 return;
             }
