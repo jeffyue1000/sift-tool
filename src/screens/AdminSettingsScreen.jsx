@@ -188,7 +188,9 @@ export default function AdminSettingsScreen() {
                                     />
                                 )}
                             </div>
-                            <div className="timer-setting-container">
+                            <div
+                                className={useTimer ? "timer-setting-container-center" : "timer-setting-container-top"}
+                            >
                                 <ToggleSetting
                                     settingName="Enable timer:"
                                     onToggle={handleComparisonTimerRequired}
