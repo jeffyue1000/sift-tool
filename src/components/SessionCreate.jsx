@@ -15,7 +15,7 @@ export default function SessionCreate({ configData }) {
     const [invalidCreate, setInvalidCreate] = useState(false);
     const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleKeyDown = (event) => {
         if (event.key === "Enter") {
@@ -35,13 +35,9 @@ export default function SessionCreate({ configData }) {
                 maxResumes: configData.maxResumes,
                 duration: configData.duration,
             };
-            const res = await axios.post(
-                `http://localhost:3001/sessions/createSession`,
-                session,
-                {
-                    withCredentials: "true",
-                }
-            );
+            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session, {
+                withCredentials: "true",
+            });
 
             if (res.data.sessionExists) {
                 console.log("test");
@@ -66,6 +62,7 @@ export default function SessionCreate({ configData }) {
                     pushQuota: session.pushQuota,
                     useTimer: session.useTimer,
                     compareTimer: session.compareTimer,
+                    updateAmount: session.updateAmount,
                 });
                 setSessionCreated(true);
             }

@@ -2,8 +2,9 @@
     border: 1px solid #000000;
     border-radius: 8px;
     padding: 16px;
-    margin: 16px;
-    width: 735px;
+    margin: 8px;
+    margin-right: 12px;
+    width: 92%;
     height: 40px;
     box-shadow: -4px 4px 8px #464649;
     transition: transform 0.2s;
@@ -20,6 +21,7 @@
 .applicant-box:active {
     transform: scale(0.99);
 }
+
 .applicant-name {
     font-size: 1.35em;
     font-weight: 600;
