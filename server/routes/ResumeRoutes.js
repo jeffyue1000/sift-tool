@@ -13,6 +13,7 @@ const {
     compareResumes,
     updateAutoPush,
     updateAutoReject,
+    updateScore,
 } = require("../controllers/ResumeController");
 
 const router = express.Router();
@@ -24,5 +25,6 @@ router.get("/getComparisonResumes", getComparisonResumes);
 router.post("/compareResumes", compareResumes);
 router.post("/updateAutoPush", updateAutoPush);
 router.post("/updateAutoReject", updateAutoReject);
+router.post("/updateScore", updateScore);
 
 module.exports = router;

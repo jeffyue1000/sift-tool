@@ -16,6 +16,7 @@ const {
     addUser,
     getUsers,
     setUser,
+    saveUpdateAmount,
 } = require("../controllers/SessionController");
 
 const router = express.Router();
@@ -26,7 +27,6 @@ router.get("/logoutSession", logoutSession);
 router.get("/getSessionFromToken", getSessionFromToken);
 router.get("/getUserFromToken", getUserFromToken);
 router.post("/updateSessionSize", updateSessionSize);
-
 router.get("/getCookies", getCookies);
 router.post("/updateUsePushOrReject", updateUsePushOrReject);
 router.post("/updateRequireAdminPushOrReject", updateRequireAdminPushOrReject);
@@ -36,5 +36,6 @@ router.post("/updateUseTimer", updateUseTimer);
 router.post("/addUser", addUser);
 router.get("/getUsers", getUsers);
 router.post("/setUser", setUser);
+router.post("/saveUpdateAmount", saveUpdateAmount);
 
 module.exports = router;

@@ -365,6 +365,24 @@ const setUser = async (req, res) => {
     }
 };
 
+const saveUpdateAmount = async (req, res) => {
+    try {
+        const { updateAmount, sessionID } = req.body;
+        const filter = { sessionID: sessionID };
+        const update = { updateAmount: updateAmount };
+        await Session.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in saveUpdateAmount: ", error);
+        res.status(500).json({
+            message: "Error occured saving update amount",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     createSession,
     loginSession,
@@ -382,4 +400,5 @@ module.exports = {
     addUser,
     getUsers,
     setUser,
+    saveUpdateAmount,
 };

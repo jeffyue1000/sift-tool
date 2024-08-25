@@ -184,7 +184,8 @@ const compareResumes = async (req, res) => {
         const leftExpected = 1.0 / (1.0 + Math.pow(10, (rightResume.eloScore - leftResume.eloScore) / 400.0));
         const rightExpected = 1.0 / (1.0 + Math.pow(10, (leftResume.eloScore - rightResume.eloScore) / 400.0));
         const leftNewScore = leftResume.eloScore + MAX_ELO_ADJUSTMENT * ((winner === "leftWin" ? 1 : 0) - leftExpected);
-        const rightNewScore = rightResume.eloScore + MAX_ELO_ADJUSTMENT * ((winner === "rightWin" ? 1 : 0) - rightExpected);
+        const rightNewScore =
+            rightResume.eloScore + MAX_ELO_ADJUSTMENT * ((winner === "rightWin" ? 1 : 0) - rightExpected);
 
         const updateLeftResume = { eloScore: leftNewScore, numComparison: leftResume.numComparison + 1 };
         const updateRightResume = { eloScore: rightNewScore, numComparison: rightResume.numComparison + 1 };
@@ -242,6 +243,24 @@ const updateAutoReject = async (req, res) => {
     }
 };
 
+const updateScore = async (req, res) => {
+    try {
+        const { id, updateAmount, currentScore } = req.body;
+        const filter = { _id: id };
+        const update = { eloScore: currentScore + updateAmount };
+        await Resume.findOneAndUpdate(filter, update);
+        res.status(200).json({
+            updateScoreSuccess: true,
+        });
+    } catch (error) {
+        console.error("Error occurred in updateScore: ", error);
+        res.status(500).json({
+            message: "Error updating score",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     uploadResumes,
     getResumePDF,
@@ -250,4 +269,5 @@ module.exports = {
     compareResumes,
     updateAutoPush,
     updateAutoReject,
+    updateScore,
 };

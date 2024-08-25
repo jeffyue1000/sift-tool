@@ -77,6 +77,10 @@ const sessionSchema = new mongoose.Schema({
         of: Number,
         default: {},
     },
+    updateAmount: {
+        type: Number,
+        default: 10,
+    },
 });
 
 sessionSchema.index({ sessionID: 1 });

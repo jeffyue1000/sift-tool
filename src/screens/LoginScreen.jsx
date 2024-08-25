@@ -56,6 +56,7 @@ export default function LoginScreen() {
                     pushQuota: session.pushQuota,
                     useTimer: session.useTimer,
                     compareTimer: session.compareTimer,
+                    updateAmount: session.updateAmount,
                 });
                 if (res.data.admin) {
                     setAdminAuthenticated(true);

@@ -54,6 +54,11 @@ export default function UploadScreen() {
     const uploadResumes = async (event) => {
         //prepare resumes for upload
         try {
+            if (numResumes == 0) {
+                alert("Add more resumes before uploading!");
+                return;
+            }
+            setSubmitted(false);
             event.preventDefault();
             setLoading(true);
 
@@ -81,6 +86,8 @@ export default function UploadScreen() {
             setSessionDetails({ ...sessionDetails, resumeCount: updateSizeRes.data.resumeCount });
             setLoading(false);
             setSubmitted(true);
+            setResumes([]);
+            setNumResumes(0);
         } catch (error) {
             console.error("Error uploading resume", error);
         }
@@ -89,6 +96,7 @@ export default function UploadScreen() {
     const handleClearResumes = () => {
         setResumes([]);
         setNumResumes(0);
+        setSubmitted(false);
     };
 
     return (
@@ -97,8 +105,8 @@ export default function UploadScreen() {
                 <div className="upload-instruction-container">
                     <h2 className="instruction-header">Upload Resumes</h2>
                     <div className="upload-instruction">
-                        Submit any resumes to be sifted to the dropzone on the right. You may drag and drop individual files or select
-                        multiple to be submitted at once.
+                        Submit any resumes to be sifted to the dropzone on the right. You may drag and drop individual
+                        files or select multiple to be submitted at once.
                         <br />
                         <p>
                             Files must be named in the following format: <b>FirstName_LastName_Resume_GradYear.pdf</b>
@@ -125,7 +133,9 @@ export default function UploadScreen() {
                     <div className="submission-details">
                         Attached: {numResumes}
                         <br />
-                        {`Remaining Resume Slots: ${parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)}`}
+                        {`Remaining Resume Slots: ${
+                            parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)
+                        }`}
                     </div>
                     <div className="upload-buttons-container">
                         <button

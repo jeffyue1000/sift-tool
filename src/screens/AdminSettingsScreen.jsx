@@ -24,7 +24,7 @@ export default function AdminSettingsScreen() {
         setUsePush(sessionDetails.usePush);
         setRejectAdmin(sessionDetails.rejectRequireAdmin);
         setPushAdmin(sessionDetails.pushRequireAdmin);
-        setRejectQuota(sessionDetails.rejectQuota);
+        setRejectQuota(sessionDetails.rejectQuota * -1);
         setPushQuota(sessionDetails.pushQuota);
         setUseTimer(sessionDetails.useTimer);
         setCompareTimer(sessionDetails.compareTimer);
@@ -188,7 +188,9 @@ export default function AdminSettingsScreen() {
                                     />
                                 )}
                             </div>
-                            <div className="timer-setting-container">
+                            <div
+                                className={useTimer ? "timer-setting-container-center" : "timer-setting-container-top"}
+                            >
                                 <ToggleSetting
                                     settingName="Enable timer:"
                                     onToggle={handleComparisonTimerRequired}

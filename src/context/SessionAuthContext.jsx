@@ -22,8 +22,9 @@ export function SessionAuthProvider({ children }) {
         rejectQuota: 1,
         pushQuota: 1,
         useTimer: false,
-        compareTimer: 3,
+        compareTimer: 1,
         user: "",
+        updateAmount: 10,
     });
     const [loading, setLoading] = useState(true);
 
@@ -63,6 +64,7 @@ export function SessionAuthProvider({ children }) {
                         pushQuota: session.pushQuota,
                         useTimer: session.useTimer,
                         compareTimer: session.compareTimer,
+                        updateAmount: session.updateAmount,
                     });
 
                     if (userCookieToken) {
