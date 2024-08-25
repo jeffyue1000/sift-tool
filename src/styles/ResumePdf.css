@@ -1,3 +1,8 @@
+.resume-scroll-container {
+    max-height: 807px;
+    overflow-y: auto;
+}
+
 .resume-container {
     margin-inline: 25px;
     box-shadow: -9px 11px 8px #464649;
