@@ -59,6 +59,11 @@
     background-color: #65aed5;
 }
 
+.manual-update-save:hover {
+    color: #f9ede1;
+    background-color: #65aed5;
+}
+
 .ranking-container {
     display: flex;
     flex-direction: column;

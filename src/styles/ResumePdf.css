@@ -1,12 +1,22 @@
+.resume-scroll-container {
+    max-height: 807px;
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
 .resume-container {
     margin-inline: 25px;
+    margin-bottom: 20px;
     box-shadow: -9px 11px 8px #464649;
     transition: transform 0.15s linear;
     overflow: hidden;
     will-change: transform;
+    height: 807px;
 }
 .resume-container:hover {
     transform: scale(1.015);
+    box-shadow: -12px 14px 10px #464649;
+    overflow-y: auto;
 }
 .resume-container:active {
     transform: scale(0.985);
