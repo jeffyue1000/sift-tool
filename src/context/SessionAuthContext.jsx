@@ -60,7 +60,7 @@ export function SessionAuthProvider({ children }) {
                         usePush: session.usePush,
                         rejectRequireAdmin: session.rejectRequireAdmin,
                         pushRequireAdmin: session.pushRequireAdmin,
-                        rejectQuota: session.rejectQuota,
+                        rejectQuota: session.rejectQuota * -1,
                         pushQuota: session.pushQuota,
                         useTimer: session.useTimer,
                         compareTimer: session.compareTimer,

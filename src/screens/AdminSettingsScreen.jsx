@@ -24,7 +24,7 @@ export default function AdminSettingsScreen() {
         setUsePush(sessionDetails.usePush);
         setRejectAdmin(sessionDetails.rejectRequireAdmin);
         setPushAdmin(sessionDetails.pushRequireAdmin);
-        setRejectQuota(sessionDetails.rejectQuota * -1);
+        setRejectQuota(sessionDetails.rejectQuota);
         setPushQuota(sessionDetails.pushQuota);
         setUseTimer(sessionDetails.useTimer);
         setCompareTimer(sessionDetails.compareTimer);
