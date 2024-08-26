@@ -164,26 +164,28 @@ export default function RankingScreen() {
 
     return (
         <Screen>
-            {/* {adminAuthenticated && ( */}
-            <div className="ranking-settings-container">
-                <div className="set-manual-update">
-                    Change Amount
-                    <input
-                        className="manual-update-input"
-                        type="number"
-                        value={updateAmount}
-                        onChange={(event) => {
-                            setUpdateAmount(parseInt(event.target.value, 10));
-                        }}
-                    />
-                    <button
-                        className="manual-update-save"
-                        onClick={saveUpdateAmount}
-                    >
-                        Save
-                    </button>
-                </div>
-                {/* <button
+            {adminAuthenticated && (
+                <div className="ranking-settings-container">
+                    <div className="set-manual-update">
+                        Change Amount
+                        <input
+                            className="manual-update-input"
+                            type="number"
+                            value={updateAmount}
+                            onChange={(event) => {
+                                setUpdateAmount(
+                                    parseInt(event.target.value, 10)
+                                );
+                            }}
+                        />
+                        <button
+                            className="manual-update-save"
+                            onClick={saveUpdateAmount}
+                        >
+                            Save
+                        </button>
+                    </div>
+                    {/* <button
                         onClick={() => {
                             console.log(currentApplicants);
                             console.log(sessionDetails.updateAmount);
@@ -191,19 +193,19 @@ export default function RankingScreen() {
                     >
                         log
                     </button> */}
-                <CSVLink
-                    className="export-csv-button"
-                    data={csvData}
-                    headers={headers}
-                    filename="Sift_Rankings.csv"
-                    onClick={() => {
-                        generateCSVData();
-                    }}
-                >
-                    Export to CSV
-                </CSVLink>
-            </div>
-            {/* )} */}
+                    <CSVLink
+                        className="export-csv-button"
+                        data={csvData}
+                        headers={headers}
+                        filename="Sift_Rankings.csv"
+                        onClick={() => {
+                            generateCSVData();
+                        }}
+                    >
+                        Export to CSV
+                    </CSVLink>
+                </div>
+            )}
             <div className="ranking-container">
                 <div className="ranking-tabs">
                     <button
@@ -244,9 +246,9 @@ export default function RankingScreen() {
                         </button>
                     )}
                 </div>
-                <div className="total-comparisons">
+                {/* <div className="total-comparisons">
                     Total Comparisons: {sessionDetails.totalComparisons}
-                </div>
+                </div> */}
                 {currentTab === "rankings" && (
                     <div className="ranking-screen">
                         {currentApplicants.map((applicant, index) => (
@@ -269,18 +271,20 @@ export default function RankingScreen() {
                                     onClick={() => showResume(index)}
                                     excluded={applicant.excluded}
                                 />
-                                <div
-                                    className="manual-button"
-                                    onClick={() => {
-                                        updateResumeScore(
-                                            applicant._id,
-                                            applicant.eloScore,
-                                            index
-                                        );
-                                    }}
-                                >
-                                    <i className="fa-solid fa-plus"></i>
-                                </div>
+                                {adminAuthenticated && (
+                                    <div
+                                        className="manual-button"
+                                        onClick={() => {
+                                            updateResumeScore(
+                                                applicant._id,
+                                                applicant.eloScore,
+                                                index
+                                            );
+                                        }}
+                                    >
+                                        <i className="fa-solid fa-plus"></i>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
