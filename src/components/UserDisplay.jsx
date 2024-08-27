@@ -15,9 +15,12 @@ export default function UserDisplay() {
 
     const getUsers = async () => {
         try {
-            const res = await axios.get(`http://localhost:3001/sessions/getUsers`, {
-                params: { sessionID: sessionDetails.sessionID },
-            });
+            const res = await axios.get(
+                `https://sift-tool.com/api/sessions/getUsers`,
+                {
+                    params: { sessionID: sessionDetails.sessionID },
+                }
+            );
             if (res.data.getSuccess) {
                 const userMap = res.data.users;
                 const userArray = Object.entries(userMap);

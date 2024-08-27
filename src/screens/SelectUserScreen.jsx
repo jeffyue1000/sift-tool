@@ -36,7 +36,7 @@ export default function SelectUserScreen() {
     const getUsers = async () => {
         try {
             const res = await axios.get(
-                `http://localhost:3001/sessions/getUsers`,
+                `https://sift-tool.com/api/sessions/getUsers`,
                 {
                     params: { sessionID: sessionDetails.sessionID },
                 }
@@ -67,7 +67,7 @@ export default function SelectUserScreen() {
     const handleUserChosen = async () => {
         try {
             const res = await axios.post(
-                `http://localhost:3001/sessions/setUser`,
+                `hhttps://sift-tool.com/api/sessions/setUser`,
                 { user: selectedUser },
                 { withCredentials: true }
             );
@@ -82,7 +82,7 @@ export default function SelectUserScreen() {
     const handleCreateUser = async () => {
         try {
             const res = await axios.post(
-                `http://localhost:3001/sessions/addUser`,
+                `https://sift-tool.com/api/sessions/addUser`,
                 { sessionID: sessionDetails.sessionID, user: newUser },
                 { withCredentials: true }
             );

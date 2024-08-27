@@ -7,7 +7,11 @@ import { useNavigate } from "react-router-dom";
 import "../styles/LoginScreen.css";
 
 export default function LoginScreen() {
-    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
+    const {
+        setSessionAuthenticated,
+        setSessionDetails,
+        setAdminAuthenticated,
+    } = useSessionAuth();
     const [sessionID, setSessionID] = useState("");
     const [passkey, setPasskey] = useState("");
     const [adminKey, setAdminKey] = useState("");
@@ -34,7 +38,7 @@ export default function LoginScreen() {
     const handleLogin = async () => {
         try {
             const res = await axios.post(
-                "http://localhost:3001/sessions/loginSession",
+                "https://sift-tool.com/api/sessions/loginSession",
                 { sessionID: sessionID, passkey: passkey, adminKey: adminKey },
                 { withCredentials: true }
             );
@@ -81,7 +85,11 @@ export default function LoginScreen() {
                     Join Session
                 </button>
                 <button
-                    className={`tab ${currentTab === "config" || currentTab === "create" ? "active" : ""}`}
+                    className={`tab ${
+                        currentTab === "config" || currentTab === "create"
+                            ? "active"
+                            : ""
+                    }`}
                     onClick={() => setCurrentTab("config")}
                 >
                     Create Session
@@ -126,7 +134,9 @@ export default function LoginScreen() {
                             onKeyDown={handleKeyDown}
                         />
                         {failedLogin && (
-                            <div className="error-message">Could not find a session with those credentials!</div>
+                            <div className="error-message">
+                                Could not find a session with those credentials!
+                            </div>
                         )}
                         <button
                             onClick={handleLogin}

@@ -13,7 +13,11 @@ export default function SessionCreate({ configData }) {
     const [sessionExists, setSessionExists] = useState(false);
     const [sessionCreated, setSessionCreated] = useState(false);
     const [invalidCreate, setInvalidCreate] = useState(false);
-    const { setSessionAuthenticated, setSessionDetails, setAdminAuthenticated } = useSessionAuth();
+    const {
+        setSessionAuthenticated,
+        setSessionDetails,
+        setAdminAuthenticated,
+    } = useSessionAuth();
 
     const navigate = useNavigate();
 
@@ -24,7 +28,12 @@ export default function SessionCreate({ configData }) {
     };
     const onCreateSession = async () => {
         try {
-            if (sessionID === "" || password === "" || confirmPassword === "" || adminKey === "") {
+            if (
+                sessionID === "" ||
+                password === "" ||
+                confirmPassword === "" ||
+                adminKey === ""
+            ) {
                 setInvalidCreate(true);
                 return;
             }
@@ -35,9 +44,13 @@ export default function SessionCreate({ configData }) {
                 maxResumes: configData.maxResumes,
                 duration: configData.duration,
             };
-            const res = await axios.post(`http://localhost:3001/sessions/createSession`, session, {
-                withCredentials: "true",
-            });
+            const res = await axios.post(
+                `https://sift-tool.com/api/sessions/createSession`,
+                session,
+                {
+                    withCredentials: "true",
+                }
+            );
 
             if (res.data.sessionExists) {
                 console.log("test");
@@ -117,9 +130,13 @@ export default function SessionCreate({ configData }) {
             />
             <div className="popup-text">
                 {!passwordsMatch && <div>Passwords do not match!</div>}
-                {sessionExists && <div>Session with that ID already exists!</div>}
+                {sessionExists && (
+                    <div>Session with that ID already exists!</div>
+                )}
                 {sessionCreated && <div>Session created successfully!</div>}
-                {invalidCreate && <div>Complete all fields before submitting!</div>}
+                {invalidCreate && (
+                    <div>Complete all fields before submitting!</div>
+                )}
             </div>
             <button
                 onClick={onCreateSession}

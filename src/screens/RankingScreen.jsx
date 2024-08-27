@@ -107,7 +107,7 @@ export default function RankingScreen() {
     const showResume = async (index) => {
         try {
             const res = await axios.get(
-                `http://localhost:3001/resumes/getResumePDF`,
+                `https://sift-tool.com/api/resumes/getResumePDF`,
                 {
                     params: { id: currentApplicants[index]._id },
                 }

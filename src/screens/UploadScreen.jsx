@@ -16,7 +16,12 @@ export default function UploadScreen() {
     const { sessionDetails, setSessionDetails } = useSessionAuth();
 
     useEffect(() => {
-        const loadingStates = ["Loading", "Loading.", "Loading..", "Loading..."];
+        const loadingStates = [
+            "Loading",
+            "Loading.",
+            "Loading..",
+            "Loading...",
+        ];
         let index = 0;
 
         const loadingInterval = setInterval(() => {
@@ -62,7 +67,10 @@ export default function UploadScreen() {
             event.preventDefault();
             setLoading(true);
 
-            if (sessionDetails.maxResumes - sessionDetails.resumeCount < numResumes) {
+            if (
+                sessionDetails.maxResumes - sessionDetails.resumeCount <
+                numResumes
+            ) {
                 alert("Not enough capacity! Try uploading fewer resumes.");
                 setLoading(false);
                 return;
@@ -72,18 +80,31 @@ export default function UploadScreen() {
                 formData.append("resumes", resume);
             });
             formData.append("sessionID", sessionDetails.sessionID);
-            formData.append("duration", sessionDetails.duration * 7 * 24 * 60 * 60 * 1000); //duration in weeks expressed in ms
+            formData.append(
+                "duration",
+                sessionDetails.duration * 7 * 24 * 60 * 60 * 1000
+            ); //duration in weeks expressed in ms
 
-            await axios.post(`http://localhost:3001/resumes/uploadResumes`, formData, {
-                //upload pdfs to aws and mongo
-                headers: {
-                    "content-type": "multipart/form-data",
-                },
+            await axios.post(
+                `https://sift-tool.com/api/resumes/uploadResumes`,
+                formData,
+                {
+                    //upload pdfs to aws and mongo
+                    headers: {
+                        "content-type": "multipart/form-data",
+                    },
+                }
+            );
+            const updateSizeRes = await axios.post(
+                `https://sift-tool.com/api/sessions/updateSessionSize`,
+                {
+                    sessionID: sessionDetails.sessionID,
+                }
+            ); //update resume count for the current session
+            setSessionDetails({
+                ...sessionDetails,
+                resumeCount: updateSizeRes.data.resumeCount,
             });
-            const updateSizeRes = await axios.post(`http://localhost:3001/sessions/updateSessionSize`, {
-                sessionID: sessionDetails.sessionID,
-            }); //update resume count for the current session
-            setSessionDetails({ ...sessionDetails, resumeCount: updateSizeRes.data.resumeCount });
             setLoading(false);
             setSubmitted(true);
             setResumes([]);
@@ -105,11 +126,13 @@ export default function UploadScreen() {
                 <div className="upload-instruction-container">
                     <h2 className="instruction-header">Upload Resumes</h2>
                     <div className="upload-instruction">
-                        Submit any resumes to be sifted to the dropzone on the right. You may drag and drop individual
-                        files or select multiple to be submitted at once.
+                        Submit any resumes to be sifted to the dropzone on the
+                        right. You may drag and drop individual files or select
+                        multiple to be submitted at once.
                         <br />
                         <p>
-                            Files must be named in the following format: <b>FirstName_LastName_Resume_GradYear.pdf</b>
+                            Files must be named in the following format:{" "}
+                            <b>FirstName_LastName_Resume_GradYear.pdf</b>
                             <br />
                             <b>(e.g. Joe_Bruin_Resume_2026) </b>
                         </p>
@@ -128,13 +151,18 @@ export default function UploadScreen() {
                             icon={faFilePdf}
                             className="large-icon"
                         />
-                        {isDragActive ? <p>Drop Resume...</p> : <div>Browse Files</div>}
+                        {isDragActive ? (
+                            <p>Drop Resume...</p>
+                        ) : (
+                            <div>Browse Files</div>
+                        )}
                     </div>
                     <div className="submission-details">
                         Attached: {numResumes}
                         <br />
                         {`Remaining Resume Slots: ${
-                            parseInt(sessionDetails.maxResumes) - parseInt(sessionDetails.resumeCount)
+                            parseInt(sessionDetails.maxResumes) -
+                            parseInt(sessionDetails.resumeCount)
                         }`}
                     </div>
                     <div className="upload-buttons-container">

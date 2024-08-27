@@ -32,16 +32,22 @@ export default function AdminSettingsScreen() {
 
     const handleRejectOrPushQuotaSubmit = async (quota, type) => {
         try {
-            const res = await axios.post(`http://localhost:3001/sessions/updateRejectOrPushQuota`, {
-                quota: quota,
-                sessionID: sessionDetails.sessionID,
-                type: type,
-            });
+            const res = await axios.post(
+                `https://sift-tool.com/api/sessions/updateRejectOrPushQuota`,
+                {
+                    quota: quota,
+                    sessionID: sessionDetails.sessionID,
+                    type: type,
+                }
+            );
             if (res.data.updateSuccess) {
                 if (type === "push") {
                     setSessionDetails({ ...sessionDetails, pushQuota: quota });
                 } else {
-                    setSessionDetails({ ...sessionDetails, rejectQuota: quota });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        rejectQuota: quota,
+                    });
                 }
             }
         } catch (error) {
@@ -51,35 +57,53 @@ export default function AdminSettingsScreen() {
 
     const handleRejectOrPushAdminRequired = async (checked, type) => {
         try {
-            const res = await axios.post(`http://localhost:3001/sessions/updateRequireAdminPushOrReject`, {
-                checked: checked,
-                sessionID: sessionDetails.sessionID,
-                type: type,
-            });
+            const res = await axios.post(
+                `https://sift-tool.com/api/sessions/updateRequireAdminPushOrReject`,
+                {
+                    checked: checked,
+                    sessionID: sessionDetails.sessionID,
+                    type: type,
+                }
+            );
             if (res.data.updateSuccess) {
                 if (type === "push") {
-                    setSessionDetails({ ...sessionDetails, pushRequireAdmin: checked });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        pushRequireAdmin: checked,
+                    });
                 } else {
-                    setSessionDetails({ ...sessionDetails, rejectRequireAdmin: checked });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        rejectRequireAdmin: checked,
+                    });
                 }
             }
         } catch (error) {
-            console.error("Error updating requireAdminPush or requireAdminReject", error);
+            console.error(
+                "Error updating requireAdminPush or requireAdminReject",
+                error
+            );
         }
     };
 
     const handleUseRejectOrPush = async (checked, type) => {
         try {
-            const res = await axios.post(`http://localhost:3001/sessions/updateUsePushOrReject`, {
-                checked: checked,
-                sessionID: sessionDetails.sessionID,
-                type: type,
-            });
+            const res = await axios.post(
+                `https://sift-tool.com/api/sessions/updateUsePushOrReject`,
+                {
+                    checked: checked,
+                    sessionID: sessionDetails.sessionID,
+                    type: type,
+                }
+            );
             if (res.data.updateSuccess) {
                 if (type === "push") {
                     setSessionDetails({ ...sessionDetails, usePush: checked });
                 } else {
-                    setSessionDetails({ ...sessionDetails, useReject: checked });
+                    setSessionDetails({
+                        ...sessionDetails,
+                        useReject: checked,
+                    });
                 }
             }
         } catch (error) {
@@ -89,10 +113,13 @@ export default function AdminSettingsScreen() {
 
     const handleComparisonTimerRequired = async (checked) => {
         try {
-            const res = await axios.post(`http://localhost:3001/sessions/updateUseTimer`, {
-                checked: checked,
-                sessionID: sessionDetails.sessionID,
-            });
+            const res = await axios.post(
+                `https://sift-tool.com/api/sessions/updateUseTimer`,
+                {
+                    checked: checked,
+                    sessionID: sessionDetails.sessionID,
+                }
+            );
             if (res.data.updateSuccess) {
                 setSessionDetails({ ...sessionDetails, useTimer: checked });
             }
@@ -103,10 +130,13 @@ export default function AdminSettingsScreen() {
 
     const handleComparisonTimerSubmit = async (time) => {
         try {
-            const res = await axios.post(`http://localhost:3001/sessions/updateCompareTimer`, {
-                sessionID: sessionDetails.sessionID,
-                time: time,
-            });
+            const res = await axios.post(
+                `https://sift-tool.com/api/sessions/updateCompareTimer`,
+                {
+                    sessionID: sessionDetails.sessionID,
+                    time: time,
+                }
+            );
             if (res.data.updateSuccess) {
                 setSessionDetails({ ...sessionDetails, compareTimer: time });
             }
@@ -120,13 +150,17 @@ export default function AdminSettingsScreen() {
             <div className="admin-wrapper">
                 <div className="settings-tabs">
                     <button
-                        className={`tab ${currentTab === "settings" ? "active" : ""}`}
+                        className={`tab ${
+                            currentTab === "settings" ? "active" : ""
+                        }`}
                         onClick={() => setCurrentTab("settings")}
                     >
                         Settings
                     </button>
                     <button
-                        className={`tab ${currentTab === "users" ? "active" : ""}`}
+                        className={`tab ${
+                            currentTab === "users" ? "active" : ""
+                        }`}
                         onClick={() => setCurrentTab("users")}
                     >
                         Users
@@ -147,7 +181,9 @@ export default function AdminSettingsScreen() {
                                 {useReject && (
                                     <ToggleSetting
                                         settingName="Require admin to reject:"
-                                        onToggle={handleRejectOrPushAdminRequired}
+                                        onToggle={
+                                            handleRejectOrPushAdminRequired
+                                        }
                                         checked={rejectAdmin}
                                         type="reject"
                                     />
@@ -155,7 +191,9 @@ export default function AdminSettingsScreen() {
                                 {useReject && (
                                     <InputSetting
                                         settingName="Number of rejections to reject:"
-                                        handleSubmit={handleRejectOrPushQuotaSubmit}
+                                        handleSubmit={
+                                            handleRejectOrPushQuotaSubmit
+                                        }
                                         input={rejectQuota}
                                         setInput={setRejectQuota}
                                         type="reject"
@@ -172,7 +210,9 @@ export default function AdminSettingsScreen() {
                                 {usePush && (
                                     <ToggleSetting
                                         settingName="Require admin to push:"
-                                        onToggle={handleRejectOrPushAdminRequired}
+                                        onToggle={
+                                            handleRejectOrPushAdminRequired
+                                        }
                                         checked={pushAdmin}
                                         setChecked={setPushAdmin}
                                         type="push"
@@ -181,7 +221,9 @@ export default function AdminSettingsScreen() {
                                 {usePush && (
                                     <InputSetting
                                         settingName="Number of pushes to push:"
-                                        handleSubmit={handleRejectOrPushQuotaSubmit}
+                                        handleSubmit={
+                                            handleRejectOrPushQuotaSubmit
+                                        }
                                         input={pushQuota}
                                         setInput={setPushQuota}
                                         type="push"
@@ -189,7 +231,11 @@ export default function AdminSettingsScreen() {
                                 )}
                             </div>
                             <div
-                                className={useTimer ? "timer-setting-container-center" : "timer-setting-container-top"}
+                                className={
+                                    useTimer
+                                        ? "timer-setting-container-center"
+                                        : "timer-setting-container-top"
+                                }
                             >
                                 <ToggleSetting
                                     settingName="Enable timer:"
@@ -200,7 +246,9 @@ export default function AdminSettingsScreen() {
                                 {useTimer && (
                                     <InputSetting
                                         settingName="Minimum seconds to compare:"
-                                        handleSubmit={handleComparisonTimerSubmit}
+                                        handleSubmit={
+                                            handleComparisonTimerSubmit
+                                        }
                                         input={compareTimer}
                                         setInput={setCompareTimer}
                                         type="placeholder"
