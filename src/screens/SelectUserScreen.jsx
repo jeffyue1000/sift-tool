@@ -67,7 +67,7 @@ export default function SelectUserScreen() {
     const handleUserChosen = async () => {
         try {
             const res = await axios.post(
-                `hhttps://sift-tool.com/api/sessions/setUser`,
+                `https://sift-tool.com/api/sessions/setUser`,
                 { user: selectedUser },
                 { withCredentials: true }
             );
