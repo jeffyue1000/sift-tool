@@ -37,7 +37,7 @@ export default function RankingScreen() {
     const saveUpdateAmount = async () => {
         try {
             await axios.post(
-                `http://localhost:3001/sessions/saveUpdateAmount`,
+                `https://sift-tool.com/api/sessions/saveUpdateAmount`,
                 {
                     updateAmount: updateAmount,
                     sessionID: sessionDetails.sessionID,
@@ -56,7 +56,7 @@ export default function RankingScreen() {
         try {
             currentApplicants[index].eloScore += updateAmount;
             setRenderCount((prev) => prev + 1);
-            await axios.post(`http://localhost:3001/resumes/updateScore`, {
+            await axios.post(`https://sift-tool.com/api/resumes/updateScore`, {
                 id: id,
                 updateAmount: updateAmount,
                 currentScore: currentScore,
@@ -84,7 +84,7 @@ export default function RankingScreen() {
         try {
             // Fetch all resumes in current session
             const response = await axios.get(
-                `http://localhost:3001/resumes/getAllResumes`,
+                `https://sift-tool.com/api/resumes/getAllResumes`,
                 {
                     params: { sessionID: sessionDetails.sessionID },
                 }

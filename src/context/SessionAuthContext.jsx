@@ -35,15 +35,21 @@ export function SessionAuthProvider({ children }) {
 
     const verifySession = async () => {
         try {
-            const res = await axios.get("http://localhost:3001/sessions/getCookies", {
-                withCredentials: true,
-            });
+            const res = await axios.get(
+                "https://sift-tool.com/api/sessions/getCookies",
+                {
+                    withCredentials: true,
+                }
+            );
             const sessionCookieToken = res.data.sessionCookieToken;
             const userCookieToken = res.data.userCookieToken;
             if (sessionCookieToken) {
-                const res = await axios.get("http://localhost:3001/sessions/getSessionFromToken", {
-                    params: { encodedSessionToken: sessionCookieToken },
-                });
+                const res = await axios.get(
+                    "https://sift-tool.com/api/sessions/getSessionFromToken",
+                    {
+                        params: { encodedSessionToken: sessionCookieToken },
+                    }
+                );
                 if (res.data.valid) {
                     setSessionAuthenticated(true);
                     if (res.data.isAdmin) {
@@ -68,9 +74,12 @@ export function SessionAuthProvider({ children }) {
                     });
 
                     if (userCookieToken) {
-                        const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
-                            params: { encodedUserToken: userCookieToken },
-                        });
+                        const userRes = await axios.get(
+                            `https://sift-tool.com/api/sessions/getUserFromToken`,
+                            {
+                                params: { encodedUserToken: userCookieToken },
+                            }
+                        );
                         setUserAuthenticated(true);
                         setSessionDetails((prevSessionDetails) => ({
                             ...prevSessionDetails,
@@ -93,9 +102,12 @@ export function SessionAuthProvider({ children }) {
 
     const logout = async () => {
         try {
-            await axios.get("http://localhost:3001/sessions/logoutSession", {
-                withCredentials: true,
-            });
+            await axios.get(
+                "https://sift-tool.com/api/sessions/logoutSession",
+                {
+                    withCredentials: true,
+                }
+            );
             setSessionAuthenticated(false);
             setAdminAuthenticated(false);
             setUserAuthenticated(false);
