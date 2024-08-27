@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: "https://sift-tool.com",
         credentials: true, //allow cookies
     })
 );
