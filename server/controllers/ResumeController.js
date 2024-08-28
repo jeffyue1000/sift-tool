@@ -44,8 +44,8 @@ const getComparisonResumes = async (req, res) => {
                 shuffledFilteredResumes[i].numComparison - leftResume.numComparison <= 5
             ) {
                 if (
-                    (leftResume.numComparison <= 8 && eloDifference <= 100) ||
-                    (leftResume.numComparison <= 16 && eloDifference <= 50) ||
+                    (leftResume.numComparison <= 4 && eloDifference <= 50) ||
+                    (leftResume.numComparison <= 8 && eloDifference <= 25) ||
                     eloDifference <= 25
                 ) {
                     return res.status(200).json({
@@ -193,9 +193,9 @@ const compareResumes = async (req, res) => {
 
         let ELO_ADJUSTMENT;
 
-        if (leftResume.numComparison <= 8) {
+        if (leftResume.numComparison <= 4) {
             ELO_ADJUSTMENT = 32;
-        } else if (leftResume.numComparison <= 16) {
+        } else if (leftResume.numComparison <= 8) {
             ELO_ADJUSTMENT = 24;
         } else {
             ELO_ADJUSTMENT = 16;
