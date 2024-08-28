@@ -39,7 +39,10 @@ const getComparisonResumes = async (req, res) => {
 
         for (let i = 0; i < shuffledFilteredResumes.length; i++) {
             const eloDifference = Math.abs(shuffledFilteredResumes[i].eloScore - leftElo);
-            if (shuffledFilteredResumes[i]._id.toString() !== leftResume._id.toString()) {
+            if (
+                shuffledFilteredResumes[i]._id.toString() !== leftResume._id.toString() &&
+                shuffledFilteredResumes[i].numComparison - leftResume.numComparison <= 5
+            ) {
                 if (
                     (leftResume.numComparison <= 8 && eloDifference <= 100) ||
                     (leftResume.numComparison <= 16 && eloDifference <= 50) ||
