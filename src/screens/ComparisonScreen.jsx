@@ -43,10 +43,7 @@ export default function ComparisonScreen() {
     useEffect(() => {
         if (useTimer) {
             if (timeLeft > 0) {
-                const timerId = setTimeout(
-                    () => setTimeLeft(timeLeft - 1),
-                    1000
-                ); //decrement by one every 1000 milliseconds
+                const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000); //decrement by one every 1000 milliseconds
                 return () => clearTimeout(timerId);
             } else {
                 setIsDisabled(false);
@@ -56,15 +53,11 @@ export default function ComparisonScreen() {
 
     const getComparisonResumes = async () => {
         try {
-            const res = await axios.get(
-                "https://sift-tool.com/api/resumes/getComparisonResumes",
-                {
-                    params: {
-                        sessionID: sessionDetails.sessionID,
-                        resumeCount: sessionDetails.resumeCount,
-                    },
-                }
-            );
+            const res = await axios.get("https://sift-tool.com/api/resumes/getComparisonResumes", {
+                params: {
+                    sessionID: sessionDetails.sessionID,
+                },
+            });
             if (res.data.message === "Not enough resumes to compare") {
                 setCanCompare(false);
                 return;
@@ -87,18 +80,12 @@ export default function ComparisonScreen() {
     const getResumePdfs = async () => {
         try {
             if (resumes.leftResume && resumes.rightResume) {
-                const leftRes = await axios.get(
-                    "https://sift-tool.com/api/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.leftResume._id },
-                    }
-                );
-                const rightRes = await axios.get(
-                    "https://sift-tool.com/api/resumes/getResumePDF",
-                    {
-                        params: { id: resumes.rightResume._id },
-                    }
-                );
+                const leftRes = await axios.get("https://sift-tool.com/api/resumes/getResumePDF", {
+                    params: { id: resumes.leftResume._id },
+                });
+                const rightRes = await axios.get("https://sift-tool.com/api/resumes/getResumePDF", {
+                    params: { id: resumes.rightResume._id },
+                });
 
                 setResumeUrls({
                     leftURL: leftRes.data.url,
@@ -112,16 +99,12 @@ export default function ComparisonScreen() {
 
     const handleWinner = async (winner) => {
         try {
-            await axios.post(
-                "https://sift-tool.com/api/resumes/compareResumes",
-                {
-                    ...resumes,
-                    winner: winner,
-                    sessionID: sessionDetails.sessionID,
-                    totalComparisons: sessionDetails.totalComparisons,
-                    user: sessionDetails.user,
-                }
-            );
+            await axios.post("https://sift-tool.com/api/resumes/compareResumes", {
+                ...resumes,
+                winner: winner,
+                sessionID: sessionDetails.sessionID,
+                user: sessionDetails.user,
+            });
             getComparisonResumes();
         } catch (error) {
             console.error("Error comparing resumes", error);
@@ -140,10 +123,7 @@ export default function ComparisonScreen() {
                           resume: resumes.rightResume,
                           pushQuota: sessionDetails.pushQuota,
                       };
-            await axios.post(
-                `https://sift-tool.com/api/resumes/updateAutoPush`,
-                request
-            );
+            await axios.post(`https://sift-tool.com/api/resumes/updateAutoPush`, request);
             getComparisonResumes();
         } catch (error) {
             console.error("Error updating auto push", error);
@@ -162,10 +142,7 @@ export default function ComparisonScreen() {
                           resume: resumes.rightResume,
                           rejectQuota: sessionDetails.rejectQuota,
                       };
-            await axios.post(
-                `https://sift-tool.com/api/resumes/updateAutoReject`,
-                request
-            );
+            await axios.post(`https://sift-tool.com/api/resumes/updateAutoReject`, request);
             getComparisonResumes();
         } catch (error) {
             console.error("Error updating auto reject", error);
@@ -176,9 +153,7 @@ export default function ComparisonScreen() {
         <Screen>
             {canCompare ? (
                 <div className="compare-container">
-                    <div className="timer-container">
-                        {useTimer && <div className="timer">{timeLeft}</div>}
-                    </div>
+                    <div className="timer-container">{useTimer && <div className="timer">{timeLeft}</div>}</div>
                     <div className="resumes">
                         <div className="resume-render-container">
                             <div className="auto-btns-container">
@@ -224,9 +199,7 @@ export default function ComparisonScreen() {
                                 {sessionDetails.useReject && (
                                     <button
                                         className="auto-btn"
-                                        onClick={() =>
-                                            handleAutoReject("right")
-                                        }
+                                        onClick={() => handleAutoReject("right")}
                                     >
                                         Reject
                                     </button>

@@ -1,4 +1,3 @@
 const DEFAULT_ELO = 1500;
-const MAX_ELO_ADJUSTMENT = 32;
 
-module.exports = { DEFAULT_ELO, MAX_ELO_ADJUSTMENT };
+module.exports = { DEFAULT_ELO };
