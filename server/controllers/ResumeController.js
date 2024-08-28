@@ -3,7 +3,6 @@ const Session = require("../models/sessionModel");
 const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { calculateSessionStdDev } = require("./SessionController");
-const { MAX_ELO_ADJUSTMENT } = require("../globals");
 const crypto = require("crypto");
 const dotenv = require("dotenv");
 
@@ -18,12 +17,15 @@ const s3 = new S3Client({
     region: process.env.BUCKET_REGION,
 });
 
+const shuffle = require("../helpers/shuffleArray");
+
 const getComparisonResumes = async (req, res) => {
     try {
-        const { sessionID, resumeCount } = req.query;
-        const resumesByComparison = await Resume.find({ sessionID: sessionID }).sort({ numComparison: 1 });
+        const { sessionID } = req.query;
+        const filteredResumesByComparison = await Resume.find({ sessionID: sessionID, excluded: false }).sort({
+            numComparison: 1,
+        });
 
-        const filteredResumesByComparison = resumesByComparison.filter((resume) => !resume.excluded);
         if (filteredResumesByComparison.length < 2) {
             return res.json({
                 message: "Not enough resumes to compare",
@@ -32,28 +34,27 @@ const getComparisonResumes = async (req, res) => {
 
         const leftResume = filteredResumesByComparison[0]; //choose a resume that has been compared the least
         const leftElo = leftResume.eloScore;
-        const sessionStdDev = await calculateSessionStdDev(sessionID);
 
-        const allResumes = await Resume.aggregate([
-            { $match: { sessionID: sessionID } },
-            { $sample: { size: parseInt(resumeCount) } }, // Randomly shuffle the matched resumes
-        ]);
-        const filteredAllResumes = allResumes.filter((resume) => !resume.excluded);
+        const shuffledFilteredResumes = shuffle(filteredResumesByComparison); // Randomly shuffle the matched resumes
 
-        for (let i = 0; i < filteredAllResumes.length; i++) {
-            if (
-                Math.abs(filteredAllResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
-                Math.abs(filteredAllResumes[i].eloScore - leftElo) <= 0.2 * sessionStdDev &&
-                filteredAllResumes[i]._id.toString() !== leftResume._id.toString()
-            ) {
-                return res.status(200).json({
-                    leftResume: leftResume,
-                    rightResume: allResumes[i],
-                });
+        for (let i = 0; i < shuffledFilteredResumes.length; i++) {
+            const eloDifference = Math.abs(shuffledFilteredResumes[i].eloScore - leftElo);
+            if (shuffledFilteredResumes[i]._id.toString() !== leftResume._id.toString()) {
+                if (
+                    (leftResume.numComparison <= 8 && eloDifference <= 100) ||
+                    (leftResume.numComparison <= 16 && eloDifference <= 50) ||
+                    eloDifference <= 25
+                ) {
+                    return res.status(200).json({
+                        leftResume: leftResume,
+                        rightResume: shuffledFilteredResumes[i],
+                    });
+                }
             }
         }
-
-        const rightResume = filteredResumesByComparison[1]; //fallback in case no suitable resume found
+        const rightResume = filteredResumesByComparison
+            .sort((a, b) => Math.abs(a.eloScore - leftElo) - Math.abs(b.eloScore - leftElo))
+            .slice(1)[0];
 
         return res.status(200).json({
             leftResume: leftResume,
@@ -67,6 +68,7 @@ const getComparisonResumes = async (req, res) => {
         });
     }
 };
+
 const getAllResumes = async (req, res) => {
     try {
         const { sessionID } = req.query;
@@ -173,19 +175,31 @@ const uploadResumes = async (req, res) => {
 
 const compareResumes = async (req, res) => {
     try {
-        const { leftResume, rightResume, winner, sessionID, totalComparisons, user } = req.body;
+        const { leftResume, rightResume, winner, sessionID, user } = req.body;
         const filterSession = { sessionID: sessionID };
         const updateSession = {
-            totalComparisons: totalComparisons + 1,
-            $inc: { [`users.${user}`]: 1 },
+            $inc: {
+                totalComparisons: 1,
+                [`users.${user}`]: 1,
+            },
         };
-        const session = await Session.findOneAndUpdate(filterSession, updateSession);
+        await Session.findOneAndUpdate(filterSession, updateSession);
 
         const leftExpected = 1.0 / (1.0 + Math.pow(10, (rightResume.eloScore - leftResume.eloScore) / 400.0));
         const rightExpected = 1.0 / (1.0 + Math.pow(10, (leftResume.eloScore - rightResume.eloScore) / 400.0));
-        const leftNewScore = leftResume.eloScore + MAX_ELO_ADJUSTMENT * ((winner === "leftWin" ? 1 : 0) - leftExpected);
-        const rightNewScore =
-            rightResume.eloScore + MAX_ELO_ADJUSTMENT * ((winner === "rightWin" ? 1 : 0) - rightExpected);
+
+        let ELO_ADJUSTMENT;
+
+        if (leftResume.numComparison <= 8) {
+            ELO_ADJUSTMENT = 32;
+        } else if (leftResume.numComparison <= 16) {
+            ELO_ADJUSTMENT = 24;
+        } else {
+            ELO_ADJUSTMENT = 16;
+        }
+
+        const leftNewScore = leftResume.eloScore + ELO_ADJUSTMENT * ((winner === "leftWin" ? 1 : 0) - leftExpected);
+        const rightNewScore = rightResume.eloScore + ELO_ADJUSTMENT * ((winner === "rightWin" ? 1 : 0) - rightExpected);
 
         const updateLeftResume = { eloScore: leftNewScore, numComparison: leftResume.numComparison + 1 };
         const updateRightResume = { eloScore: rightNewScore, numComparison: rightResume.numComparison + 1 };

@@ -26,6 +26,7 @@ const updateRejectOrPushQuota = async (req, res) => {
         });
     }
 };
+
 const updateRequireAdminPushOrReject = async (req, res) => {
     try {
         const { checked, sessionID, type } = req.body;
@@ -42,6 +43,7 @@ const updateRequireAdminPushOrReject = async (req, res) => {
         });
     }
 };
+
 const updateUsePushOrReject = async (req, res) => {
     try {
         const { checked, sessionID, type } = req.body;
@@ -79,6 +81,7 @@ const calculateSessionStdDev = async (sessionID) => {
         });
     }
 };
+
 const getCookies = async (req, res) => {
     try {
         const encodedSessionToken = req.cookies.session;
@@ -95,6 +98,7 @@ const getCookies = async (req, res) => {
         });
     }
 };
+
 const getSessionFromToken = async (req, res) => {
     try {
         const { encodedSessionToken } = req.query;
@@ -276,6 +280,7 @@ const updateSessionSize = async (req, res) => {
         });
     }
 };
+
 const updateUseTimer = async (req, res) => {
     try {
         const { sessionID, checked } = req.body;
@@ -293,6 +298,7 @@ const updateUseTimer = async (req, res) => {
         });
     }
 };
+
 const updateCompareTimer = async (req, res) => {
     try {
         const { sessionID, time } = req.body;

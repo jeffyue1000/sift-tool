@@ -56,7 +56,6 @@ export default function ComparisonScreen() {
             const res = await axios.get("http://localhost:3001/resumes/getComparisonResumes", {
                 params: {
                     sessionID: sessionDetails.sessionID,
-                    resumeCount: sessionDetails.resumeCount,
                 },
             });
             if (res.data.message === "Not enough resumes to compare") {
@@ -104,7 +103,6 @@ export default function ComparisonScreen() {
                 ...resumes,
                 winner: winner,
                 sessionID: sessionDetails.sessionID,
-                totalComparisons: sessionDetails.totalComparisons,
                 user: sessionDetails.user,
             });
             getComparisonResumes();
