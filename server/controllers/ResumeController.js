@@ -33,35 +33,55 @@ const getComparisonResumes = async (req, res) => {
         }
 
         const leftResume = filteredResumesByComparison[0]; //choose a resume that has been compared the least
-        const leftElo = leftResume.eloScore;
 
-        const shuffledFilteredResumes = shuffle(filteredResumesByComparison); // Randomly shuffle the matched resumes
+        filteredResumesByComparison.sort({ eloScore: 1 });
+        const resumeRange = Math.floor(0.683 * Math.pow(filteredResumesByComparison.length, 0.5475));
+        if (resumeRange % 2 !== 0) {
+            resumeRange += 1;
+        }
 
-        for (let i = 0; i < shuffledFilteredResumes.length; i++) {
-            const eloDifference = Math.abs(shuffledFilteredResumes[i].eloScore - leftElo);
-            if (
-                shuffledFilteredResumes[i]._id.toString() !== leftResume._id.toString() &&
-                shuffledFilteredResumes[i].numComparison - leftResume.numComparison <= 5
-            ) {
-                if (
-                    (leftResume.numComparison <= 4 && eloDifference <= 50) ||
-                    (leftResume.numComparison <= 8 && eloDifference <= 25) ||
-                    eloDifference <= 25
-                ) {
-                    return res.status(200).json({
-                        leftResume: leftResume,
-                        rightResume: shuffledFilteredResumes[i],
-                    });
-                }
+        let comparisonCandidates;
+        let leftResumeIndex;
+
+        for (let i = 0; i < filteredResumesByComparison.length; i++) {
+            if (filteredResumesByComparison[i]._id.toString() === leftResume._id.toString()) {
+                leftResumeIndex = i;
+                const leftBound = Math.max(0, i - resumeRange / 2);
+                comparisonCandidates = filteredResumesByComparison.slice(leftBound, resumeRange + 2);
+                break;
             }
         }
-        const rightResume = filteredResumesByComparison
-            .sort((a, b) => Math.abs(a.eloScore - leftElo) - Math.abs(b.eloScore - leftElo))
-            .slice(1)[0];
+
+        comparisonCandidates = shuffle(comparisonCandidates);
+
+        for (let i = 0; i < comparisonCandidates.length; i++) {
+            if (
+                leftResume._id.toString() !== comparisonCandidates[i]._id.toString() &&
+                Math.abs(leftResume.numComparison - comparisonCandidates[i].numComparison) <= 3
+            ) {
+                return res.status(200).json({
+                    leftResume: leftResume,
+                    rightResume: comparisonCandidates[i],
+                });
+            }
+        }
+
+        let fallbackResume;
+
+        if (leftResumeIndex === 0) {
+            fallbackResume = filteredResumesByComparison[1];
+        } else if (leftResumeIndex === filteredResumesByComparison.length - 1) {
+            fallbackResume = filteredResumesByComparison[filteredResumesByComparison.length - 2];
+        } else {
+            fallbackResume =
+                Math.random() >= 0.5
+                    ? filteredResumesByComparison[leftResumeIndex + 1]
+                    : filteredResumesByComparison[leftResumeIndex - 1];
+        }
 
         return res.status(200).json({
             leftResume: leftResume,
-            rightResume: rightResume,
+            rightResume: fallbackResume,
         });
     } catch (error) {
         console.error("Error occurred in getComparisonResumes", error);
