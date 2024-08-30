@@ -1,6 +1,10 @@
 const Resume = require("../models/resumeModel");
 const Session = require("../models/sessionModel");
-const { S3Client, PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { calculateSessionStdDev } = require("./SessionController");
 const crypto = require("crypto");
@@ -22,7 +26,10 @@ const shuffle = require("../helpers/shuffleArray");
 const getComparisonResumes = async (req, res) => {
     try {
         const { sessionID } = req.query;
-        const filteredResumesByComparison = await Resume.find({ sessionID: sessionID, excluded: false }).sort({
+        const filteredResumesByComparison = await Resume.find({
+            sessionID: sessionID,
+            excluded: false,
+        }).sort({
             numComparison: 1,
         });
 
@@ -34,8 +41,12 @@ const getComparisonResumes = async (req, res) => {
 
         const leftResume = filteredResumesByComparison[0]; //choose a resume that has been compared the least
 
-        filteredResumesByComparison.sort({ eloScore: 1 });
-        const resumeRange = Math.floor(0.683 * Math.pow(filteredResumesByComparison.length, 0.5475));
+        filteredResumesByComparison.sort(
+            (resume1, resume2) => resume1.eloScore - resume2.eloScore
+        );
+        let resumeRange = Math.floor(
+            0.683 * Math.pow(filteredResumesByComparison.length, 0.5475)
+        );
         if (resumeRange % 2 !== 0) {
             resumeRange += 1;
         }
@@ -44,10 +55,16 @@ const getComparisonResumes = async (req, res) => {
         let leftResumeIndex;
 
         for (let i = 0; i < filteredResumesByComparison.length; i++) {
-            if (filteredResumesByComparison[i]._id.toString() === leftResume._id.toString()) {
+            if (
+                filteredResumesByComparison[i]._id.toString() ===
+                leftResume._id.toString()
+            ) {
                 leftResumeIndex = i;
                 const leftBound = Math.max(0, i - resumeRange / 2);
-                comparisonCandidates = filteredResumesByComparison.slice(leftBound, resumeRange + 2);
+                comparisonCandidates = filteredResumesByComparison.slice(
+                    leftBound,
+                    resumeRange + 2
+                );
                 break;
             }
         }
@@ -56,8 +73,12 @@ const getComparisonResumes = async (req, res) => {
 
         for (let i = 0; i < comparisonCandidates.length; i++) {
             if (
-                leftResume._id.toString() !== comparisonCandidates[i]._id.toString() &&
-                Math.abs(leftResume.numComparison - comparisonCandidates[i].numComparison) <= 3
+                leftResume._id.toString() !==
+                    comparisonCandidates[i]._id.toString() &&
+                Math.abs(
+                    leftResume.numComparison -
+                        comparisonCandidates[i].numComparison
+                ) <= 3
             ) {
                 return res.status(200).json({
                     leftResume: leftResume,
@@ -71,7 +92,10 @@ const getComparisonResumes = async (req, res) => {
         if (leftResumeIndex === 0) {
             fallbackResume = filteredResumesByComparison[1];
         } else if (leftResumeIndex === filteredResumesByComparison.length - 1) {
-            fallbackResume = filteredResumesByComparison[filteredResumesByComparison.length - 2];
+            fallbackResume =
+                filteredResumesByComparison[
+                    filteredResumesByComparison.length - 2
+                ];
         } else {
             fallbackResume =
                 Math.random() >= 0.5
@@ -150,7 +174,8 @@ const uploadResumes = async (req, res) => {
 
         //upload each resume to S3, then store metadata in MongoDB
         for (const resume of resumeArray) {
-            const randomName = (bytes = 16) => crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
+            const randomName = (bytes = 16) =>
+                crypto.randomBytes(bytes).toString("hex"); //if resuems have duplicate names, they will still get stored in S3 separately
 
             const s3Key = `${sessionID}/${randomName()}`;
 
@@ -208,8 +233,20 @@ const compareResumes = async (req, res) => {
         };
         await Session.findOneAndUpdate(filterSession, updateSession);
 
-        const leftExpected = 1.0 / (1.0 + Math.pow(10, (rightResume.eloScore - leftResume.eloScore) / 400.0));
-        const rightExpected = 1.0 / (1.0 + Math.pow(10, (leftResume.eloScore - rightResume.eloScore) / 400.0));
+        const leftExpected =
+            1.0 /
+            (1.0 +
+                Math.pow(
+                    10,
+                    (rightResume.eloScore - leftResume.eloScore) / 400.0
+                ));
+        const rightExpected =
+            1.0 /
+            (1.0 +
+                Math.pow(
+                    10,
+                    (leftResume.eloScore - rightResume.eloScore) / 400.0
+                ));
 
         let ELO_ADJUSTMENT;
 
@@ -221,11 +258,21 @@ const compareResumes = async (req, res) => {
             ELO_ADJUSTMENT = 16;
         }
 
-        const leftNewScore = leftResume.eloScore + ELO_ADJUSTMENT * ((winner === "leftWin" ? 1 : 0) - leftExpected);
-        const rightNewScore = rightResume.eloScore + ELO_ADJUSTMENT * ((winner === "rightWin" ? 1 : 0) - rightExpected);
+        const leftNewScore =
+            leftResume.eloScore +
+            ELO_ADJUSTMENT * ((winner === "leftWin" ? 1 : 0) - leftExpected);
+        const rightNewScore =
+            rightResume.eloScore +
+            ELO_ADJUSTMENT * ((winner === "rightWin" ? 1 : 0) - rightExpected);
 
-        const updateLeftResume = { eloScore: leftNewScore, numComparison: leftResume.numComparison + 1 };
-        const updateRightResume = { eloScore: rightNewScore, numComparison: rightResume.numComparison + 1 };
+        const updateLeftResume = {
+            eloScore: leftNewScore,
+            numComparison: leftResume.numComparison + 1,
+        };
+        const updateRightResume = {
+            eloScore: rightNewScore,
+            numComparison: rightResume.numComparison + 1,
+        };
 
         await Resume.findByIdAndUpdate(leftResume._id, updateLeftResume);
         await Resume.findByIdAndUpdate(rightResume._id, updateRightResume);
@@ -247,7 +294,10 @@ const updateAutoPush = async (req, res) => {
         const { resume, pushQuota } = req.body;
         const newAuto = resume.auto + 1;
         const filter = { s3Key: resume.s3Key };
-        const update = newAuto >= pushQuota ? { auto: newAuto, excluded: true } : { auto: newAuto };
+        const update =
+            newAuto >= pushQuota
+                ? { auto: newAuto, excluded: true }
+                : { auto: newAuto };
         await Resume.findOneAndUpdate(filter, update);
         res.status(200).json({
             updateAutoSuccess: true,
@@ -266,7 +316,10 @@ const updateAutoReject = async (req, res) => {
         const { resume, rejectQuota } = req.body;
         const newAuto = resume.auto - 1;
         const filter = { s3Key: resume.s3Key };
-        const update = newAuto <= rejectQuota ? { auto: newAuto, excluded: true } : { auto: newAuto };
+        const update =
+            newAuto <= rejectQuota
+                ? { auto: newAuto, excluded: true }
+                : { auto: newAuto };
         await Resume.findOneAndUpdate(filter, update);
         res.status(200).json({
             updateAutoSuccess: true,
