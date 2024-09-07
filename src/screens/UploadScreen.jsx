@@ -128,7 +128,8 @@ export default function UploadScreen() {
                     <div className="upload-instruction">
                         Submit any resumes to be sifted to the dropzone on the
                         right. You may drag and drop individual files or select
-                        multiple to be submitted at once.
+                        multiple to be submitted at once. Please ensure that
+                        file sizes are no greater than 500 kb.
                         <br />
                         <p>
                             Files must be named in the following format:{" "}
