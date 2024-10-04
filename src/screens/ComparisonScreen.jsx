@@ -18,12 +18,28 @@ export default function ComparisonScreen() {
     const [useTimer, setUseTimer] = useState(false);
     const [timeLeft, setTimeLeft] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
-    const { sessionDetails } = useSessionAuth();
+    const [showPush, setShowPush] = useState(false);
+    const [showReject, setShowReject] = useState(false);
+    const { sessionDetails, adminAuthenticated } = useSessionAuth();
 
     useEffect(() => {
         if (parseInt(sessionDetails.resumeCount) >= 2) {
             setCanCompare(true);
             setUseTimer(sessionDetails.useTimer);
+        }
+        if (sessionDetails.usePush) {
+            if (sessionDetails.pushRequireAdmin) {
+                setShowPush(adminAuthenticated);
+            } else {
+                setShowPush(true);
+            }
+        }
+        if (sessionDetails.useReject) {
+            if (sessionDetails.rejectRequireAdmin) {
+                setShowReject(adminAuthenticated);
+            } else {
+                setShowReject(true);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -157,7 +173,7 @@ export default function ComparisonScreen() {
                     <div className="resumes">
                         <div className="resume-render-container">
                             <div className="auto-btns-container">
-                                {sessionDetails.usePush && (
+                                {showPush && (
                                     <button
                                         className="auto-btn"
                                         onClick={() => handleAutoPush("left")}
@@ -165,7 +181,7 @@ export default function ComparisonScreen() {
                                         Push
                                     </button>
                                 )}
-                                {sessionDetails.useReject && (
+                                {showReject && (
                                     <button
                                         className="auto-btn"
                                         onClick={() => handleAutoReject("left")}
@@ -187,7 +203,7 @@ export default function ComparisonScreen() {
                                 disabled={isDisabled}
                             />
                             <div className="auto-btns-container">
-                                {sessionDetails.usePush && (
+                                {showPush && (
                                     <button
                                         className="auto-btn"
                                         onClick={() => handleAutoPush("right")}
@@ -196,7 +212,7 @@ export default function ComparisonScreen() {
                                     </button>
                                 )}
 
-                                {sessionDetails.useReject && (
+                                {showReject && (
                                     <button
                                         className="auto-btn"
                                         onClick={() => handleAutoReject("right")}

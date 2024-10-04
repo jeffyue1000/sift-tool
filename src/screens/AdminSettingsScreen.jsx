@@ -146,7 +146,7 @@ export default function AdminSettingsScreen() {
                                 />
                                 {useReject && (
                                     <ToggleSetting
-                                        settingName="Require admin to reject:"
+                                        settingName="Admin Only:"
                                         onToggle={handleRejectOrPushAdminRequired}
                                         checked={rejectAdmin}
                                         type="reject"
@@ -171,7 +171,7 @@ export default function AdminSettingsScreen() {
                                 />
                                 {usePush && (
                                     <ToggleSetting
-                                        settingName="Require admin to push:"
+                                        settingName="Admin only:"
                                         onToggle={handleRejectOrPushAdminRequired}
                                         checked={pushAdmin}
                                         setChecked={setPushAdmin}
