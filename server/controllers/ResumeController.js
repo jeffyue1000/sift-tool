@@ -146,7 +146,7 @@ const uploadResumes = async (req, res) => {
             //write metadata of each resume into MongoDB
             const fileName = resume.originalname.split("_");
             const name = fileName[0].concat(" ", fileName[1]);
-            const gradYear = fileName[3].split(".")[0];
+            const gradYear = fileName[3].split(".")[0].substr(0, 4);
             const resumeExists = await Resume.findOne({
                 name: name,
                 gradYear: gradYear,
