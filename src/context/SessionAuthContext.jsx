@@ -6,9 +6,10 @@ export const SessionAuthContext = createContext();
 export const useSessionAuth = () => useContext(SessionAuthContext);
 
 export function SessionAuthProvider({ children }) {
-    const [sessionAuthenticated, setSessionAuthenticated] = useState(false);
-    const [adminAuthenticated, setAdminAuthenticated] = useState(false);
-    const [userAuthenticated, setUserAuthenticated] = useState(false);
+    //session context manager to maintain user login/authentication states
+    const [sessionAuthenticated, setSessionAuthenticated] = useState(false); //logged into session
+    const [adminAuthenticated, setAdminAuthenticated] = useState(false); //entered correct admin key
+    const [userAuthenticated, setUserAuthenticated] = useState(false); //selected a user
     const [sessionDetails, setSessionDetails] = useState({
         sessionID: "defaultID",
         duration: 1, //expire immediately if invalid session
@@ -35,15 +36,21 @@ export function SessionAuthProvider({ children }) {
 
     const verifySession = async () => {
         try {
+            //check for session and user authentication through stored browser cookies
             const res = await axios.get("http://localhost:3001/sessions/getCookies", {
                 withCredentials: true,
             });
             const sessionCookieToken = res.data.sessionCookieToken;
             const userCookieToken = res.data.userCookieToken;
+
+            //if user is logged into a session, proceed
             if (sessionCookieToken) {
+                //decode session token from cookie
                 const res = await axios.get("http://localhost:3001/sessions/getSessionFromToken", {
                     params: { encodedSessionToken: sessionCookieToken },
                 });
+
+                //proceed and update session state if session exists
                 if (res.data.valid) {
                     setSessionAuthenticated(true);
                     if (res.data.isAdmin) {
@@ -67,6 +74,7 @@ export function SessionAuthProvider({ children }) {
                         updateAmount: session.updateAmount,
                     });
 
+                    //if user has been selected, update session state to track that user
                     if (userCookieToken) {
                         const userRes = await axios.get(`http://localhost:3001/sessions/getUserFromToken`, {
                             params: { encodedUserToken: userCookieToken },
@@ -79,7 +87,7 @@ export function SessionAuthProvider({ children }) {
                     }
                 }
             } else {
-                console.log("every false");
+                //if cookie not found, set all auth to false
                 setSessionAuthenticated(false);
                 setAdminAuthenticated(false);
                 setUserAuthenticated(false);
