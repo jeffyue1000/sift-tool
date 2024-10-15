@@ -11,8 +11,7 @@ export default function SelectUserScreen() {
     const [selectUserDisabled, setSelectUserDisabled] = useState(true);
     const [newUser, setNewUser] = useState("");
     const [showAddUser, setShowAddUser] = useState(false);
-    const { sessionDetails, setSessionDetails, setUserAuthenticated } =
-        useSessionAuth();
+    const { sessionDetails, setSessionDetails, setUserAuthenticated } = useSessionAuth();
 
     const navigate = useNavigate();
 
@@ -33,14 +32,12 @@ export default function SelectUserScreen() {
         }
     };
 
+    //retrieve list of users
     const getUsers = async () => {
         try {
-            const res = await axios.get(
-                `http://localhost:3001/sessions/getUsers`,
-                {
-                    params: { sessionID: sessionDetails.sessionID },
-                }
-            );
+            const res = await axios.get(`http://localhost:3001/sessions/getUsers`, {
+                params: { sessionID: sessionDetails.sessionID },
+            });
             if (res.data.getSuccess) {
                 const userMap = res.data.users;
                 const userArray = Object.keys(userMap);

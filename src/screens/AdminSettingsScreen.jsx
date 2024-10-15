@@ -10,16 +10,17 @@ import "../styles/AdminSettingsScreen.css";
 export default function AdminSettingsScreen() {
     const [useReject, setUseReject] = useState(false);
     const [usePush, setUsePush] = useState(false);
-    const [rejectAdmin, setRejectAdmin] = useState(false);
-    const [pushAdmin, setPushAdmin] = useState(false);
-    const [rejectQuota, setRejectQuota] = useState(1);
-    const [pushQuota, setPushQuota] = useState(1);
+    const [rejectAdmin, setRejectAdmin] = useState(false); //require admin to reject resumes
+    const [pushAdmin, setPushAdmin] = useState(false); //require admin to push resumes
+    const [rejectQuota, setRejectQuota] = useState(1); //number of votes to reject
+    const [pushQuota, setPushQuota] = useState(1); //number of votes to push
     const [useTimer, setUseTimer] = useState(false);
-    const [compareTimer, setCompareTimer] = useState(5);
+    const [compareTimer, setCompareTimer] = useState(5); //seconds until resumes are able to be compared
     const [currentTab, setCurrentTab] = useState("settings");
-    const { sessionDetails, setSessionDetails } = useSessionAuth();
+    const { sessionDetails, setSessionDetails } = useSessionAuth(); //session states
 
     useEffect(() => {
+        //update settings according to session state
         setUseReject(sessionDetails.useReject);
         setUsePush(sessionDetails.usePush);
         setRejectAdmin(sessionDetails.rejectRequireAdmin);
@@ -31,6 +32,7 @@ export default function AdminSettingsScreen() {
     }, [sessionDetails]);
 
     const handleRejectOrPushQuotaSubmit = async (quota, type) => {
+        //update reject/push voting quotas
         try {
             const res = await axios.post(`http://localhost:3001/sessions/updateRejectOrPushQuota`, {
                 quota: quota,
@@ -50,6 +52,7 @@ export default function AdminSettingsScreen() {
     };
 
     const handleRejectOrPushAdminRequired = async (checked, type) => {
+        //update reject/push admin requirements
         try {
             const res = await axios.post(`http://localhost:3001/sessions/updateRequireAdminPushOrReject`, {
                 checked: checked,
@@ -69,6 +72,7 @@ export default function AdminSettingsScreen() {
     };
 
     const handleUseRejectOrPush = async (checked, type) => {
+        //update whether to use reject/push functionalities
         try {
             const res = await axios.post(`http://localhost:3001/sessions/updateUsePushOrReject`, {
                 checked: checked,
@@ -88,6 +92,7 @@ export default function AdminSettingsScreen() {
     };
 
     const handleComparisonTimerRequired = async (checked) => {
+        //update whether comparison timer is used
         try {
             const res = await axios.post(`http://localhost:3001/sessions/updateUseTimer`, {
                 checked: checked,
@@ -102,6 +107,7 @@ export default function AdminSettingsScreen() {
     };
 
     const handleComparisonTimerSubmit = async (time) => {
+        //update the comparison timer second count
         try {
             const res = await axios.post(`http://localhost:3001/sessions/updateCompareTimer`, {
                 sessionID: sessionDetails.sessionID,

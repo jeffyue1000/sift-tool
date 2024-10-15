@@ -38,6 +38,8 @@ export default function LoginScreen() {
                 { sessionID: sessionID, passkey: passkey, adminKey: adminKey },
                 { withCredentials: true }
             );
+
+            //if login credentials are valid, update session state and navigate to users page
             if (res.data.validLogin) {
                 setSessionAuthenticated(true);
                 const session = res.data.session;

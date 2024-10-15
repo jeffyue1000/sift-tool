@@ -42,6 +42,7 @@ export default function UploadScreen() {
         [resumes]
     );
 
+    //configure file dropzone
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
@@ -51,8 +52,8 @@ export default function UploadScreen() {
         maxFiles: 10000,
     });
 
+    //prepare resumes for upload
     const uploadResumes = async (event) => {
-        //prepare resumes for upload
         try {
             if (numResumes === 0) {
                 alert("Add more resumes before uploading!");

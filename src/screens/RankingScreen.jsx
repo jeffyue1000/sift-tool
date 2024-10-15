@@ -15,9 +15,8 @@ export default function RankingScreen() {
     const [selectedGradYear, setSelectedGradYear] = useState("All");
     const [currentTab, setCurrentTab] = useState("rankings");
     const [csvData, setCsvData] = useState([]);
-    const [updateAmount, setUpdateAmount] = useState(10);
+    const [updateAmount, setUpdateAmount] = useState(10); //manual score update amount
     // eslint-disable-next-line no-unused-vars
-    const [renderCount, setRenderCount] = useState(0);
     const { sessionDetails, setSessionDetails, adminAuthenticated } = useSessionAuth();
 
     const headers = [
@@ -34,11 +33,14 @@ export default function RankingScreen() {
             : applicants.filter((applicant) => applicant.gradYear === selectedGradYear);
 
     const pushedApplicants = filteredApplicants.filter((applicant) => applicant.auto > 0 && applicant.excluded);
+
     const rejectedApplicants = filteredApplicants.filter((applicant) => applicant.auto < 0 && applicant.excluded);
+
     const totalPages = Math.ceil(
         (currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants)
             .length / MAX_ITEMS_PER_PAGE
     );
+
     const currentApplicants = (
         currentTab === "rankings" ? rankingsApplicants : currentTab === "push" ? pushedApplicants : rejectedApplicants
     ).slice((currentPage - 1) * MAX_ITEMS_PER_PAGE, currentPage * MAX_ITEMS_PER_PAGE);
@@ -53,6 +55,7 @@ export default function RankingScreen() {
         setRankingsApplicants(filteredApplicants.filter((applicant) => !applicant.excluded));
     }, filteredApplicants);
 
+    //update manual score update amount
     const saveUpdateAmount = async () => {
         try {
             await axios.post(`http://localhost:3001/sessions/saveUpdateAmount`, {
@@ -68,6 +71,7 @@ export default function RankingScreen() {
         }
     };
 
+    //perform manual score update and reshuffle array to reflect changes
     const updateResumeScore = async (id, currentScore, index) => {
         try {
             setRankingsApplicants((prevRankingsApplicants) => {
@@ -79,11 +83,6 @@ export default function RankingScreen() {
                 updatedRankingsApplicants.sort((applicant1, applicant2) => applicant2.eloScore - applicant1.eloScore);
                 return updatedRankingsApplicants;
             });
-            // rankingsApplicants[index].eloScore += updateAmount;
-            // rankingsApplicants = rankingsApplicants.sort(
-            //     (applicant1, applicant2) => applicant2.eloScore - applicant1.eloScore
-            // );
-            // setRenderCount((prev) => prev + 1);
             await axios.post(`http://localhost:3001/resumes/updateScore`, {
                 id: id,
                 updateAmount: updateAmount,
@@ -106,9 +105,9 @@ export default function RankingScreen() {
         );
     };
 
+    // Fetch all resumes in current session
     const fetchApplicants = async () => {
         try {
-            // Fetch all resumes in current session
             const response = await axios.get(`http://localhost:3001/resumes/getAllResumes`, {
                 params: { sessionID: sessionDetails.sessionID },
             });
@@ -127,6 +126,7 @@ export default function RankingScreen() {
         setCurrentPage(1);
     };
 
+    //display resume upon clicking their box
     const showResume = async (index) => {
         try {
             const res = await axios.get(`http://localhost:3001/resumes/getResumePDF`, {

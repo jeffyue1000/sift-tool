@@ -27,6 +27,8 @@ export default function ComparisonScreen() {
             setCanCompare(true);
             setUseTimer(sessionDetails.useTimer);
         }
+
+        //show push button logic
         if (sessionDetails.usePush) {
             if (sessionDetails.pushRequireAdmin) {
                 setShowPush(adminAuthenticated);
@@ -34,6 +36,8 @@ export default function ComparisonScreen() {
                 setShowPush(true);
             }
         }
+
+        //show reject button logic
         if (sessionDetails.useReject) {
             if (sessionDetails.rejectRequireAdmin) {
                 setShowReject(adminAuthenticated);
@@ -44,6 +48,7 @@ export default function ComparisonScreen() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    //retrieve resumes for comparison if more than 2 exist
     useEffect(() => {
         if (canCompare) {
             getComparisonResumes();
@@ -51,6 +56,7 @@ export default function ComparisonScreen() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canCompare]);
 
+    //once resume data retrieved, get pdf link to display
     useEffect(() => {
         getResumePdfs();
         // eslint-disable-next-line react-hooks/exhaustive-deps
