@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/SessionCreate.css";
 
 export default function SessionCreate({ configData }) {
+    //session creation screen
     const [sessionID, setSessionID] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");

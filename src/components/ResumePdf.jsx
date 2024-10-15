@@ -7,6 +7,7 @@ import "../styles/ResumePdf.css";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function ResumePDF({ onClick, resumeURL, disabled }) {
+    //pdf render component for comparison
     const [numPages, setNumPages] = useState(null);
 
     const onDocumentLoadSuccess = ({ numPages }) => {

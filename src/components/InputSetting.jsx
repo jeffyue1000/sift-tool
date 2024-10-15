@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/InputSetting.css";
 
 export default function InputSetting({ settingName, handleSubmit, input, setInput, type }) {
+    //numeric input fields for admin setting screen
     const [savedMessage, setSavedMessage] = useState(false);
 
     const handleInputSubmit = (e) => {

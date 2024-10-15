@@ -5,6 +5,7 @@ import axios from "axios";
 import "../styles/UserDisplay.css";
 
 export default function UserDisplay() {
+    //user comparison count box for admin setting screen
     const [users, setUsers] = useState([]);
     const { sessionDetails } = useSessionAuth();
 

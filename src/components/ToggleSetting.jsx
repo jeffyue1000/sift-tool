@@ -2,6 +2,7 @@ import React from "react";
 import ReactSwitch from "react-switch";
 import "../styles/ToggleSetting.css";
 export default function ToggleSetting({ settingName, onToggle, checked, type }) {
+    //toggle switch component for admin setting screen
     const handleToggle = () => {
         onToggle(!checked, type);
     };

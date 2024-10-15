@@ -4,6 +4,7 @@ import { useSessionAuth } from "../context/SessionAuthContext";
 import "../styles/Navbar.css";
 
 export default function Navbar() {
+    //general navbar
     const [click, setClick] = useState(false);
     const { sessionAuthenticated, adminAuthenticated, userAuthenticated, logout } = useSessionAuth();
 

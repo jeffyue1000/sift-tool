@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import "../styles/SessionConfig.css";
 
 export default function SessionConfig({ onSubmit }) {
+    //set session details component
     const [maxResumes, setMaxResumes] = useState(1);
     const [sessionDuration, setSessionDuration] = useState(1);
 
@@ -31,7 +32,10 @@ export default function SessionConfig({ onSubmit }) {
                 onChange={(e) => setSessionDuration(e.target.value)}
             />
             {/* make animation to create session page? */}
-            <button onClick={handleConfigSubmit} className="submit-button">
+            <button
+                onClick={handleConfigSubmit}
+                className="submit-button"
+            >
                 Continue
             </button>
         </div>

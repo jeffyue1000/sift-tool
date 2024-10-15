@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/ApplicantRank.css";
 
 export default function ApplicantRank({ name, gradYear, eloScore, rank, onClick, excluded }) {
+    //display card for applicants on ranking screen
     return (
         <div
             className="applicant-box"
