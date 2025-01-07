@@ -35,23 +35,41 @@ function App() {
 
                     <Route
                         path="/rankings"
-                        element={<SessionProtectedRoute component={<RankingScreen />} />}
+                        element={
+                            <AdminProtectedRoute
+                                component={<RankingScreen />}
+                            />
+                        }
                     />
                     <Route
                         path="/compare"
-                        element={<SessionProtectedRoute component={<ComparisonScreen />} />}
+                        element={
+                            <SessionProtectedRoute
+                                component={<ComparisonScreen />}
+                            />
+                        }
                     />
                     <Route
                         path="/users"
-                        element={<UserProtectedRoute component={<SelectUserScreen />} />}
+                        element={
+                            <UserProtectedRoute
+                                component={<SelectUserScreen />}
+                            />
+                        }
                     />
                     <Route
                         path="/admin"
-                        element={<AdminProtectedRoute component={<AdminSettingsScreen />} />}
+                        element={
+                            <AdminProtectedRoute
+                                component={<AdminSettingsScreen />}
+                            />
+                        }
                     />
                     <Route
                         path="/upload"
-                        element={<AdminProtectedRoute component={<UploadScreen />} />}
+                        element={
+                            <AdminProtectedRoute component={<UploadScreen />} />
+                        }
                     />
                     <Route
                         path="*"
