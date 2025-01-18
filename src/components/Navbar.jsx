@@ -59,7 +59,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                 )}
-                {sessionAuthenticated && userAuthenticated && (
+                {adminAuthenticated && userAuthenticated && (
                     <li className="nav-item">
                         <Link
                             to="/rankings"

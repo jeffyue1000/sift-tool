@@ -35,7 +35,7 @@ function App() {
 
                     <Route
                         path="/rankings"
-                        element={<SessionProtectedRoute component={<RankingScreen />} />}
+                        element={<AdminProtectedRoute component={<RankingScreen />} />}
                     />
                     <Route
                         path="/compare"
